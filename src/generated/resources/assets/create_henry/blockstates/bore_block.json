@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "create_henry:block/bore_block"
+    }
+  }
+}

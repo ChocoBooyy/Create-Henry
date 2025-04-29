@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "create_henry:block/inverse_box/block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "create_henry:block/inverse_box/block"
+    },
+    "axis=z": {
+      "model": "create_henry:block/inverse_box/block",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

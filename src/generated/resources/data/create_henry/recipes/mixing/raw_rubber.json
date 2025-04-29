@@ -1,0 +1,15 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "amount": 500,
+      "fluid": "create_henry:sap",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "create_henry:raw_rubber"
+    }
+  ]
+}

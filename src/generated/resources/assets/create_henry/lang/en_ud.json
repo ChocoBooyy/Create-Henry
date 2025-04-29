@@ -1,0 +1,23 @@
+{
+  "block.create_henry.bore_block": "ʞɔoןᗺ ǝɹoᗺ",
+  "block.create_henry.furnace_engine": "ǝuıbuƎ ǝɔɐuɹnℲ",
+  "block.create_henry.hydraulic_casing": "buısɐƆ ɔıןnɐɹpʎH",
+  "block.create_henry.hydraulic_press": "ssǝɹԀ ɔıןnɐɹpʎH",
+  "block.create_henry.industrial_casing": "buısɐƆ ןɐıɹʇsnpuI",
+  "block.create_henry.industrial_fan": "uɐℲ ןɐıɹʇsnpuI",
+  "block.create_henry.inverse_box": "xoᗺ ǝsɹǝʌuI",
+  "block.create_henry.kinetic_motor": "ɹoʇoW ɔıʇǝuıʞ",
+  "block.create_henry.multimeter": "ɹǝʇǝɯıʇןnW",
+  "block.create_henry.powered_flywheel": "ןǝǝɥʍʎןℲ pǝɹǝʍoԀ",
+  "block.create_henry.raw_rubber_block": "ɹǝqqnᴚ ʍɐᴚ ɟo ʞɔoןᗺ",
+  "block.create_henry.redstone_divider": "ɹǝpıʌıᗡ ǝuoʇspǝᴚ",
+  "block.create_henry.rubber_block": "ɹǝqqnᴚ ɟo ʞɔoןᗺ",
+  "fluid.create_henry.sap": "pınbıꞀ dɐS",
+  "item.create_henry.coal_piece": "ǝɔǝıԀ ןɐoƆ",
+  "item.create_henry.incomplete_kinetic_mechanism": "ɯsıuɐɥɔǝW ɔıʇǝuıʞ ǝʇǝןdɯoɔuI",
+  "item.create_henry.kinetic_mechanism": "ɯsıuɐɥɔǝW ɔıʇǝuıʞ",
+  "item.create_henry.lapis_lazuli_shard": "pɹɐɥS ıןnzɐꞀ sıdɐꞀ",
+  "item.create_henry.raw_rubber": "ɹǝqqnᴚ ʍɐᴚ",
+  "item.create_henry.rubber": "ɹǝqqnᴚ",
+  "itemGroup.create_henry.base": "ʎɹuǝH :ǝʇɐǝɹƆ"
+}

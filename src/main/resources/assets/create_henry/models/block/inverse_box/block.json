@@ -1,0 +1,7 @@
+{
+	"parent": "create:block/gearshift/block",
+    "textures": {
+        "0": "create_henry:block/inverse_box",
+		"particle": "create_henry:block/inverse_box"
+    }
+}

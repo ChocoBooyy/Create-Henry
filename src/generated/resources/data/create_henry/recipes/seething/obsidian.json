@@ -1,0 +1,13 @@
+{
+  "type": "create_henry:seething",
+  "ingredients": [
+    {
+      "item": "minecraft:obsidian"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:crying_obsidian"
+    }
+  ]
+}

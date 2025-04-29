@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "create_henry:block/multi_gauge",
+		"particle": "create_henry:block/multi_gauge"
+	},
+	"elements": [
+		{
+			"name": "GaugeColorBar",
+			"from": [14.5, 2.9, 2.9],
+			"to": [15.5, 13.1, 13.1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 8.5, 5, 9], "rotation": 90, "texture": "#1"},
+				"east": {"uv": [12, 0, 16, 4], "texture": "#1"},
+				"south": {"uv": [0, 8.5, 5, 9], "rotation": 90, "texture": "#1"},
+				"up": {"uv": [0, 8, 5, 8.5], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [0, 8, 5, 8.5], "rotation": 90, "texture": "#1"}
+			}
+		}
+	]
+}

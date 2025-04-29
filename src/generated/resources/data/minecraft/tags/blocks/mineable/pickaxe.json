@@ -1,0 +1,15 @@
+{
+  "values": [
+    "create_henry:hydraulic_casing",
+    "create_henry:industrial_casing",
+    "create_henry:industrial_fan",
+    "create_henry:hydraulic_press",
+    "create_henry:bore_block",
+    "create_henry:multimeter",
+    "create_henry:redstone_divider",
+    "create_henry:inverse_box",
+    "create_henry:kinetic_motor",
+    "create_henry:furnace_engine",
+    "create_henry:powered_flywheel"
+  ]
+}

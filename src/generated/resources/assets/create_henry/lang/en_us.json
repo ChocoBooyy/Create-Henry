@@ -1,0 +1,23 @@
+{
+  "block.create_henry.bore_block": "Bore Block",
+  "block.create_henry.furnace_engine": "Furnace Engine",
+  "block.create_henry.hydraulic_casing": "Hydraulic Casing",
+  "block.create_henry.hydraulic_press": "Hydraulic Press",
+  "block.create_henry.industrial_casing": "Industrial Casing",
+  "block.create_henry.industrial_fan": "Industrial Fan",
+  "block.create_henry.inverse_box": "Inverse Box",
+  "block.create_henry.kinetic_motor": "Kinetic Motor",
+  "block.create_henry.multimeter": "Multimeter",
+  "block.create_henry.powered_flywheel": "Powered Flywheel",
+  "block.create_henry.raw_rubber_block": "Block of Raw Rubber",
+  "block.create_henry.redstone_divider": "Redstone Divider",
+  "block.create_henry.rubber_block": "Block of Rubber",
+  "fluid.create_henry.sap": "Sap Liquid",
+  "item.create_henry.coal_piece": "Coal Piece",
+  "item.create_henry.incomplete_kinetic_mechanism": "Incomplete Kinetic Mechanism",
+  "item.create_henry.kinetic_mechanism": "Kinetic Mechanism",
+  "item.create_henry.lapis_lazuli_shard": "Lapis Lazuli Shard",
+  "item.create_henry.raw_rubber": "Raw Rubber",
+  "item.create_henry.rubber": "Rubber",
+  "itemGroup.create_henry.base": "Create: Henry"
+}

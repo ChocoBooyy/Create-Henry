@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "heatRequirement": "heated",
+  "ingredients": [
+    {
+      "item": "minecraft:diorite"
+    },
+    {
+      "item": "minecraft:bone_block"
+    }
+  ],
+  "results": [
+    {
+      "count": 2,
+      "item": "minecraft:calcite"
+    }
+  ]
+}

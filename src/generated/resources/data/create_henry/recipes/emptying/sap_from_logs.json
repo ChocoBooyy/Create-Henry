@@ -1,0 +1,14 @@
+{
+  "type": "create:emptying",
+  "ingredients": [
+    {
+      "tag": "forge:stripped_logs"
+    }
+  ],
+  "results": [
+    {
+      "amount": 100,
+      "fluid": "create_henry:sap"
+    }
+  ]
+}
