@@ -7,9 +7,9 @@ issueTrackerURL="https://github.com/ChocoBooyy/Create-Henry/issues"
     modId="create_henry"
     version="${file.jarVersion}"
     displayName="Create: Henry"
-    logoFile= "../pack.png" #optional
+    logoFile= "pack.png" #optional
     #credits="" #optional
-    authors="ChocoBoy, LopyLuna"
+    authors="ChocoBoy, TryMyWagon, LopyLuna"
     description='''
 Create: Henry is an addon for the Create mod that add random QoL, items, & blocks features that relates to old Create & New Create versions! It is also a continued version of the addon "Create: Dreams & Desires" for 1.20.1.
 '''
