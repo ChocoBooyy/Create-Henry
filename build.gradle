@@ -21,9 +21,15 @@ apply plugin: 'org.spongepowered.mixin'
 
 jarJar.enable()
 
+// Remove the "-all" suffix from the fat-jar
+tasks.named('jarJar') {
+    // for Gradle 5+:
+    archiveClassifier.set("")
+}
+
 group = 'com.chocoboy.create_henry'
 archivesBaseName = "Create-Henry-${artifact_minecraft_version}"
-version = mod_version
+version = mod_version+"-"+create
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
