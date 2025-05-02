@@ -4,7 +4,7 @@ import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.content.logistics.chute.AbstractChuteBlock;
 import com.simibubi.create.foundation.block.IBE;
-import net.createmod.catnip.levelWrappers.WrappedLevel;
+import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -67,7 +67,7 @@ public class IndustrialFanBlock extends DirectionalKineticBlock implements IBE<I
     }
 
     protected void blockUpdate(LevelAccessor worldIn, BlockPos pos) {
-        if (worldIn instanceof WrappedLevel)
+        if (worldIn instanceof WrappedWorld)
             return;
         notifyFanBlockEntity(worldIn, pos);
         if (worldIn.isClientSide())

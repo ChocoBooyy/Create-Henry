@@ -1,28 +1,27 @@
 package com.chocoboy.create_henry.registry;
 
+import com.chocoboy.create_henry.content.blocks.kinetics.negative_motor.HenryBlockStressDefaults;
+import com.chocoboy.create_henry.content.blocks.kinetics.negative_motor.NegativeMotorBlock;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllDisplaySources;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.content.decoration.encasing.CasingBlock;
+import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.content.kinetics.gauge.GaugeGenerator;
 import com.simibubi.create.content.kinetics.motor.CreativeMotorGenerator;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
+import com.simibubi.create.content.redstone.displayLink.source.KineticSpeedDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.KineticStressDisplaySource;
 import com.simibubi.create.foundation.data.*;
-import com.chocoboy.create_henry.infrastructure.config.HStress;
+import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -40,17 +39,18 @@ import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.PoweredF
 import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMotorBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlock;
+import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
 
-import static com.simibubi.create.api.behaviour.movement.MovementBehaviour.movementBehaviour;
-import static com.simibubi.create.api.behaviour.display.DisplaySource.displaySource;
+import java.util.function.Consumer;
+
+import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
+import static com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours.assignDataBehaviour;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.TagGen.*;
 import static com.tterrag.registrate.providers.RegistrateRecipeProvider.has;
 
 @SuppressWarnings({"unused", "removal", "all"})
 public class HenryBlocks {
-	private static final CreateRegistrate REGISTRATE = HenryCreate.registrate();
-
 	static {
 		REGISTRATE.setCreativeTab(HenryCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
@@ -71,28 +71,29 @@ public class HenryBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntry<CasingBlock> HYDRAULIC_CASING =
-			REGISTRATE.block("hydraulic_casing", CasingBlock::new)
-					.transform(BuilderTransformers.casing(() -> HenrySpriteShifts.HYDRAULIC_CASING))
-					.properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
-							.requiresCorrectToolForDrops()
-							.sound(SoundType.COPPER))
-					.transform(pickaxeOnly())
-					.lang("Hydraulic Casing")
-					.register();
-
-
-	public static final BlockEntry<CasingBlock> INDUSTRIAL_CASING =
-			REGISTRATE.block("industrial_casing", CasingBlock::new)
-			.transform(BuilderTransformers.casing(() -> HenrySpriteShifts.INDUSTRIAL_CASING))
-			.properties(p -> p
-					.mapColor(MapColor.TERRACOTTA_CYAN)
+	public static final BlockEntry<CasingBlock> HYDRAULIC_CASING = REGISTRATE.block("hydraulic_casing", CasingBlock::new)
+			.transform(BuilderTransformers.casing(() -> HenrySpriteShifts.HYDRAULIC_CASING))
+			.properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
 					.requiresCorrectToolForDrops()
-					.sound(SoundType.NETHERITE_BLOCK))
+					.sound(SoundType.COPPER))
+			.transform(pickaxeOnly())
+			.lang("Hydraulic Casing")
+			.item()
+			.build()
 			.register();
 
-	public static final BlockEntry<IndustrialFanBlock> INDUSTRIAL_FAN =
-			REGISTRATE.block("industrial_fan", IndustrialFanBlock::new)
+	public static final BlockEntry<CasingBlock> INDUSTRIAL_CASING = REGISTRATE.block("industrial_casing", CasingBlock::new)
+			.transform(BuilderTransformers.casing(() -> HenrySpriteShifts.INDUSTRIAL_CASING))
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_CYAN)
+					.requiresCorrectToolForDrops()
+					.sound(SoundType.NETHERITE_BLOCK))
+			.transform(pickaxeOnly())
+			.lang("Industrial Casing")
+			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<IndustrialFanBlock> INDUSTRIAL_FAN = REGISTRATE.block("industrial_fan", IndustrialFanBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.noOcclusion()
 					.mapColor(MapColor.TERRACOTTA_CYAN)
@@ -101,15 +102,14 @@ public class HenryBlocks {
 			.blockstate(BlockStateGen.directionalBlockProvider(true))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(pickaxeOnly())
-			.transform(HStress.setImpact(4.0))
-			.transform(HStress.setCapacity(16))
+			.transform(BlockStressDefaults.setImpact(4.0))
 			.recipe((c, p) -> {
 				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
 						.pattern("CIP")
 						.define('P', AllItems.PROPELLER.get())
 						.define('C', AllBlocks.COGWHEEL.get())
-						.define('I', HenryBlocks.INDUSTRIAL_CASING.get())
-						.unlockedBy("has_casing", has(HenryBlocks.INDUSTRIAL_CASING.get()))
+						.define('I', INDUSTRIAL_CASING.get())
+						.unlockedBy("has_casing", has(INDUSTRIAL_CASING.get()))
 						.save(p, HenryCreate.asResource("crafting/" + c.getName()));
 			})
 			.lang("Industrial Fan")
@@ -117,20 +117,19 @@ public class HenryBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<HydraulicPressBlock> HYDRAULIC_PRESS =
-			REGISTRATE.block("hydraulic_press", HydraulicPressBlock::new)
+
+	public static final BlockEntry<HydraulicPressBlock> HYDRAULIC_PRESS = REGISTRATE.block("hydraulic_press", HydraulicPressBlock::new)
 			.initialProperties(SharedProperties::copperMetal)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_ORANGE))
 			.transform(pickaxeOnly())
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
-			.transform(HStress.setImpact(64.0))
+			.transform(BlockStressDefaults.setImpact(64.0))
 			.item(AssemblyOperatorBlockItem::new)
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<BoreBlock> BORE_BLOCK =
-			REGISTRATE.block("bore_block", BoreBlock::new)
+	public static final BlockEntry<BoreBlock> BORE_BLOCK = REGISTRATE.block("bore_block", BoreBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.mapColor(MapColor.STONE))
 			.properties(p -> p.sound(new ForgeSoundType(0.9f, 1.25f, () -> SoundEvents.NETHERITE_BLOCK_BREAK,
@@ -153,39 +152,36 @@ public class HenryBlocks {
 			.build()
 			.register();
 
-	public static final BlockEntry<MultiMeterBlock> MULTIMETER =
-			REGISTRATE.block("multimeter", MultiMeterBlock::new)
+	public static final BlockEntry<MultiMeterBlock> MULTIMETER = REGISTRATE.block("multimeter", MultiMeterBlock::new)
 			.initialProperties(SharedProperties::wooden)
 			.properties(p -> p.mapColor(MapColor.PODZOL))
 			.transform(axeOrPickaxe())
-			.transform(HStress.setNoImpact())
+			.transform(BlockStressDefaults.setNoImpact())
 			.blockstate(new GaugeGenerator()::generate)
-			.transform(displaySource(AllDisplaySources.KINETIC_SPEED))
-			.transform(displaySource(AllDisplaySources.KINETIC_STRESS))
+			.onRegister(assignDataBehaviour(new KineticSpeedDisplaySource(), "kinetic_speed"))
+			.onRegister(assignDataBehaviour(new KineticStressDisplaySource(), "kinetic_stress"))
 			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 2)
 					.requires(AllBlocks.STRESSOMETER.get())
 					.requires(AllBlocks.SPEEDOMETER.get())
 					.unlockedBy("has_compass", has(Items.COMPASS))
 					.save(p, HenryCreate.asResource("crafting/multimeter")))
 			.item()
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.transform(ModelGen.customItemModel("gauge", "_", "item"))
 			.register();
 
-	public static final BlockEntry<RedstoneDividerBlock> REDSTONE_DIVIDER =
-			REGISTRATE.block("redstone_divider", RedstoneDividerBlock::new)
+	public static final BlockEntry<RedstoneDividerBlock> REDSTONE_DIVIDER = REGISTRATE.block("redstone_divider", RedstoneDividerBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(HStress.setNoImpact())
+			.transform(BlockStressDefaults.setNoImpact())
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> {
-			int power = s.getValue(BlockStateProperties.POWER);
+				int power = s.getValue(BlockStateProperties.POWER);
 				return AssetLookup.partialBaseModel(c, p, "power_" + (
-				power == 0 || power == 1 || power == 2 ? 0 :
-				power == 3 || power == 4 || power == 5 ? 1 :
-				power == 6 || power == 7 || power == 8 ? 2 :
-				power == 9 || power == 10 || power == 11 ? 3 : 4));
+						power == 0 || power == 1 || power == 2 ? 0 :
+								power == 3 || power == 4 || power == 5 ? 1 :
+										power == 6 || power == 7 || power == 8 ? 2 :
+												power == 9 || power == 10 || power == 11 ? 3 : 4));
 			}))
 			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 					.requires(AllBlocks.ANDESITE_CASING.get())
@@ -197,12 +193,11 @@ public class HenryBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<InverseBoxBlock> INVERSE_BOX =
-			REGISTRATE.block("inverse_box", InverseBoxBlock::new)
+	public static final BlockEntry<InverseBoxBlock> INVERSE_BOX = REGISTRATE.block("inverse_box", InverseBoxBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(HStress.setNoImpact())
+			.transform(BlockStressDefaults.setNoImpact())
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.axisBlockProvider(true))
 			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
@@ -214,8 +209,8 @@ public class HenryBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<KineticMotorBlock> KINETIC_MOTOR =
-			REGISTRATE.block("kinetic_motor", KineticMotorBlock::new)
+	public static final BlockEntry<KineticMotorBlock> KINETIC_MOTOR = REGISTRATE
+			.block("kinetic_motor", KineticMotorBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY))
 			.tag(AllTags.AllBlockTags.SAFE_NBT.tag)
@@ -226,8 +221,22 @@ public class HenryBlocks {
 					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get()))
 					.save(p, HenryCreate.asResource("crafting/kinetics/kinetic_motor")))
 			.blockstate(new CreativeMotorGenerator()::generate)
-			.transform(HStress.setCapacity(48))
-			.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
+			.transform(BlockStressDefaults.setCapacity(48))
+			.transform(BlockStressDefaults.setGeneratorSpeed(() -> Couple.create(0, 32)))
+			.item()
+			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<NegativeMotorBlock> NEGATIVE_MOTOR = REGISTRATE
+			.block("negative_motor", NegativeMotorBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY))
+			.tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+			.transform(axeOrPickaxe())
+			.blockstate(new CreativeMotorGenerator()::generate)
+			.transform(HenryBlockStressDefaults.setImpact(() ->
+					Couple.create(1.0, 1.0)
+			))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -240,21 +249,9 @@ public class HenryBlocks {
 					.properties(BlockBehaviour.Properties::noOcclusion)
 					.transform(pickaxeOnly())
 					.tag(AllTags.AllBlockTags.BRITTLE.tag)
-					.recipe((c, p) -> {
-						ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
-								.pattern("AAB")
-								.pattern("ACD")
-								.pattern("AAB")
-								.define('A', AllItems.BRASS_SHEET)
-								.define('B', AllItems.BRASS_INGOT)
-								.define('C', AllBlocks.BRASS_CASING)
-								.define('D', Ingredient.of(Blocks.PISTON , Blocks.STICKY_PISTON))
-								.unlockedBy("has_" + c.getName(), has(c.get()))
-								.save(p, HenryCreate.asResource("crafting/" + c.getName()));
-					})
 					.blockstate(new FurnaceEngineGenerator()::generate)
-					.transform(HStress.setCapacity(256.0))
-					.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
+					.transform(BlockStressDefaults.setCapacity(256.0))
+					.transform(BlockStressDefaults.setGeneratorSpeed(FurnaceEngineBlock::getSpeedRange))
 					.item()
 					.transform(ModelGen.customItemModel())
 					.register();
@@ -269,5 +266,7 @@ public class HenryBlocks {
 					.register();
 
 	// Load this class
+
 	public static void register() {}
+
 }

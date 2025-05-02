@@ -5,7 +5,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import net.createmod.catnip.platform.CatnipServices;
+import com.simibubi.create.foundation.utility.RegisteredObjects;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -32,6 +32,8 @@ public abstract class HenryProcessingRecipeGen extends CreateRecipeProvider {
         GENERATORS.add(new SandingRecipeGen(output));
         GENERATORS.add(new FreezingRecipeGen(output));
         GENERATORS.add(new SeethingRecipeGen(output));
+        GENERATORS.add(new WitheringRecipeGen(output));
+        GENERATORS.add(new DragonBreathingRecipeGen(output));
         GENERATORS.add(new ItemApplicationRecipeGen(output));
         GENERATORS.add(new MixingRecipeGen(output));
         GENERATORS.add(new EmptyingRecipeGen(output));
@@ -67,7 +69,7 @@ public abstract class HenryProcessingRecipeGen extends CreateRecipeProvider {
             ItemLike itemLike = singleIngredient.get();
             transform
                     .apply(new ProcessingRecipeBuilder<>(serializer.getFactory(),
-                            new ResourceLocation(namespace, CatnipServices.REGISTRIES.getKeyOrThrow(itemLike.asItem())
+                            new ResourceLocation(namespace, RegisteredObjects.getKeyOrThrow(itemLike.asItem())
                                     .getPath())).withItemIngredients(Ingredient.of(itemLike)))
                     .build(c);
         };
@@ -120,16 +122,10 @@ public abstract class HenryProcessingRecipeGen extends CreateRecipeProvider {
 
     protected Supplier<ResourceLocation> idWithSuffix(Supplier<ItemLike> item, String suffix) {
         return () -> {
-            ResourceLocation registryName = CatnipServices.REGISTRIES.getKeyOrThrow(item.get()
+            ResourceLocation registryName = RegisteredObjects.getKeyOrThrow(item.get()
                     .asItem());
             return HenryCreate.asResource(registryName.getPath() + suffix);
         };
     }
-
-    //@Override
-    //public String getName() {
-    //    return "Create's Processing Recipes: " + getRecipeType().getId()
-    //            .getPath();
-    //}
 
 }

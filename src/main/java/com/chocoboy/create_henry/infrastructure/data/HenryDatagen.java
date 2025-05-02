@@ -1,15 +1,14 @@
 package com.chocoboy.create_henry.infrastructure.data;
 
-import com.chocoboy.create_henry.content.data_recipes.EmptyingRecipeGen;
 import com.tterrag.registrate.providers.ProviderType;
-import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;
 import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.content.data_recipes.AdvancedCraftingRecipeGen;
 import com.chocoboy.create_henry.content.data_recipes.HenryProcessingRecipeGen;
-import com.chocoboy.create_henry.infrastructure.ponder.HenryPonderPlugin;
+import com.chocoboy.create_henry.content.data_recipes.AdvancedCraftingRecipeGen;
+import com.chocoboy.create_henry.infrastructure.ponder.HenryPonderTags;
+import com.chocoboy.create_henry.infrastructure.ponder.HenryPonderIndex;
 import com.chocoboy.create_henry.registry.HenryLangPartial;
 
 import java.util.function.BiConsumer;
@@ -31,7 +30,7 @@ public class HenryDatagen {
 	private static void addExtraRegistrateData() {
 		HenryRegistrateTags.addGenerators();
 
-		HenryCreate.registrate().addDataGenerator(ProviderType.LANG, provider -> {
+		HenryCreate.REGISTRATE.addDataGenerator(ProviderType.LANG, provider -> {
 			BiConsumer<String, String> langConsumer = provider::add;
 
 			providePartialLang(langConsumer);
@@ -44,7 +43,7 @@ public class HenryDatagen {
 	}
 
 	private static void providePonderLang() {
-		// Register this since FMLClientSetupEvent does not run during datagen
-		PonderIndex.addPlugin(new HenryPonderPlugin());
+		HenryPonderTags.register();
+		HenryPonderIndex.register();
 	}
 }

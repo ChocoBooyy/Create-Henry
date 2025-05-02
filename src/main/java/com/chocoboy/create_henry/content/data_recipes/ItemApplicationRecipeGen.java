@@ -11,6 +11,7 @@ import com.chocoboy.create_henry.registry.HenryItems;
 
 import static com.chocoboy.create_henry.registry.HenryTags.forgeItemTag;
 
+@SuppressWarnings({"unused"})
 public class ItemApplicationRecipeGen extends HenryProcessingRecipeGen {
     public ItemApplicationRecipeGen(PackOutput generator) {
         super(generator);

@@ -1,35 +1,13 @@
 package com.chocoboy.create_henry.registry;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
 import com.chocoboy.create_henry.HenryCreate;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
-
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.AllTags.AllFluidTags;
-import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.content.fluids.VirtualFluid;
-import com.simibubi.create.content.fluids.potion.PotionFluid;
-import com.simibubi.create.content.fluids.potion.PotionFluid.PotionFluidType;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
+import com.simibubi.create.foundation.utility.Color;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import com.tterrag.registrate.util.entry.FluidEntry;
-
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fluids.FluidInteractionRegistry;
-import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-
-import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer.FogMode;
@@ -40,10 +18,25 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
+import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
+import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
+
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
+
 
 public class HenryFluids {
-	private static final CreateRegistrate REGISTRATE = HenryCreate.registrate();
 
 	static {
 		REGISTRATE.setCreativeTab(HenryCreativeModeTabs.BASE_CREATIVE_TAB);
@@ -56,8 +49,7 @@ public class HenryFluids {
 
 	// Load this class
 
-	public static void register() {
-	}
+	public static void register() {}
 
 	public static abstract class TintedFluidType extends FluidType {
 

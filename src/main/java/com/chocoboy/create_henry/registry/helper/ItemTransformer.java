@@ -7,7 +7,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.content.items.port.ConversionItem;
 
 import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
 
@@ -15,22 +14,22 @@ import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
 public class ItemTransformer {
 
     @Deprecated(forRemoval=true)
-    public static ItemEntry<ConversionItem> itemConversion(String name, ItemEntry<? extends Item> conversion, boolean isBlock) {return
-            REGISTRATE.item(name, p -> new ConversionItem(p, conversion.get()))
-            .model((c, p) -> p.withExistingParent(c.getId().getPath(),
-                    new ResourceLocation("item/generated")).texture("layer0",
-                    new ResourceLocation(HenryCreate.MOD_ID, (isBlock ? "block/" : "item/") + conversion.getId().getPath())))
-            .lang("NA | INVALID ITEM")
-            .register();
+    public static ItemEntry<com.chocoboy.create_henry.content.items.port.ConversionItem> itemConversion(String name, ItemEntry<? extends Item> conversion, boolean isBlock) {return
+            REGISTRATE.item(name, p -> new com.chocoboy.create_henry.content.items.port.ConversionItem(p, conversion.get()))
+                    .model((c, p) -> p.withExistingParent(c.getId().getPath(),
+                            new ResourceLocation("item/generated")).texture("layer0",
+                            new ResourceLocation(HenryCreate.MOD_ID, (isBlock ? "block/" : "item/") + conversion.getId().getPath())))
+                    .lang("NA | INVALID ITEM")
+                    .register();
     }
     @Deprecated(forRemoval=true)
-    public static ItemEntry<ConversionItem> itemConversion(String name, BlockEntry<? extends Block> conversion, boolean isBlock) {return
-            REGISTRATE.item(name, p -> new ConversionItem(p, conversion.get()))
-            .model((c, p) -> p.withExistingParent(c.getId().getPath(),
-                    new ResourceLocation("item/generated")).texture("layer0",
-                    new ResourceLocation(HenryCreate.MOD_ID, (isBlock ? "block/" : "item/") + conversion.getId().getPath())))
-            .lang("NA | INVALID ITEM")
-            .register();
+    public static ItemEntry<com.chocoboy.create_henry.content.items.port.ConversionItem> itemConversion(String name, BlockEntry<? extends Block> conversion, boolean isBlock) {return
+            REGISTRATE.item(name, p -> new com.chocoboy.create_henry.content.items.port.ConversionItem(p, conversion.get()))
+                    .model((c, p) -> p.withExistingParent(c.getId().getPath(),
+                            new ResourceLocation("item/generated")).texture("layer0",
+                            new ResourceLocation(HenryCreate.MOD_ID, (isBlock ? "block/" : "item/") + conversion.getId().getPath())))
+                    .lang("NA | INVALID ITEM")
+                    .register();
     }
 
     public static ItemEntry<Item> itemEntry(String name) {return REGISTRATE.item(name, Item::new)
@@ -45,8 +44,8 @@ public class ItemTransformer {
     @SafeVarargs
     public static ItemEntry<Item> itemEntryTagged(String name, TagKey<Item>... tags) {
         return REGISTRATE.item(name, Item::new)
-            .tag(tags)
-            .register();
+                .tag(tags)
+                .register();
     }
 
     @SafeVarargs

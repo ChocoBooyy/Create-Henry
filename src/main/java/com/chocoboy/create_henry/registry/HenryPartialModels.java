@@ -1,6 +1,6 @@
 package com.chocoboy.create_henry.registry;
 
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.chocoboy.create_henry.HenryCreate;
 
 @SuppressWarnings({"all"})
@@ -20,7 +20,7 @@ public class HenryPartialModels {
 		GAUGE_HEAD = block("gauge/multimeter/head");
 
 	private static PartialModel block(String path) {
-		return PartialModel.of(HenryCreate.asResource("block/" + path));
+		return new PartialModel(HenryCreate.asResource("block/" + path));
 	}
 
 

@@ -7,23 +7,19 @@ issueTrackerURL="https://github.com/ChocoBooyy/Create-Henry/issues"
     modId="create_henry"
     version="${file.jarVersion}"
     displayName="Create: Henry"
-    logoFile= "pack.png" #optional
-    #credits="" #optional
+    displayURL="https://modrinth.com/mod/create-henry"
+    logoFile= "pack.png"
+    credits="LopyLuna"
     authors="ChocoBoy, TryMyWagon, LopyLuna"
     description='''
 Create: Henry is an addon for the Create mod that add random QoL, items, & blocks features that relates to old Create & New Create versions! It is also a continued version of the addon "Create: Dreams & Desires" for 1.20.1.
 '''
 
-[[dependencies.create_henry]] #optional
-    # the modid of the dependency
-    modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
-    mandatory=true #mandatory
-    # The version range of the dependency
-    versionRange="[47,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+[[dependencies.create_henry]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
     ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 
 [[dependencies.create_henry]]
@@ -36,6 +32,6 @@ Create: Henry is an addon for the Create mod that add random QoL, items, & block
 [[dependencies.create_henry]]
     modId="create"
     mandatory=true
-    versionRange="[6.0.2,6.1.0)"
+    versionRange="[0.5.1.f,)"
     ordering="AFTER"
     side="BOTH"

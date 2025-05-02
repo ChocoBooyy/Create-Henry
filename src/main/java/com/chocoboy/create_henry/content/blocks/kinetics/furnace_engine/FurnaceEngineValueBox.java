@@ -1,16 +1,14 @@
 package com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine;
 
-import dev.engine_room.flywheel.lib.transform.TransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Pointing;
+import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.createmod.catnip.math.Pointing;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.math.AngleHelper;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -32,13 +30,13 @@ public class FurnaceEngineValueBox extends ValueBoxTransform.Sided {
 		boolean recessed = roll % 180 == 0;
 		if (engineFacing.getAxis() == Axis.Y)
 			recessed ^= state.getValue(FurnaceEngineBlock.FACING)
-				.getAxis() == Axis.X;
+					.getAxis() == Axis.X;
 
 		return !recessed;
 	}
 
 	@Override
-	public Vec3 getLocalOffset(LevelAccessor level, BlockPos pos, BlockState state) {
+	public Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		Direction engineFacing = FurnaceEngineBlock.getFacing(state);
 
@@ -61,11 +59,11 @@ public class FurnaceEngineValueBox extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	public void rotate(LevelAccessor level, BlockPos pos, BlockState state, PoseStack ms) {
+	public void rotate(BlockState state, PoseStack ms) {
 		Direction facing = FurnaceEngineBlock.getFacing(state);
 
 		if (facing.getAxis() == Axis.Y) {
-			super.rotate(level, pos, state, ms);
+			super.rotate(state, ms);
 			return;
 		}
 
@@ -75,10 +73,10 @@ public class FurnaceEngineValueBox extends ValueBoxTransform.Sided {
 				roll = p.getXRotation();
 
 		float yRot = AngleHelper.horizontalAngle(facing) + (facing == Direction.DOWN ? 180 : 0);
-		TransformStack.of(ms)
-			.rotateYDegrees(yRot)
-			.rotateXDegrees(facing == Direction.DOWN ? -90 : 90)
-			.rotateYDegrees(roll);
+		TransformStack.cast(ms)
+				.rotateY(yRot)
+				.rotateX(facing == Direction.DOWN ? -90 : 90)
+				.rotateY(roll);
 	}
 
 	@Override

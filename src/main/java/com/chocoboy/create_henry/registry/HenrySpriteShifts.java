@@ -12,16 +12,6 @@ public class HenrySpriteShifts {
             INDUSTRIAL_CASING = omni("industrial_casing"),
             HYDRAULIC_CASING = omni("hydraulic_casing");
 
-    public static final CTSpriteShiftEntry
-            INDUSTRIAL_CASING_COGWHEEL_SIDE = vertical("industrial_encased_cogwheel_side"),
-            HYDRAULIC_CASING_COGWHEEL_SIDE = vertical("hydraulic_encased_cogwheel_side");
-
-    public static final CTSpriteShiftEntry
-            INDUSTRIAL_CASING_COGWHEEL_OTHERSIDE = horizontal("industrial_encased_cogwheel_side"),
-            HYDRAULIC_CASING_COGWHEEL_OTHERSIDE = horizontal("hydraulic_encased_cogwheel_side");
-
-    //
-
     private static CTSpriteShiftEntry omni(String name) {
         return getCT(AllCTTypes.OMNIDIRECTIONAL, name);
     }

@@ -24,18 +24,7 @@ import static net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER;
 public enum HenryPackets {
 
 	// Client to Server
-	OBSERVER_GAUGEOMETER(GaugeObservedPacket.class, GaugeObservedPacket::new, PLAY_TO_SERVER),
-
-	//CONFIGURE_WORLDSHAPER(ConfigureWorldshaperPacket.class, ConfigureWorldshaperPacket::new, PLAY_TO_SERVER),
-	//TOOLBOX_EQUIP(ToolboxEquipPacket.class, ToolboxEquipPacket::new, PLAY_TO_SERVER),
-	//TOOLBOX_DISPOSE_ALL(ToolboxDisposeHenryPacket.class, ToolboxDisposeHenryPacket::new, PLAY_TO_SERVER),
-
-	// Server to Client
-	//BEAM_EFFECT(ZapperBeamPacket.class, ZapperBeamPacket::new, PLAY_TO_CLIENT),
-	//POTATO_CANNON(PotatoCannonPacket.class, PotatoCannonPacket::new, PLAY_TO_CLIENT),
-	//SYNC_POTATO_PROJECTILE_TYPES(PotatoProjectileTypeManager.SyncPacket.class,
-	//	PotatoProjectileTypeManager.SyncPacket::new, PLAY_TO_CLIENT),
-	;
+	OBSERVER_GAUGEOMETER(GaugeObservedPacket.class, GaugeObservedPacket::new, PLAY_TO_SERVER);
 
 	public static final ResourceLocation CHANNEL_NAME = HenryCreate.asResource("main");
 	public static final int NETWORK_VERSION = 3;
@@ -45,16 +34,16 @@ public enum HenryPackets {
 	private PacketType<?> packetType;
 
 	<T extends SimplePacketBase> HenryPackets(Class<T> type, Function<FriendlyByteBuf, T> factory,
-		NetworkDirection direction) {
+												NetworkDirection direction) {
 		packetType = new PacketType<>(type, factory, direction);
 	}
 
 	public static void registerPackets() {
 		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
-			.serverAcceptedVersions(NETWORK_VERSION_STR::equals)
-			.clientAcceptedVersions(NETWORK_VERSION_STR::equals)
-			.networkProtocolVersion(() -> NETWORK_VERSION_STR)
-			.simpleChannel();
+				.serverAcceptedVersions(NETWORK_VERSION_STR::equals)
+				.clientAcceptedVersions(NETWORK_VERSION_STR::equals)
+				.networkProtocolVersion(() -> NETWORK_VERSION_STR)
+				.simpleChannel();
 
 		for (HenryPackets packet : values())
 			packet.packetType.register();
@@ -66,8 +55,8 @@ public enum HenryPackets {
 
 	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
 		getChannel().send(
-			PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
-			message);
+				PacketDistributor.NEAR.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
+				message);
 	}
 
 	private static class PacketType<T extends SimplePacketBase> {
@@ -94,10 +83,10 @@ public enum HenryPackets {
 
 		private void register() {
 			getChannel().messageBuilder(type, index++, direction)
-				.encoder(encoder)
-				.decoder(decoder)
-				.consumerNetworkThread(handler)
-				.add();
+					.encoder(encoder)
+					.decoder(decoder)
+					.consumerNetworkThread(handler)
+					.add();
 		}
 	}
 

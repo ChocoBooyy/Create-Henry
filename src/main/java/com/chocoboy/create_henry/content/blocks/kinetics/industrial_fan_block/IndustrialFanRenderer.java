@@ -1,12 +1,12 @@
 package com.chocoboy.create_henry.content.blocks.kinetics.industrial_fan_block;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import net.createmod.catnip.render.CachedBuffers;
-import net.createmod.catnip.render.SuperByteBuffer;
-import net.createmod.catnip.animation.AnimationTickHolder;
+import com.simibubi.create.foundation.render.CachedBufferer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,7 +28,7 @@ public class IndustrialFanRenderer extends KineticBlockEntityRenderer<Industrial
     @Override
     protected void renderSafe(IndustrialFanBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
                               int light, int overlay) {
-        if (VisualizationManager.supportsVisualization(be.getLevel())) return;
+        if (Backend.canUseInstancing(be.getLevel())) return;
 
         Direction direction = be.getBlockState()
                 .getValue(FACING);
@@ -38,9 +38,9 @@ public class IndustrialFanRenderer extends KineticBlockEntityRenderer<Industrial
         int lightInFront = LevelRenderer.getLightColor(be.getLevel(), be.getBlockPos().relative(direction));
 
         SuperByteBuffer shaftHalf =
-                CachedBuffers.partialFacing(HenryPartialModels.INDUSTRIAL_FAN_POWER, be.getBlockState(), direction.getOpposite());
+                CachedBufferer.partialFacing(HenryPartialModels.INDUSTRIAL_FAN_POWER, be.getBlockState(), direction.getOpposite());
         SuperByteBuffer fanInner =
-                CachedBuffers.partialFacing(HenryPartialModels.INDUSTRIAL_FAN_INNER, be.getBlockState(), direction.getOpposite());
+                CachedBufferer.partialFacing(HenryPartialModels.INDUSTRIAL_FAN_INNER, be.getBlockState(), direction.getOpposite());
 
         float time = AnimationTickHolder.getRenderTime(be.getLevel());
         float speed = be.getSpeed() * 5;

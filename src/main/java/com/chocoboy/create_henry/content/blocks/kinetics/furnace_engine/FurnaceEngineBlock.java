@@ -5,11 +5,12 @@ import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.kinetics.flywheel.FlywheelBlock;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.placement.IPlacementHelper;
+import com.simibubi.create.foundation.placement.PlacementHelpers;
+import com.simibubi.create.foundation.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import net.createmod.catnip.data.Iterate;
-import net.createmod.catnip.placement.IPlacementHelper;
-import net.createmod.catnip.placement.PlacementHelpers;
-import net.createmod.catnip.placement.PlacementOffset;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,31 +53,22 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-@SuppressWarnings({"all"})
+@SuppressWarnings({"deprecation"})
 @ParametersAreNonnullByDefault
 @Mod.EventBusSubscriber
 public class FurnaceEngineBlock extends FaceAttachedHorizontalDirectionalBlock implements SimpleWaterloggedBlock, IWrenchable, IBE<FurnaceEngineBlockEntity> {
 
-    private static final int placementHelperId = PlacementHelpers.register(
-            new FurnaceEngineBlock.PlacementHelper()
-    );
+    private static final int placementHelperId = PlacementHelpers.register(new FurnaceEngineBlock.PlacementHelper());
 
     public FurnaceEngineBlock(Properties pProperties) {
         super(pProperties);
-        this.registerDefaultState(
-                this.stateDefinition.any()
-                        .setValue(FACE, AttachFace.FLOOR)
-                        .setValue(FACING, Direction.NORTH)
-                        .setValue(BlockStateProperties.WATERLOGGED, false)
-        );
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(BlockStateProperties.WATERLOGGED, false));
 
     }
 
     @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        return canAttach(pLevel, pPos,
-                getConnectedDirection(pState).getOpposite()) &&
-                isValidPosition(pLevel,pPos.relative(getConnectedDirection(pState).getOpposite()),getConnectedDirection(pState));
+        return canAttach(pLevel, pPos, getConnectedDirection(pState).getOpposite()) && isValidPosition(pLevel,pPos.relative(getConnectedDirection(pState).getOpposite()),getConnectedDirection(pState));
     }
 
     public static boolean canAttach(LevelReader pReader, BlockPos pPos, Direction pDirection) {
@@ -99,7 +91,6 @@ public class FurnaceEngineBlock extends FaceAttachedHorizontalDirectionalBlock i
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder.add(FACE, FACING, BlockStateProperties.WATERLOGGED));
     }
-
     public @NotNull FluidState getFluidState(BlockState state) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
@@ -289,5 +280,9 @@ public class FurnaceEngineBlock extends FaceAttachedHorizontalDirectionalBlock i
                     s -> BlockHelper.copyProperties(s, HenryBlocks.POWERED_FLYWHEEL.getDefaultState())
                             .setValue(PoweredFlywheelBlock.AXIS, axis));
         }
+    }
+
+    public static Couple<Integer> getSpeedRange() {
+        return Couple.create(0, 32);
     }
 }

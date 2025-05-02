@@ -1,25 +1,21 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.content.recipes.*;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.minecraft.core.registries.Registries;
+import com.chocoboy.create_henry.registry.helper.Lang;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
-
-import net.createmod.catnip.lang.Lang;
+import com.chocoboy.create_henry.HenryCreate;
+import com.chocoboy.create_henry.content.recipes.*;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -28,7 +24,9 @@ public enum HenryRecipeTypes implements IRecipeTypeInfo {
 
 	SANDING(SandingRecipe::new),
 	FREEZING(FreezingRecipe::new),
-	SEETHING(SeethingRecipe::new);
+	SEETHING(SeethingRecipe::new),
+	WITHERING(WitheringRecipe::new),
+	DRAGON_BREATHING(DragonBreathingRecipe::new);
 
 	private final ResourceLocation id;
 	private final RegistryObject<RecipeSerializer<?>> serializerObject;

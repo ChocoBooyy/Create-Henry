@@ -1,8 +1,6 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.HenryCreate;
-import com.simibubi.create.Create;
-import net.createmod.catnip.lang.Lang;
+import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -21,6 +19,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import com.chocoboy.create_henry.HenryCreate;
 
 import java.util.Collections;
 
@@ -50,14 +49,15 @@ public class HenryTags {
 		return forgeTag(ForgeRegistries.FLUIDS, path);
 	}
 
+	public static TagKey<Item> minecraftItemTag(String path) {
+		return ItemTags.create(new ResourceLocation("minecraft", path));
+	}
+
 	public enum NameSpace {
 
 		MOD(HenryCreate.MOD_ID, false, true),
 		CREATE("create"),
-		FORGE("forge"),
-		TIC("tconstruct"),
-		QUARK("quark")
-
+		FORGE("forge")
 		;
 
 		public final String id;
@@ -80,6 +80,8 @@ public class HenryTags {
 		FAN_PROCESSING_CATALYSTS_SANDING(NameSpace.MOD, "fan_processing_catalysts/sanding"),
 		FAN_PROCESSING_CATALYSTS_FREEZING(NameSpace.MOD, "fan_processing_catalysts/freezing"),
 		FAN_PROCESSING_CATALYSTS_SEETHING(NameSpace.MOD, "fan_processing_catalysts/seething"),
+		FAN_PROCESSING_CATALYSTS_WITHERING(NameSpace.MOD, "fan_processing_catalysts/withering"),
+		FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING(NameSpace.MOD, "fan_processing_catalysts/dragon_breathing"),
 		INDUSTRIAL_FAN_HEATER,
 		INDUSTRIAL_FAN_TRANSPARENT,
 		BACKPACKS,
@@ -137,8 +139,13 @@ public class HenryTags {
 
 		SEETHABLE,
 		SANDABLE,
-		FREEZABLE
+		FREEZABLE,
+		WITHERABLE,
+		DRAGON_BREATHABLE,
+		ADDITIONAL_DROPS_TOOL,
 
+		MEAT(NameSpace.MOD, "meat"),
+		IRON_PLATE(FORGE, "plates/iron")
 		;
 
 		public final TagKey<Item> tag;
@@ -189,6 +196,9 @@ public class HenryTags {
 		FAN_PROCESSING_CATALYSTS_SANDING(NameSpace.MOD, "fan_processing_catalysts/sanding"),
 		FAN_PROCESSING_CATALYSTS_FREEZING(NameSpace.MOD, "fan_processing_catalysts/freezing"),
 		FAN_PROCESSING_CATALYSTS_SEETHING(NameSpace.MOD, "fan_processing_catalysts/seething"),
+		FAN_PROCESSING_CATALYSTS_WITHERING(NameSpace.MOD, "fan_processing_catalysts/withering"),
+		FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING(NameSpace.MOD, "fan_processing_catalysts/dragon_breathing"),
+		INDUSTRIAL_FAN_HEATER,
 
 		SAP(FORGE)
 

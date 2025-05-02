@@ -1,16 +1,17 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.content.recipes.*;
-import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_fan_block.IndustrialFanBlock;
+import com.chocoboy.create_henry.content.recipes.WitheringRecipe;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
+import com.simibubi.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.trains.CubeParticleData;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
+import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.VecHelper;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
-import net.createmod.catnip.math.VecHelper;
-import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -24,6 +25,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,46 +35,33 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import com.chocoboy.create_henry.HenryCreate;
-
+import com.chocoboy.create_henry.content.recipes.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class HenryFanProcessingTypes {
     public static final SandingType SANDING = register("sanding", new SandingType());
     public static final FreezingType FREEZING = register("freezing", new FreezingType());
     public static final SeethingType SEETHING = register("seething", new SeethingType());
-
-    private static final Map<String, FanProcessingType> LEGACY_NAME_MAP;
+    public static final WitheringType WITHERING = register("withering", new WitheringType());
+    public static final DragonBreathingType DRAGON_BREATHING = register("dragon_breathing", new DragonBreathingType());
 
     static {
         Object2ReferenceOpenHashMap<String, FanProcessingType> map = new Object2ReferenceOpenHashMap<>();
         map.put("SANDING", SANDING);
         map.put("FREEZING", FREEZING);
         map.put("SEETHING", SEETHING);
+        map.put("WITHERING", WITHERING);
+        map.put("DRAGON_BREATHING", DRAGON_BREATHING);
         map.trim();
-        LEGACY_NAME_MAP = map;
     }
 
-    private static <T extends FanProcessingType> T register(String name, T type) {
-        return Registry.register(CreateBuiltInRegistries.FAN_PROCESSING_TYPE, HenryCreate.asResource(name), type);
+    private static <T extends FanProcessingType> T register(String id, T type) {
+        FanProcessingTypeRegistry.register(HenryCreate.asResource(id), type);
+        return type;
     }
 
-    @Nullable
-    public static FanProcessingType ofLegacyName(String name) {
-        return LEGACY_NAME_MAP.get(name);
-    }
-
-    @Nullable
-    public static FanProcessingType parseLegacy(String str) {
-        FanProcessingType type = ofLegacyName(str);
-        if (type != null) {
-            return type;
-        }
-        return FanProcessingType.parse(str);
-    }
-
-    public static void init() {
+    public static void register() {
     }
 
     public static class SandingType implements FanProcessingType {
@@ -253,7 +243,6 @@ public class HenryFanProcessingTypes {
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20, 1, false, false));
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0, false, false));
             }
-
         }
     }
 
@@ -378,6 +367,293 @@ public class HenryFanProcessingTypes {
                 level.addFreshEntity(stray);
                 skeleton.discard();
             }
+        }
+    }
+
+    public static class WitheringType implements FanProcessingType {
+        private static final WitheringRecipe.WitheringWrapper WITHERING_WRAPPER = new WitheringRecipe.WitheringWrapper();
+
+        @Override
+        public boolean isValidAt(Level level, BlockPos pos) {
+            FluidState fluidState = level.getFluidState(pos);
+            if (HenryTags.AllFluidTags.FAN_PROCESSING_CATALYSTS_WITHERING.matches(fluidState)) {
+                return true;
+            }
+            BlockState blockState = level.getBlockState(pos);
+            return HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_WITHERING.matches(blockState);
+        }
+
+        @Override
+        public int getPriority() {
+            return 691300;
+        }
+
+        @Override
+        public boolean canProcess(ItemStack stack, Level level) {
+            WITHERING_WRAPPER.setItem(0, stack);
+            Optional<WitheringRecipe> recipe = HenryRecipeTypes.WITHERING.find(WITHERING_WRAPPER, level);
+            return recipe.isPresent();
+        }
+
+        @Override
+        @Nullable
+        public List<ItemStack> process(ItemStack stack, Level level) {
+            WITHERING_WRAPPER.setItem(0, stack);
+            Optional<WitheringRecipe> recipe = HenryRecipeTypes.WITHERING.find(WITHERING_WRAPPER, level);
+            return recipe.map(witheringRecipe -> RecipeApplier.applyRecipeOn(level, stack, witheringRecipe)).orElse(null);
+        }
+
+        @Override
+        public void spawnProcessingParticles(Level level, Vec3 pos) {
+            if (level.random.nextInt(8) != 0)
+                return;
+            Vector3f color = new Color(0x1e0f3d).asVectorF();
+            level.addParticle(new DustParticleOptions(color, 1), pos.x + (level.random.nextFloat() - .5f) * .5f,
+                    pos.y + .5f, pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+            level.addParticle(ParticleTypes.SOUL, pos.x, pos.y + .45f, pos.z, 0, 0, 0);
+            level.addParticle(ParticleTypes.SOUL, pos.x + (level.random.nextFloat() - .5f) * .5f, pos.y + .5f,
+                    pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+        }
+
+        @Override
+        public void morphAirFlow(AirFlowParticleAccess particleAccess, RandomSource random) {
+            particleAccess.setColor(Color.mixColors(0x180c30, 0x1e0f3d, random.nextFloat()));
+            particleAccess.setAlpha(1f);
+            if (random.nextFloat() < 1 / 32f)
+                particleAccess.spawnExtraParticle(ParticleTypes.SOUL,  .125f);
+            Vector3f colorBright = new Color(0x180c30).asVectorF();
+            Vector3f colorDark = new Color(0x1e0f3d).asVectorF();
+            if (random.nextFloat() < 1 / 32f)
+                particleAccess.spawnExtraParticle((new DustParticleOptions(colorBright, 1)), .125f);
+            if (random.nextFloat() < 1 / 32f)
+                particleAccess.spawnExtraParticle((new DustParticleOptions(colorDark, 1)), .125f);
+            if (random.nextFloat() < 1 / 48f)
+                particleAccess.spawnExtraParticle(ParticleTypes.ASH, .125f);
+        }
+
+        @Override
+        public void affectEntity(Entity entity, Level level) {
+            if (level.isClientSide) {
+
+                if (entity instanceof Skeleton) {
+                    Vec3 p = entity.getPosition(0);
+                    Vec3 v = p.add(0, 0.5f, 0)
+                            .add(VecHelper.offsetRandomly(Vec3.ZERO, level.random, 1)
+                                    .multiply(1, 0.2f, 1)
+                                    .normalize()
+                                    .scale(1f));
+                    level.addParticle(ParticleTypes.ASH, v.x, v.y, v.z, 0, 0.1f, 0);
+                    if (level.random.nextInt(3) == 0)
+                        level.addParticle(ParticleTypes.ASH, p.x, p.y + .5f, p.z,
+                                (level.random.nextFloat() - .5f) * .5f, 0.1f, (level.random.nextFloat() - .5f) * .5f);
+                }
+                return;
+            }
+
+            if (entity instanceof LivingEntity livingEntity) {
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.WITHER, 5, 1, false, false));
+            }
+
+            if (entity instanceof WitherBoss witherBoss) {
+                witherBoss.heal(4);
+            }
+
+            if (entity instanceof WitherSkeleton witherSkeleton) {
+                witherSkeleton.heal(2);
+            }
+
+            if (entity instanceof Skeleton skeleton) {
+                int progress = skeleton.getPersistentData()
+                        .getInt("CreateWithering");
+                if (progress < 50) {
+                    if (progress % 10 == 0) {
+                        level.playSound(null, entity.blockPosition(), SoundEvents.WITHER_SKELETON_AMBIENT, SoundSource.NEUTRAL,
+                                1f, 1.5f * progress / 50f);
+                    }
+                    skeleton.getPersistentData()
+                            .putInt("CreateWithering", progress + 1);
+                    return;
+                }
+
+                level.playSound(null, entity.blockPosition(), SoundEvents.WITHER_SKELETON_STEP,
+                        SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+                WitherSkeleton witherSkeleton = EntityType.WITHER_SKELETON.create(level);
+                CompoundTag serializeNBT = skeleton.saveWithoutId(new CompoundTag());
+                serializeNBT.remove("UUID");
+
+                assert witherSkeleton != null;
+                witherSkeleton.deserializeNBT(serializeNBT);
+                witherSkeleton.setPos(skeleton.getPosition(0));
+                level.addFreshEntity(witherSkeleton);
+                skeleton.discard();
+            }
+        }
+    }
+
+    public static class DragonBreathingType implements FanProcessingType {
+        private static final DragonBreathingRecipe.dragonBreathingWrapper DRAGON_BREATHING_WRAPPER = new DragonBreathingRecipe.dragonBreathingWrapper();
+
+        @Override
+        public boolean isValidAt(Level level, BlockPos pos) {
+            FluidState fluidState = level.getFluidState(pos);
+            if (HenryTags.AllFluidTags.FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING.matches(fluidState)) {
+                return true;
+            }
+            BlockState blockState = level.getBlockState(pos);
+            return HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING.matches(blockState);
+        }
+
+        @Override
+        public int getPriority() {
+            return 691400;
+        }
+
+        @Override
+        public boolean canProcess(ItemStack stack, Level level) {
+            DRAGON_BREATHING_WRAPPER.setItem(0, stack);
+            Optional<DragonBreathingRecipe> recipe = HenryRecipeTypes.DRAGON_BREATHING.find(DRAGON_BREATHING_WRAPPER, level);
+            return recipe.isPresent();
+        }
+
+        @Override
+        @Nullable
+        public List<ItemStack> process(ItemStack stack, Level level) {
+            DRAGON_BREATHING_WRAPPER.setItem(0, stack);
+            Optional<DragonBreathingRecipe> recipe = HenryRecipeTypes.DRAGON_BREATHING.find(DRAGON_BREATHING_WRAPPER, level);
+            return recipe.map(dragonBreathingRecipe -> RecipeApplier.applyRecipeOn(level, stack, dragonBreathingRecipe)).orElse(null);
+        }
+
+        @Override
+        public void spawnProcessingParticles(Level level, Vec3 pos) {
+            if (level.random.nextInt(8) != 0)
+                return;
+            level.addParticle(ParticleTypes.DRAGON_BREATH, pos.x + (level.random.nextFloat() - .5f) * .5f, pos.y + .5f,
+                    pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+        }
+
+        @Override
+        public void morphAirFlow(AirFlowParticleAccess particleAccess, RandomSource random) {
+            particleAccess.setColor(Color.mixColors(0xD36FD9, 0xC21BF5, random.nextFloat()));
+            particleAccess.setAlpha(1f);
+            if (random.nextFloat() < 1 / 128f)
+                particleAccess.spawnExtraParticle(ParticleTypes.DRAGON_BREATH, .125f);
+            if (random.nextFloat() < 1 / 32f)
+                particleAccess.spawnExtraParticle(ParticleTypes.WITCH, .125f);
+
+            float r =  0.2f;
+            float g =  0.08f;
+            float b =  0.3f;
+
+            if (random.nextFloat() < 1/32f)
+                particleAccess.spawnExtraParticle(
+                        new CubeParticleData(r, g, b,
+                                0.075f,
+                                12,
+                                false),
+                        0.125f);
+
+            // bigger cube
+            if (random.nextFloat() < 1/32f)
+                particleAccess.spawnExtraParticle(
+                        new CubeParticleData(r, g, b,
+                                0.1f,
+                                14,
+                                false),
+                        0.125f);
+        }
+
+        @Override
+        public void affectEntity(Entity entity, Level level) {
+
+            if (entity instanceof Silverfish silverfish) {
+                int progress = silverfish.getPersistentData()
+                        .getInt("CreateBreathing");
+                if (progress < 50) {
+                    if (progress % 10 == 0) {
+                        level.playSound(null, entity.blockPosition(), SoundEvents.ENDERMITE_AMBIENT, SoundSource.NEUTRAL,
+                                0.5f, 1.5f * progress / 50f);
+                    }
+                    silverfish.getPersistentData()
+                            .putInt("CreateBreathing", progress + 1);
+                    return;
+                }
+
+                level.playSound(null, entity.blockPosition(), SoundEvents.ENDERMAN_SCREAM,
+                        SoundSource.NEUTRAL, 1.25f, 0.65f);
+
+                Endermite endermite = EntityType.ENDERMITE.create(level);
+                CompoundTag serializeNBT = silverfish.saveWithoutId(new CompoundTag());
+                serializeNBT.remove("UUID");
+
+                assert endermite != null;
+                endermite.deserializeNBT(serializeNBT);
+                endermite.setPos(silverfish.getPosition(0));
+                level.addFreshEntity(endermite);
+                silverfish.discard();
+            } else if (entity instanceof WitherSkeleton witherSkeleton) {
+
+                int progress = witherSkeleton.getPersistentData()
+                        .getInt("CreateBreathing");
+                if (progress < 50) {
+                    if (progress % 10 == 0) {
+                        level.playSound(null, entity.blockPosition(), SoundEvents.ENDERMAN_SCREAM, SoundSource.NEUTRAL,
+                                1f, 1.5f * progress / 50f);
+                    }
+                    witherSkeleton.getPersistentData()
+                            .putInt("CreateBreathing", progress + 1);
+                    return;
+                }
+
+                level.playSound(null, entity.blockPosition(), SoundEvents.ENDERMAN_STARE,
+                        SoundSource.NEUTRAL, 1f, 0.65f);
+
+                EnderMan enderMan = EntityType.ENDERMAN.create(level);
+                CompoundTag serializeNBT = witherSkeleton.saveWithoutId(new CompoundTag());
+                serializeNBT.remove("UUID");
+
+                assert enderMan != null;
+                enderMan.deserializeNBT(serializeNBT);
+                enderMan.setPos(witherSkeleton.getPosition(0));
+                level.addFreshEntity(enderMan);
+                witherSkeleton.discard();
+
+            } else if (entity instanceof LivingEntity livingEntity && !(entity instanceof EnderMan) && !(entity instanceof Endermite) && !(entity instanceof EnderDragon)) {
+                // current position
+                double x = livingEntity.getX();
+                double y = livingEntity.getY();
+                double z = livingEntity.getZ();
+
+                // random offsets
+                RandomSource rand = level.random;
+                double dx = (rand.nextDouble() * 5) - 5;
+                double dz = (rand.nextDouble() * 5) - 5;
+                double dy = (rand.nextDouble() * 2) - 2;
+
+                double newX = x + dx;
+                double newY = Math.max(0, y + dy);         // ensure non-negative
+                double newZ = z + dz;
+
+                // teleport the entity
+                livingEntity.teleportTo(newX, newY, newZ);
+
+                // play the enderman teleport sound
+                level.playSound(null, newX, newY, newZ,
+                        SoundEvents.ENDERMAN_TELEPORT, SoundSource.NEUTRAL,
+                        1.0f, 1.0f + (float) (rand.nextGaussian() * 0.05));
+
+                // spawn a few portal particles at the new location
+                for (int i = 0; i < 10; i++) {
+                    double px = newX + (rand.nextDouble() - 0.5) * 2;
+                    double py = newY + rand.nextDouble() * 2;
+                    double pz = newZ + (rand.nextDouble() - 0.5) * 2;
+                    level.addParticle(ParticleTypes.PORTAL, px, py, pz,
+                            (rand.nextDouble() - 0.5) * 2,
+                            (rand.nextDouble() - 0.5) * 2,
+                            (rand.nextDouble() - 0.5) * 2);
+                }
+            }
+
         }
     }
 

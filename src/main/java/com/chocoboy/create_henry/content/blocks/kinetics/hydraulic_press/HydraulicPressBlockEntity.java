@@ -7,8 +7,9 @@ import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.lang.LangBuilder;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
+import com.simibubi.create.infrastructure.config.AllConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,46 +47,46 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        LangBuilder mb = CreateLang.translate("generic.unit.millibuckets");
-        CreateLang.translate("gui.goggles.fluid_container")
+        LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+        Lang.translate("gui.goggles.fluid_container")
                 .forGoggles(tooltip);
 
         FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
         if (!fluidStack.isEmpty()) {
-            CreateLang.fluidName(fluidStack)
+            Lang.fluidName(fluidStack)
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip, 1);
 
-            CreateLang.builder()
-                    .add(CreateLang.number(fluidStack.getAmount())
+            Lang.builder()
+                    .add(Lang.number(fluidStack.getAmount())
                             .add(mb)
                             .style(ChatFormatting.GOLD))
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                    .add(Lang.number(tank.getPrimaryHandler().getTankCapacity(0))
                             .add(mb)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);
 
         } else if (fluidStack.isEmpty()) {
-            CreateLang.translate("gui.goggles.fluid_container.capacity")
-                    .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+            Lang.translate("gui.goggles.fluid_container.capacity")
+                    .add(Lang.number(tank.getPrimaryHandler().getTankCapacity(0))
                             .add(mb)
                             .style(ChatFormatting.GOLD))
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip, 1);
         }
 
-        CreateLang.translate("tooltip.stressImpact")
+        Lang.translate("tooltip.stressImpact")
                 .style(GRAY)
                 .forGoggles(tooltip);
 
         float stressTotal = calculateStressApplied() * Math.abs(getTheoreticalSpeed());
 
-        CreateLang.number(stressTotal)
+        Lang.number(stressTotal)
                 .translate("generic.unit.stress")
                 .style(ChatFormatting.AQUA)
                 .space()
-                .add(CreateLang.translate("gui.goggles.at_current_speed")
+                .add(Lang.translate("gui.goggles.at_current_speed")
                         .style(ChatFormatting.DARK_GRAY))
                 .forGoggles(tooltip, 1);
         return true;

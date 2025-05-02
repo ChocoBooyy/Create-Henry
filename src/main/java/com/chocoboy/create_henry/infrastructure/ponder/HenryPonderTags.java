@@ -1,15 +1,18 @@
 package com.chocoboy.create_henry.infrastructure.ponder;
 
-import net.minecraft.resources.ResourceLocation;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.ponder.PonderTag;
 import com.chocoboy.create_henry.HenryCreate;
 
 public class HenryPonderTags {
 
-	public static final ResourceLocation
-			Henry = loc("create_henry");
+	public static final PonderTag
+			Henry = create("create_henry").item(AllItems.PRECISION_MECHANISM.get())
+			.defaultLang("Create: Henry", "Welcome to the mod!")
+			.addToIndex();
 
-	private static ResourceLocation loc(String id) {
-		return HenryCreate.asResource(id);
+	private static PonderTag create(String id) {
+		return new PonderTag(HenryCreate.asResource(id));
 	}
 
 	public static void register() {

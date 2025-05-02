@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Blocks;
 import com.chocoboy.create_henry.HenryCreate;
 
 import static com.tterrag.registrate.providers.RegistrateRecipeProvider.getItemName;
@@ -21,6 +20,10 @@ import static com.chocoboy.create_henry.registry.HenryTags.forgeItemTag;
 
 @SuppressWarnings({"unused", "deprecation", "all"})
 public class HenryItems {
+
+	static {
+		REGISTRATE.setCreativeTab(HenryCreativeModeTabs.BASE_CREATIVE_TAB);
+	}
 
 	public static final ItemEntry<SequencedAssemblyItem>
 			INCOMPLETE_KINETIC_MECHANISM = sequencedItem("incomplete_kinetic_mechanism");
@@ -48,7 +51,6 @@ public class HenryItems {
 						.save(p, HenryCreate.asResource("crafting/" + c.getName() + "_from_" + getItemName(output)));
 			})
 			.lang("Raw Rubber")
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.register();
 
 	public static final ItemEntry<Item> RUBBER = REGISTRATE.item("rubber", Item::new)
@@ -75,7 +77,6 @@ public class HenryItems {
 						.save(p, HenryCreate.asResource("smoking/" + c.getId().getPath()));
 			})
 			.lang("Rubber")
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.register();
 
 	public static final ItemEntry<Item> LAPIS_LAZULI_SHARD = REGISTRATE.item("lapis_lazuli_shard", Item::new)
@@ -96,7 +97,6 @@ public class HenryItems {
 						.unlockedBy("has_" + c.getName(), has(c.get()))
 						.save(p, HenryCreate.asResource("crafting/" + c.getName() + "_from_" + getItemName(output)));
 			})
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.register();
 
 	public static final ItemEntry<CombustibleItem> COAL_PIECE = REGISTRATE.item("coal_piece", CombustibleItem::new)
@@ -119,7 +119,6 @@ public class HenryItems {
 						.unlockedBy("has_" + c.getName(), has(c.get()))
 						.save(p, HenryCreate.asResource("crafting/" + c.getName() + "_from_" + getItemName(output)));
 			})
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.register();
 
 	private static ItemEntry<Item> item(String name) {

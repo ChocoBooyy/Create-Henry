@@ -1,6 +1,6 @@
 # Create: Henry
 
-An addon for Create 6.0.
+An addon for Create.
 
 **Inspired and has some features of Create Dream & Desires, but entirely independent.**
 

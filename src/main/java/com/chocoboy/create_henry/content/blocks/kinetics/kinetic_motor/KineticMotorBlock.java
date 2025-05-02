@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
+import  com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 
 public class KineticMotorBlock extends DirectionalKineticBlock implements IBE<KineticMotorBlockEntity> {
     public KineticMotorBlock(BlockBehaviour.Properties properties) {

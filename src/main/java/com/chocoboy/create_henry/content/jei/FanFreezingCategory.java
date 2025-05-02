@@ -1,11 +1,11 @@
 package com.chocoboy.create_henry.content.jei;
 
-import com.chocoboy.create_henry.content.recipes.FreezingRecipe;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import net.createmod.catnip.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
+import com.chocoboy.create_henry.content.recipes.FreezingRecipe;
 
 public class FanFreezingCategory extends HProcessingViaFanCategory.MultiOutput<FreezingRecipe> {
 

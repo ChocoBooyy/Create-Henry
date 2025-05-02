@@ -10,9 +10,9 @@ import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.CreateLang;
-import net.createmod.catnip.math.AngleHelper;
-import net.createmod.catnip.math.VecHelper;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -46,7 +46,7 @@ public class FurnaceEngineBlockEntity extends SmartBlockEntity {
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        this.movementDirection = new ScrollOptionBehaviour<>(WindmillBearingBlockEntity.RotationDirection.class, CreateLang.translateDirect("contraptions.windmill.rotation_direction"), this, new FurnaceEngineValueBox());
+        this.movementDirection = new ScrollOptionBehaviour<>(WindmillBearingBlockEntity.RotationDirection.class, Lang.translateDirect("contraptions.windmill.rotation_direction"), this, new FurnaceEngineValueBox());
         this.movementDirection.onlyActiveWhen(() -> {
             PoweredFlywheelBlockEntity flywheel = this.getFlywheel();
             return flywheel == null || !flywheel.hasSource();
@@ -227,7 +227,7 @@ public class FurnaceEngineBlockEntity extends SmartBlockEntity {
                 return null;
             } else {
                 axis = KineticBlockEntityRenderer.getRotationAxisOf(flywheel);
-                angle = KineticBlockEntityRenderer.getAngleForBe(flywheel, flywheel.getBlockPos(), axis);
+                angle = KineticBlockEntityRenderer.getAngleForTe(flywheel, flywheel.getBlockPos(), axis);
                 if (axis == facingAxis) {
                     return null;
                 } else {

@@ -21,6 +21,7 @@ public class FurnaceEngineGenerator extends SpecialBlockStateGen {
         this.wallModel = "block/furnace_engine/block_horizontal";
     }
 
+
     @Override
     protected int getXRotation(BlockState state) {
         return state.getValue(BlockStateProperties.ATTACH_FACE).ordinal() * 90;

@@ -1,36 +1,32 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.content.recipes.*;
-import com.chocoboy.create_henry.content.jei.*;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.*;
-import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.compat.jei.category.*;
+import com.simibubi.create.foundation.config.ConfigBase;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import com.chocoboy.create_henry.registry.helper.Lang;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.IRecipeTransferRegistration;
+import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IIngredientManager;
-import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.content.jei.HProcessingViaFanCategory;
+import com.chocoboy.create_henry.content.jei.*;
+import com.chocoboy.create_henry.content.recipes.*;
 import com.chocoboy.create_henry.infrastructure.config.HRecipes;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
-import com.simibubi.create.foundation.utility.CreateLang;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -65,11 +61,11 @@ public class HenryJEI implements IModPlugin {
         CreateRecipeCategory<?>
 
                 sanding = builder(SandingRecipe.class)
-                .addTypedRecipes(HenryRecipeTypes.SANDING)
-                .catalystStack(HProcessingViaFanCategory.getFan("fan_sanding"))
-                .doubleItemIcon(AllItems.PROPELLER.get(), Items.SAND)
-                .emptyBackground(178, 72)
-                .build("fan_sanding", FanSandingCategory::new),
+                    .addTypedRecipes(HenryRecipeTypes.SANDING)
+                    .catalystStack(HProcessingViaFanCategory.getFan("fan_sanding"))
+                    .doubleItemIcon(AllItems.PROPELLER.get(), Items.SAND)
+                    .emptyBackground(178, 72)
+                    .build("fan_sanding", FanSandingCategory::new),
                 freezing = builder(FreezingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.FREEZING)
                         .catalystStack(HProcessingViaFanCategory.getFan("fan_freezing"))
@@ -81,7 +77,19 @@ public class HenryJEI implements IModPlugin {
                         .catalystStack(HProcessingViaFanCategory.getFan("fan_seething"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), AllItems.BLAZE_CAKE.get())
                         .emptyBackground(178, 72)
-                        .build("fan_seething", FanSeethingCategory::new);
+                        .build("fan_seething", FanSeethingCategory::new),
+                withering = builder(WitheringRecipe.class)
+                        .addTypedRecipes(HenryRecipeTypes.WITHERING)
+                        .catalystStack(HProcessingViaFanCategory.getFan("fan_withering"))
+                        .doubleItemIcon(AllItems.PROPELLER.get(), Items.WITHER_ROSE)
+                        .emptyBackground(178, 72)
+                        .build("fan_withering", FanWitheringCategory::new),
+                dragon_breathing = builder(DragonBreathingRecipe.class)
+                        .addTypedRecipes(HenryRecipeTypes.DRAGON_BREATHING)
+                        .catalystStack(HProcessingViaFanCategory.getFan("fan_dragon_breathing"))
+                        .doubleItemIcon(AllItems.PROPELLER.get(), Items.DRAGON_HEAD)
+                        .emptyBackground(178, 72)
+                        .build("fan_dragon_breathing", FanDragonBreathingCategory::new);
 
     }
 
@@ -116,6 +124,10 @@ public class HenryJEI implements IModPlugin {
                 registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
         registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_freezing")).ifPresent(type ->
                 registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
+        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_withering")).ifPresent(type ->
+                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
+        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_dragon_breathing")).ifPresent(type ->
+                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
     }
 
     @Override
@@ -129,7 +141,7 @@ public class HenryJEI implements IModPlugin {
 
     private static class CategoryBuilder<T extends Recipe<?>> {
         private final Class<? extends T> recipeClass;
-        private Predicate<HRecipes> predicate = hRecipes -> true;
+        private Predicate<HRecipes> predicate = cRecipes -> true;
 
         private IDrawable background;
         private IDrawable icon;
@@ -306,7 +318,7 @@ public class HenryJEI implements IModPlugin {
 
             CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
                     new mezz.jei.api.recipe.RecipeType<>(HenryCreate.asResource(name), recipeClass),
-                    CreateLang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
+                    Lang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
             CreateRecipeCategory<T> category = factory.create(info);
             allCategories.add(category);
             return category;

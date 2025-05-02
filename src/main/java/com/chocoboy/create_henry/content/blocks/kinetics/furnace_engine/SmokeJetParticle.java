@@ -14,6 +14,8 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+
+
 @SuppressWarnings({"all"})
 @ParametersAreNonnullByDefault
 public class SmokeJetParticle extends SimpleAnimatedParticle {

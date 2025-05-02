@@ -1,10 +1,7 @@
 package com.chocoboy.create_henry.infrastructure.config;
 
-import com.simibubi.create.api.stress.BlockStressValues;
-import com.tterrag.registrate.providers.ProviderType;
-import net.createmod.catnip.config.ConfigBase;
-import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.world.item.Item;
+import com.simibubi.create.content.kinetics.BlockStressValues;
+import com.simibubi.create.foundation.config.ConfigBase;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -58,16 +55,14 @@ public class HenryConfigs {
 		for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
 			context.registerConfig(pair.getKey(), pair.getValue().specification);
 
-		HStress stress = server().kinetics.stressValues;
-		BlockStressValues.IMPACTS.registerProvider(stress::getImpact);
-		BlockStressValues.CAPACITIES.registerProvider(stress::getCapacity);
+		BlockStressValues.registerProvider(context.getActiveNamespace(), server().kinetics.stressValues);
 	}
 
 	@SubscribeEvent
 	public static void onLoad(ModConfigEvent.Loading event) {
 		for (ConfigBase config : CONFIGS.values())
 			if (config.specification == event.getConfig()
-				.getSpec())
+					.getSpec())
 				config.onLoad();
 	}
 
@@ -75,7 +70,8 @@ public class HenryConfigs {
 	public static void onReload(ModConfigEvent.Reloading event) {
 		for (ConfigBase config : CONFIGS.values())
 			if (config.specification == event.getConfig()
-				.getSpec())
+					.getSpec())
 				config.onReload();
 	}
+
 }

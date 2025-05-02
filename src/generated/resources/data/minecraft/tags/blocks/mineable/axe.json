@@ -5,6 +5,7 @@
     "create_henry:multimeter",
     "create_henry:redstone_divider",
     "create_henry:inverse_box",
-    "create_henry:kinetic_motor"
+    "create_henry:kinetic_motor",
+    "create_henry:negative_motor"
   ]
 }

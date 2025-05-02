@@ -3,7 +3,11 @@ package com.chocoboy.create_henry.content.data_recipes;
 import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.registry.HenryItems;
 import com.chocoboy.create_henry.registry.HenryRecipeTypes;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
+import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.recipe.CompatMetals;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -32,6 +36,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 		COBBLED_DEEPSLATE = convert(Blocks.COBBLESTONE, Blocks.COBBLED_DEEPSLATE),
 
 		LAPIS_LAZULI_SHARD = convertChanceRecipe(() -> Items.CALCITE, HenryItems.LAPIS_LAZULI_SHARD::get, .75f),
+
 
 		NETHERITE_SCRAP = secondaryRecipe(() -> Items.ANCIENT_DEBRIS, () -> Items.NETHERITE_SCRAP, () -> Items.NETHERITE_SCRAP, .35f),
 

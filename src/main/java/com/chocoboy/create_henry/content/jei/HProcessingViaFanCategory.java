@@ -7,12 +7,12 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.CreateLang;
+import net.minecraft.client.gui.GuiGraphics;
+import com.chocoboy.create_henry.registry.helper.Lang;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import com.chocoboy.create_henry.registry.HenryBlocks;
@@ -32,8 +32,7 @@ public abstract class HProcessingViaFanCategory<T extends Recipe<?>> extends Cre
     }
 
     public static Supplier<ItemStack> getFan(String name) {
-        return () -> HenryBlocks.INDUSTRIAL_FAN.asStack()
-                .setHoverName(CreateLang.translateDirect("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
+        return () -> HenryBlocks.INDUSTRIAL_FAN.asStack().setHoverName(Lang.translateDirect("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
     }
 
     @Override
@@ -121,7 +120,7 @@ public abstract class HProcessingViaFanCategory<T extends Recipe<?>> extends Cre
                         .addSlot(RecipeIngredientRole.OUTPUT, 141 + xOffset, 48 + yOffset)
                         .setBackground(getRenderedSlot(output), -1, -1)
                         .addItemStack(output.getStack())
-                        .addRichTooltipCallback(addStochasticTooltip(output));
+                        .addTooltipCallback(addStochasticTooltip(output));
                 i++;
             }
         }
