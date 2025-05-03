@@ -1,7 +1,7 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.content.blocks.kinetics.negative_motor.HenryBlockStressDefaults;
-import com.chocoboy.create_henry.content.blocks.kinetics.negative_motor.NegativeMotorBlock;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.HenryBlockStressDefaults;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlock;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -40,8 +41,6 @@ import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMo
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlock;
 import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
-
-import java.util.function.Consumer;
 
 import static com.simibubi.create.AllMovementBehaviours.movementBehaviour;
 import static com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours.assignDataBehaviour;
@@ -104,7 +103,7 @@ public class HenryBlocks {
 			.transform(pickaxeOnly())
 			.transform(BlockStressDefaults.setImpact(4.0))
 			.recipe((c, p) -> {
-				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
+				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 						.pattern("CIP")
 						.define('P', AllItems.PROPELLER.get())
 						.define('C', AllBlocks.COGWHEEL.get())
@@ -160,7 +159,7 @@ public class HenryBlocks {
 			.blockstate(new GaugeGenerator()::generate)
 			.onRegister(assignDataBehaviour(new KineticSpeedDisplaySource(), "kinetic_speed"))
 			.onRegister(assignDataBehaviour(new KineticStressDisplaySource(), "kinetic_stress"))
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 2)
+			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 					.requires(AllBlocks.STRESSOMETER.get())
 					.requires(AllBlocks.SPEEDOMETER.get())
 					.unlockedBy("has_compass", has(Items.COMPASS))
@@ -227,12 +226,18 @@ public class HenryBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<NegativeMotorBlock> NEGATIVE_MOTOR = REGISTRATE
-			.block("negative_motor", NegativeMotorBlock::new)
+	public static final BlockEntry<IndustrialBrakeBlock> INDUSTRIAL_BRAKE = REGISTRATE
+			.block("industrial_brake", IndustrialBrakeBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY))
 			.tag(AllTags.AllBlockTags.SAFE_NBT.tag)
 			.transform(axeOrPickaxe())
+			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+					.requires(INDUSTRIAL_CASING.get())
+					.requires(HenryItems.KINETIC_MECHANISM.get())
+					.requires(HenryItems.RUBBER.get())
+					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get()))
+					.save(p, HenryCreate.asResource("crafting/kinetics/industrial_brake")))
 			.blockstate(new CreativeMotorGenerator()::generate)
 			.transform(HenryBlockStressDefaults.setImpact(() ->
 					Couple.create(1.0, 1.0)

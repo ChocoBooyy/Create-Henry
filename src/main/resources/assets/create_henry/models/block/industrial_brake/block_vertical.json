@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"textures": {
 		"5": "create_henry:block/industrial_casing",
-		"6": "create_henry:block/negative_motor",
+		"6": "create_henry:block/industrial_brake",
 		"particle": "create_henry:block/industrial_casing",
 		"1_0": "create:block/axis"
 	},

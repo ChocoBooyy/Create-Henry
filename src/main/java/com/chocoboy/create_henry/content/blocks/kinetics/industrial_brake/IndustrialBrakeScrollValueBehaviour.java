@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.content.blocks.kinetics.negative_motor;
+package com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
@@ -8,7 +8,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -16,8 +15,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.Collections;
 
-public class NegativeMotorScrollValueBehaviour extends ScrollValueBehaviour implements ValueSettingsBehaviour {
-    public NegativeMotorScrollValueBehaviour(Component label, SmartBlockEntity be, ValueBoxTransform slot) {
+public class IndustrialBrakeScrollValueBehaviour extends ScrollValueBehaviour implements ValueSettingsBehaviour {
+    public IndustrialBrakeScrollValueBehaviour(Component label, SmartBlockEntity be, ValueBoxTransform slot) {
         super(label, be, slot);
         this.withFormatter(v -> String.valueOf(v));
     }

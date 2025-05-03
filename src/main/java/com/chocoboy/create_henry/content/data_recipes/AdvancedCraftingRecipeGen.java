@@ -3,6 +3,7 @@ package com.chocoboy.create_henry.content.data_recipes;
 import com.google.common.base.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
@@ -24,7 +25,9 @@ import java.util.function.UnaryOperator;
 public class AdvancedCraftingRecipeGen extends CreateRecipeProvider {
 
     GeneratedRecipe
-            //SEQUENCED ASSEMBLY RECIPE
+
+    //SEQUENCED ASSEMBLY RECIPE
+
             KINETIC_MECHANISM = createSequencedAssembly("kinetic_mechanism", b -> b.require(AllItems.IRON_SHEET.get())
             .transitionTo(HenryItems.INCOMPLETE_KINETIC_MECHANISM.get())
             .addOutput(HenryItems.KINETIC_MECHANISM.get(), 480)
@@ -45,6 +48,19 @@ public class AdvancedCraftingRecipeGen extends CreateRecipeProvider {
 
 
     //MECHANICAL CRAFTING RECIPE
+
+    FURNACE_ENGINE = createMechanicalCrafting(HenryBlocks.FURNACE_ENGINE::get).returns(1)
+            .recipe(b -> b
+                    .key('S', AllTags.forgeItemTag("plates/brass"))
+                    .key('O', AllTags.forgeItemTag("dusts/obsidian"))
+                    .key('N', AllTags.forgeItemTag("nuggets/zinc"))
+                    .key('B', AllTags.forgeItemTag("storage_blocks/zinc"))
+                    .key('C', HenryBlocks.INDUSTRIAL_CASING.get())
+                    .key('A', AllItems.ANDESITE_ALLOY.get())
+                    .patternLine(" S S ")
+                    .patternLine(" ACA ")
+                    .patternLine("NOBON")
+            ),
 
     HYDRAULIC_PRESS = createMechanicalCrafting(HenryBlocks.HYDRAULIC_PRESS::get).returns(1)
             .recipe(b -> b

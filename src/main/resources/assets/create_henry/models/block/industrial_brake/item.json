@@ -4,7 +4,7 @@
 	"textures": {
 		"0": "create:block/axis",
 		"1": "create:block/axis_top",
-		"4": "create_henry:block/negative_motor",
+		"4": "create_henry:block/industrial_brake",
 		"5": "create_henry:block/industrial_casing",
 		"7": "create:block/flap_display_front",
 		"particle": "create_henry:block/industrial_casing"

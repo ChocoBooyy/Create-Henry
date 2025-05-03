@@ -14,8 +14,8 @@ import com.chocoboy.create_henry.content.blocks.kinetics.industrial_fan_block.In
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.*;
 import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMotorBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMotorRenderer;
-import com.chocoboy.create_henry.content.blocks.kinetics.negative_motor.NegativeMotorBlockEntity;
-import com.chocoboy.create_henry.content.blocks.kinetics.negative_motor.NegativeMotorRenderer;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeRenderer;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlockEntity;
 
@@ -64,11 +64,11 @@ public class HenryBlockEntityTypes {
 			.validBlocks(HenryBlocks.KINETIC_MOTOR)
 			.renderer(() -> KineticMotorRenderer::new).register();
 
-	public static final BlockEntityEntry<NegativeMotorBlockEntity> NEGATIVE_MOTOR = REGISTRATE
-			.blockEntity("negative_motor", NegativeMotorBlockEntity::new)
+	public static final BlockEntityEntry<IndustrialBrakeBlockEntity> INDUSTRIAL_BRAKE = REGISTRATE
+			.blockEntity("industrial_brake", IndustrialBrakeBlockEntity::new)
 			.instance(() -> HalfShaftInstance::new, false)
-			.validBlocks(HenryBlocks.NEGATIVE_MOTOR)
-			.renderer(() -> NegativeMotorRenderer::new).register();
+			.validBlocks(HenryBlocks.INDUSTRIAL_BRAKE)
+			.renderer(() -> IndustrialBrakeRenderer::new).register();
 
 	public static final BlockEntityEntry<MultiMeterBlockEntity> MULTIMETER = REGISTRATE
 			.blockEntity("multimeter", MultiMeterBlockEntity::new)

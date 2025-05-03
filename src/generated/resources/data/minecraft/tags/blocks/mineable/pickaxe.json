@@ -9,7 +9,7 @@
     "create_henry:redstone_divider",
     "create_henry:inverse_box",
     "create_henry:kinetic_motor",
-    "create_henry:negative_motor",
+    "create_henry:industrial_brake",
     "create_henry:furnace_engine",
     "create_henry:powered_flywheel"
   ]

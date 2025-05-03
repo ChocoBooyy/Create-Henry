@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package com.chocoboy.create_henry.content.blocks.kinetics.negative_motor;
+package com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake;
 
 import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.builders.BlockBuilder;

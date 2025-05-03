@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.content.blocks.kinetics.negative_motor;
+package com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
@@ -16,8 +16,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import  com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 
-public class NegativeMotorBlock extends DirectionalKineticBlock implements IBE<NegativeMotorBlockEntity> {
-    public NegativeMotorBlock(BlockBehaviour.Properties properties) {
+public class IndustrialBrakeBlock extends DirectionalKineticBlock implements IBE<IndustrialBrakeBlockEntity> {
+    public IndustrialBrakeBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 
@@ -46,11 +46,11 @@ public class NegativeMotorBlock extends DirectionalKineticBlock implements IBE<N
         return false;
     }
 
-    public Class<NegativeMotorBlockEntity> getBlockEntityClass() {
-        return NegativeMotorBlockEntity.class;
+    public Class<IndustrialBrakeBlockEntity> getBlockEntityClass() {
+        return IndustrialBrakeBlockEntity.class;
     }
 
-    public BlockEntityType<? extends NegativeMotorBlockEntity> getBlockEntityType() {
-        return HenryBlockEntityTypes.NEGATIVE_MOTOR.get();
+    public BlockEntityType<? extends IndustrialBrakeBlockEntity> getBlockEntityType() {
+        return HenryBlockEntityTypes.INDUSTRIAL_BRAKE.get();
     }
 }

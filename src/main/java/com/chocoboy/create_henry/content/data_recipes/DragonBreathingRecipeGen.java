@@ -17,7 +17,8 @@ public class DragonBreathingRecipeGen extends HenryProcessingRecipeGen{
 
     DRAGON_BREATH = convert(Items.POTION, Items.DRAGON_BREATH),
     END_STONE = convert(Items.DEEPSLATE, Items.END_STONE),
-    CRYING_OBSIDIAN = convert(Items.OBSIDIAN, Items.CRYING_OBSIDIAN);
+    CRYING_OBSIDIAN = convert(Items.OBSIDIAN, Items.CRYING_OBSIDIAN),
+    END_ROD = convert(Items.BLAZE_ROD, Items.END_ROD);
 
     public CreateRecipeProvider.GeneratedRecipe convert(Item item, Item result) {
         return create(() -> item, b -> b.output(result));

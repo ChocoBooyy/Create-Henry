@@ -1,6 +1,5 @@
-package com.chocoboy.create_henry.content.blocks.kinetics.negative_motor;
+package com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake;
 
-import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMotorBlock;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.KineticNetwork;
@@ -23,12 +22,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class NegativeMotorBlockEntity extends GeneratingKineticBlockEntity {
+public class IndustrialBrakeBlockEntity extends GeneratingKineticBlockEntity {
     public static final int MAX_STRESS_PER_RPM = 256;
 
     protected ScrollValueBehaviour impactValue;
 
-    public NegativeMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public IndustrialBrakeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -36,7 +35,7 @@ public class NegativeMotorBlockEntity extends GeneratingKineticBlockEntity {
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
 
-        this.impactValue = new NegativeMotorScrollValueBehaviour(
+        this.impactValue = new IndustrialBrakeScrollValueBehaviour(
                 Component.literal("SU taken from connected source"),
                 this,
                 new MotorValueBox()
@@ -120,7 +119,7 @@ public class NegativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 
         @Override
         public Vec3 getLocalOffset(BlockState state) {
-            Direction facing = state.getValue(NegativeMotorBlock.FACING);
+            Direction facing = state.getValue(IndustrialBrakeBlock.FACING);
             return super.getLocalOffset(state).add(Vec3.atLowerCornerOf(facing.getNormal())
                     .scale(-1 / 16f));
         }
@@ -128,7 +127,7 @@ public class NegativeMotorBlockEntity extends GeneratingKineticBlockEntity {
         @Override
         public void rotate(BlockState state, PoseStack ms) {
             super.rotate(state, ms);
-            Direction facing = state.getValue(NegativeMotorBlock.FACING);
+            Direction facing = state.getValue(IndustrialBrakeBlock.FACING);
             if (facing.getAxis() == Axis.Y)
                 return;
             if (getSide() != Direction.UP)
@@ -139,7 +138,7 @@ public class NegativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 
         @Override
         protected boolean isSideActive(BlockState state, Direction direction) {
-            Direction facing = state.getValue(NegativeMotorBlock.FACING);
+            Direction facing = state.getValue(IndustrialBrakeBlock.FACING);
             if (facing.getAxis() != Axis.Y && direction == Direction.DOWN)
                 return false;
             return direction.getAxis() != facing.getAxis();
