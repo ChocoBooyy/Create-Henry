@@ -32,6 +32,8 @@ public abstract class HenryProcessingRecipeGen extends CreateRecipeProvider {
         GENERATORS.add(new SandingRecipeGen(output));
         GENERATORS.add(new FreezingRecipeGen(output));
         GENERATORS.add(new SeethingRecipeGen(output));
+        GENERATORS.add(new WitheringRecipeGen(output));
+        GENERATORS.add(new DragonBreathingRecipeGen(output));
         GENERATORS.add(new ItemApplicationRecipeGen(output));
         GENERATORS.add(new MixingRecipeGen(output));
         GENERATORS.add(new EmptyingRecipeGen(output));

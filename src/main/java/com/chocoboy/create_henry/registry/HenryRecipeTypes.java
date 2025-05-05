@@ -28,7 +28,9 @@ public enum HenryRecipeTypes implements IRecipeTypeInfo {
 
 	SANDING(SandingRecipe::new),
 	FREEZING(FreezingRecipe::new),
-	SEETHING(SeethingRecipe::new);
+	SEETHING(SeethingRecipe::new),
+	WITHERING(WitheringRecipe::new),
+	DRAGON_BREATHING(DragonBreathingRecipe::new);
 
 	private final ResourceLocation id;
 	private final RegistryObject<RecipeSerializer<?>> serializerObject;

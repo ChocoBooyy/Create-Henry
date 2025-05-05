@@ -2,6 +2,8 @@
   "values": [
     "#create_henry:fan_processing_catalysts/sanding",
     "#create_henry:fan_processing_catalysts/freezing",
-    "#create_henry:fan_processing_catalysts/seething"
+    "#create_henry:fan_processing_catalysts/seething",
+    "#create_henry:fan_processing_catalysts/withering",
+    "#create_henry:fan_processing_catalysts/dragon_breathing"
   ]
 }

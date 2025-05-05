@@ -28,6 +28,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 		ENDER_EYE = convert(Items.ENDER_PEARL, Items.ENDER_EYE),
 		MAGMA_BLOCK = convert(Blocks.NETHERRACK, Blocks.MAGMA_BLOCK),
 		MAGMA_CREAM = convert(Items.SLIME_BALL, Items.MAGMA_CREAM),
+		BLAZE_ROD = convert(Items.END_ROD, Items.BLAZE_ROD),
 		CRYING_OBSIDIAN = convert(Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
 		COBBLED_DEEPSLATE = convert(Blocks.COBBLESTONE, Blocks.COBBLED_DEEPSLATE),
 

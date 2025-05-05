@@ -1,5 +1,7 @@
 package com.chocoboy.create_henry.registry;
 
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.HenryBlockStressValues;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlock;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDisplaySources;
 import com.simibubi.create.AllItems;
@@ -228,6 +230,24 @@ public class HenryBlocks {
 			.blockstate(new CreativeMotorGenerator()::generate)
 			.transform(HStress.setCapacity(48))
 			.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
+			.item()
+			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<IndustrialBrakeBlock> INDUSTRIAL_BRAKE = REGISTRATE
+			.block("industrial_brake", IndustrialBrakeBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.mapColor(MapColor.COLOR_GRAY))
+			.tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+			.transform(axeOrPickaxe())
+			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+					.requires(INDUSTRIAL_CASING.get())
+					.requires(HenryItems.KINETIC_MECHANISM.get())
+					.requires(HenryItems.RUBBER.get())
+					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get()))
+					.save(p, HenryCreate.asResource("crafting/kinetics/industrial_brake")))
+			.blockstate(new CreativeMotorGenerator()::generate)
+			.onRegister(HenryBlockStressValues.setTakenSU(256, true))
 			.item()
 			.transform(customItemModel())
 			.register();
