@@ -105,6 +105,18 @@ public class HenryRegistrateTags {
                 .add(AllItems.ROSE_QUARTZ.get())
         ;
 
+        prov.tag(HenryTags.AllItemTags.WITHERABLE.tag)
+                .add(Items.CHARCOAL)
+                .add(Items.COBBLESTONE)
+                .add(Items.STONE)
+                .add(Items.SLIME_BALL)
+                .add(Items.GRASS_BLOCK)
+        ;
+
+        prov.tag(HenryTags.AllItemTags.MEAT.tag)
+                .add(Items.BEEF, Items.PORKCHOP, Items.CHICKEN, Items.MUTTON, Items.COD, Items.SALMON, Items.RABBIT)
+        ;
+
     }
 
     private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
@@ -120,14 +132,19 @@ public class HenryRegistrateTags {
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag)
                 .add(AllBlocks.BLAZE_BURNER.get());
 
-        prov.tag(HenryTags.AllBlockTags.INDUSTRIAL_FAN_HEATER.tag)
-                .add(Blocks.LAVA)
-                .add(AllBlocks.BLAZE_BURNER.get());
+        prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_WITHERING.tag)
+                .add(Blocks.WITHER_ROSE);
+
+        prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING.tag)
+                .add(Blocks.DRAGON_HEAD)
+                .add(Blocks.DRAGON_WALL_HEAD);
 
         prov.tag(AllTags.AllBlockTags.FAN_TRANSPARENT.tag)
                 .addTag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SANDING.tag)
                 .addTag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_FREEZING.tag)
-                .addTag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag);
+                .addTag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag)
+                .addTag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_WITHERING.tag)
+                .addTag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING.tag);
 
         prov.tag(HenryTags.AllBlockTags.INDUSTRIAL_FAN_TRANSPARENT.tag)
                 .addTag(AllTags.AllBlockTags.FAN_TRANSPARENT.tag);

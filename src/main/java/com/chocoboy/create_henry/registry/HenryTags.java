@@ -50,13 +50,15 @@ public class HenryTags {
 		return forgeTag(ForgeRegistries.FLUIDS, path);
 	}
 
+	public static TagKey<Item> minecraftItemTag(String path) {
+		return ItemTags.create(new ResourceLocation("minecraft", path));
+	}
+
 	public enum NameSpace {
 
 		MOD(HenryCreate.MOD_ID, false, true),
 		CREATE("create"),
 		FORGE("forge"),
-		TIC("tconstruct"),
-		QUARK("quark")
 
 		;
 
@@ -80,9 +82,9 @@ public class HenryTags {
 		FAN_PROCESSING_CATALYSTS_SANDING(NameSpace.MOD, "fan_processing_catalysts/sanding"),
 		FAN_PROCESSING_CATALYSTS_FREEZING(NameSpace.MOD, "fan_processing_catalysts/freezing"),
 		FAN_PROCESSING_CATALYSTS_SEETHING(NameSpace.MOD, "fan_processing_catalysts/seething"),
-		INDUSTRIAL_FAN_HEATER,
-		INDUSTRIAL_FAN_TRANSPARENT,
-		BACKPACKS,
+		FAN_PROCESSING_CATALYSTS_WITHERING(NameSpace.MOD, "fan_processing_catalysts/withering"),
+		FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING(NameSpace.MOD, "fan_processing_catalysts/dragon_breathing"),
+		INDUSTRIAL_FAN_TRANSPARENT
 
 		;
 
@@ -137,8 +139,11 @@ public class HenryTags {
 
 		SEETHABLE,
 		SANDABLE,
-		FREEZABLE
+		FREEZABLE,
+		WITHERABLE,
+		DRAGON_BREATHABLE,
 
+		MEAT(NameSpace.MOD, "meat")
 		;
 
 		public final TagKey<Item> tag;
@@ -189,6 +194,8 @@ public class HenryTags {
 		FAN_PROCESSING_CATALYSTS_SANDING(NameSpace.MOD, "fan_processing_catalysts/sanding"),
 		FAN_PROCESSING_CATALYSTS_FREEZING(NameSpace.MOD, "fan_processing_catalysts/freezing"),
 		FAN_PROCESSING_CATALYSTS_SEETHING(NameSpace.MOD, "fan_processing_catalysts/seething"),
+		FAN_PROCESSING_CATALYSTS_WITHERING(NameSpace.MOD, "fan_processing_catalysts/withering"),
+		FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING(NameSpace.MOD, "fan_processing_catalysts/dragon_breathing"),
 
 		SAP(FORGE)
 

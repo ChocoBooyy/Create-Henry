@@ -1,7 +1,5 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.*;
-import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.*;
 import com.simibubi.create.content.kinetics.transmission.SplitShaftVisual;
@@ -17,6 +15,10 @@ import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMo
 import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMotorRenderer;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.*;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeRenderer;
 
 import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
 
@@ -62,6 +64,12 @@ public class HenryBlockEntityTypes {
 			.visual(() -> OrientedRotatingVisual.of(AllPartialModels.SHAFT_HALF), false)
 			.validBlocks(HenryBlocks.KINETIC_MOTOR)
 			.renderer(() -> KineticMotorRenderer::new).register();
+
+	public static final BlockEntityEntry<IndustrialBrakeBlockEntity> INDUSTRIAL_BRAKE = REGISTRATE
+			.blockEntity("industrial_brake", IndustrialBrakeBlockEntity::new)
+			.visual(() -> OrientedRotatingVisual.of(AllPartialModels.SHAFT_HALF), false)
+			.validBlocks(HenryBlocks.INDUSTRIAL_BRAKE)
+			.renderer(() -> IndustrialBrakeRenderer::new).register();
 
 	public static final BlockEntityEntry<MultiMeterBlockEntity> MULTIMETER = REGISTRATE
 			.blockEntity("multimeter", MultiMeterBlockEntity::new)

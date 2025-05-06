@@ -43,7 +43,7 @@ import java.util.function.Supplier;
 import static com.simibubi.create.compat.jei.CreateJEI.consumeTypedRecipes;
 
 @JeiPlugin
-@SuppressWarnings({"unused", "inline", "unchecked", "all"})
+@SuppressWarnings({"unused", "inline", "unchecked", "all", "removal"})
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HenryJEI implements IModPlugin {
@@ -65,11 +65,11 @@ public class HenryJEI implements IModPlugin {
         CreateRecipeCategory<?>
 
                 sanding = builder(SandingRecipe.class)
-                .addTypedRecipes(HenryRecipeTypes.SANDING)
-                .catalystStack(HProcessingViaFanCategory.getFan("fan_sanding"))
-                .doubleItemIcon(AllItems.PROPELLER.get(), Items.SAND)
-                .emptyBackground(178, 72)
-                .build("fan_sanding", FanSandingCategory::new),
+                        .addTypedRecipes(HenryRecipeTypes.SANDING)
+                        .catalystStack(HProcessingViaFanCategory.getFan("fan_sanding"))
+                        .doubleItemIcon(AllItems.PROPELLER.get(), Items.SAND)
+                        .emptyBackground(178, 72)
+                        .build("fan_sanding", FanSandingCategory::new),
                 freezing = builder(FreezingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.FREEZING)
                         .catalystStack(HProcessingViaFanCategory.getFan("fan_freezing"))
@@ -81,7 +81,19 @@ public class HenryJEI implements IModPlugin {
                         .catalystStack(HProcessingViaFanCategory.getFan("fan_seething"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), AllItems.BLAZE_CAKE.get())
                         .emptyBackground(178, 72)
-                        .build("fan_seething", FanSeethingCategory::new);
+                        .build("fan_seething", FanSeethingCategory::new),
+                withering = builder(WitheringRecipe.class)
+                        .addTypedRecipes(HenryRecipeTypes.WITHERING)
+                        .catalystStack(HProcessingViaFanCategory.getFan("fan_withering"))
+                        .doubleItemIcon(AllItems.PROPELLER.get(), Items.WITHER_ROSE)
+                        .emptyBackground(178, 72)
+                        .build("fan_withering", FanWitheringCategory::new),
+                dragon_breathing = builder(DragonBreathingRecipe.class)
+                        .addTypedRecipes(HenryRecipeTypes.DRAGON_BREATHING)
+                        .catalystStack(HProcessingViaFanCategory.getFan("fan_dragon_breathing"))
+                        .doubleItemIcon(AllItems.PROPELLER.get(), Items.DRAGON_HEAD)
+                        .emptyBackground(178, 72)
+                        .build("fan_dragon_breathing", FanDragonBreathingCategory::new);
 
     }
 
@@ -115,6 +127,10 @@ public class HenryJEI implements IModPlugin {
         registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_seething")).ifPresent(type ->
                 registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
         registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_freezing")).ifPresent(type ->
+                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
+        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_withering")).ifPresent(type ->
+                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
+        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_dragon_breathing")).ifPresent(type ->
                 registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
     }
 

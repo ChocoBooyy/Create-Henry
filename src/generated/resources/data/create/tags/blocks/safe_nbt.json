@@ -1,5 +1,6 @@
 {
   "values": [
-    "create_henry:kinetic_motor"
+    "create_henry:kinetic_motor",
+    "create_henry:industrial_brake"
   ]
 }
