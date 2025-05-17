@@ -1,5 +1,6 @@
 package com.chocoboy.create_henry.infrastructure.data;
 
+import com.chocoboy.create_henry.compat.HenryMods;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
@@ -7,6 +8,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.TagGen;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -14,6 +16,8 @@ import net.minecraft.world.level.block.Blocks;
 import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.registry.HenryTags;
 import net.minecraft.world.level.material.Fluid;
+
+import com.mrh0.createaddition.index.CABlocks;
 
 import static com.chocoboy.create_henry.registry.HenryTags.forgeItemTag;
 
@@ -118,7 +122,8 @@ public class HenryRegistrateTags {
     }
 
     private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
-        TagGen.CreateTagsProvider<Block> prov = new TagGen.CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
+        TagGen.CreateTagsProvider<Block> prov =
+                new TagGen.CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
 
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SANDING.tag)
                 .add(Blocks.SAND)
@@ -127,8 +132,19 @@ public class HenryRegistrateTags {
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_FREEZING.tag)
                 .add(Blocks.POWDER_SNOW);
 
-        prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag)
+
+        // Seething catalysts: always add vanilla Blaze Burner
+        var seething = prov
+                .tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag)
                 .add(AllBlocks.BLAZE_BURNER.get());
+
+        // Compat
+        // Add the createaddition blaze burner if the mod is loaded
+        if (HenryMods.CREATEADDITION.isLoaded()) {
+            Block compat = HenryMods.CREATEADDITION.getBlock("liquid_blaze_burner");
+            if (compat != null)
+                seething.add(compat);
+        }
 
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_WITHERING.tag)
                 .add(Blocks.WITHER_ROSE);
@@ -136,7 +152,6 @@ public class HenryRegistrateTags {
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING.tag)
                 .add(Blocks.DRAGON_HEAD)
                 .add(Blocks.DRAGON_WALL_HEAD);
-
 
         prov.tag(HenryTags.AllBlockTags.INDUSTRIAL_FAN_HEATER.tag)
                 .add(Blocks.LAVA)
