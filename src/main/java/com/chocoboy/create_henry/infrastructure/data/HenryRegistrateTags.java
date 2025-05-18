@@ -1,5 +1,6 @@
 package com.chocoboy.create_henry.infrastructure.data;
 
+import com.chocoboy.create_henry.compat.HenryMods;
 import com.chocoboy.create_henry.registry.HenryFluids;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -129,8 +130,18 @@ public class HenryRegistrateTags {
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_FREEZING.tag)
                 .add(Blocks.POWDER_SNOW);
 
-        prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag)
+        // Seething catalysts: always add vanilla Blaze Burner
+        var seething = prov
+                .tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag)
                 .add(AllBlocks.BLAZE_BURNER.get());
+
+        // Compat
+        // Add the createaddition blaze burner if the mod is loaded
+        if (HenryMods.CREATEADDITION.isLoaded()) {
+            Block compat = HenryMods.CREATEADDITION.getBlock("liquid_blaze_burner");
+            if (compat != null)
+                seething.add(compat);
+        }
 
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_WITHERING.tag)
                 .add(Blocks.WITHER_ROSE);

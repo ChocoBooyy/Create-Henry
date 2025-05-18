@@ -1,6 +1,7 @@
 {
   "block.create_henry.bore_block": "Bore Block",
   "block.create_henry.furnace_engine": "Furnace Engine",
+  "block.create_henry.henry_block": "Henry Block",
   "block.create_henry.hydraulic_casing": "Hydraulic Casing",
   "block.create_henry.hydraulic_press": "Hydraulic Press",
   "block.create_henry.industrial_brake": "Industrial Brake",

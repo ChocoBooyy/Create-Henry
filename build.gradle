@@ -104,17 +104,9 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
-    //maven {
-    //    name = "DVS1 Maven FS"
-    //    url = "https://dvs1.progwml6.com/files/maven"
-    //}
-    //maven {
-    //    //Iglee's Repo
-    //    url = "https://iglee.fr:8081/releases"
-    //    content {
-    //        includeGroup "fr.iglee42"
-    //    }
-    //}
+    maven {
+        url "https://cursemaven.com"
+    }
 
     flatDir {
         dirs "libs"
@@ -131,19 +123,12 @@ dependencies {
     implementation(fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}"))
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
-    //implementation fg.deobf("fr.iglee42:CreateCasing:${minecraft_version}-${create_casing_version}") { transitive = false }
 
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
     runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
 
-    // compile against the JEI API but do not include it at runtime
-    // compileOnly(fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}"))
-    // at runtime, use the full JEI jar for Forge
-    // runtimeOnly(fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge:${jei_version}"))
-
-    //compileOnly fg.deobf("slimeknights.mantle:Mantle:${minecraft_version}-${mantle_build}")
-    //compileOnly fg.deobf("slimeknights.tconstruct:TConstruct:${minecraft_version}-${tinkers_build}")
+    compileOnly fg.deobf("curse.maven:createaddition-439890:6084982")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }

@@ -1,5 +1,6 @@
 package com.chocoboy.create_henry.registry;
 
+import com.chocoboy.create_henry.compat.HenryMods;
 import com.chocoboy.create_henry.content.recipes.*;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
@@ -177,15 +179,30 @@ public class HenryFanProcessingTypes {
 
         @Override
         public boolean isValidAt(Level level, BlockPos pos) {
-            FluidState fluidState = level.getFluidState(pos);
-            if (HenryTags.AllFluidTags.FAN_PROCESSING_CATALYSTS_SEETHING.matches(fluidState)) {
+            if (HenryTags.AllFluidTags.FAN_PROCESSING_CATALYSTS_SEETHING
+                    .matches(level.getFluidState(pos)))
                 return true;
+
+            BlockState state = level.getBlockState(pos);
+            Block block = state.getBlock();
+
+            // Vanilla Blaze Burner
+            if (block instanceof BlazeBurnerBlock) {
+                BlazeBurnerBlock.HeatLevel heat = state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
+                return heat.isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING);
             }
-            BlockState blockState = level.getBlockState(pos);
-            if (HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.matches(blockState)) {
-                return !blockState.hasProperty(BlazeBurnerBlock.HEAT_LEVEL) || blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL).isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING);
+
+            // CreateAddition liquid blaze burner (only when that mod is loaded and the block is present)
+            if (HenryMods.CREATEADDITION.isLoaded()) {
+                Block compat = HenryMods.CREATEADDITION.getBlock("liquid_blaze_burner");
+                if (block == compat) {
+                    // CreateAddition reuses the same HEAT_LEVEL property
+                    BlazeBurnerBlock.HeatLevel heat = state.getValue(BlazeBurnerBlock.HEAT_LEVEL);
+                    return heat.isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING);
+                }
             }
-            return false;
+
+            return HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.matches(state);
         }
 
         @Override
