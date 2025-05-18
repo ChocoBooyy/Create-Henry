@@ -1,5 +1,6 @@
 package com.chocoboy.create_henry.registry;
 
+import com.chocoboy.create_henry.content.blocks.henrys.HenryBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.HenryBlockStressDefaults;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlock;
 import com.simibubi.create.AllBlocks;
@@ -12,6 +13,7 @@ import com.simibubi.create.content.kinetics.motor.CreativeMotorGenerator;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.redstone.displayLink.source.KineticSpeedDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.source.KineticStressDisplaySource;
+import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.*;
 import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -19,7 +21,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -269,6 +270,25 @@ public class HenryBlocks {
 					.blockstate(BlockStateGen.axisBlockProvider(false))
 					.loot((lt, block) -> lt.dropOther(block, AllBlocks.FLYWHEEL.get()))
 					.register();
+
+	public static final BlockEntry<HenryBlock> HENRY_BLOCK = REGISTRATE.block("henry_block", HenryBlock::new)
+			.properties(p -> p
+					.mapColor(MapColor.TERRACOTTA_YELLOW)
+					.strength(0.5f, 1.5f)
+					.sound(SoundType.WOOL)
+			)
+			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+					.requires(Items.YELLOW_DYE)
+					.requires(Items.FEATHER)
+					.requires(HenryItems.RUBBER.get())
+					.unlockedBy("has_rubber", has(HenryItems.RUBBER.get()))
+					.save(p, HenryCreate.asResource("crafting/henry_block")))
+			.blockstate(BlockStateGen.horizontalBlockProvider(true))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.lang("Henry Block")
+			.item()
+			.transform(com.simibubi.create.foundation.data.ModelGen.customItemModel())
+			.register();
 
 	// Load this class
 
