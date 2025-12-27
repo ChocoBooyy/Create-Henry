@@ -3,29 +3,30 @@ package com.chocoboy.create_henry.content.data_recipes;
 import com.google.common.base.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider;
-import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeBuilder;
+import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
+import com.chocoboy.create_henry.HenryCreate;
+import com.chocoboy.create_henry.registry.HenryBlocks;
+import com.chocoboy.create_henry.registry.HenryItems;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.registry.HenryBlocks;
-import com.chocoboy.create_henry.registry.HenryItems;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.UnaryOperator;
 
 @ParametersAreNonnullByDefault
 @SuppressWarnings({"unused", "all"})
-public class AdvancedCraftingRecipeGen extends CreateRecipeProvider {
+public class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
 
     GeneratedRecipe
-            //SEQUENCED ASSEMBLY RECIPE
-            KINETIC_MECHANISM = createSequencedAssembly("kinetic_mechanism", b -> b.require(AllItems.IRON_SHEET.get())
+            // SEQUENCED ASSEMBLY RECIPE
+            KINETIC_MECHANISM = createSequencedAssembly("kinetic_mechanism", b -> b
+            .require(AllItems.IRON_SHEET.get())
             .transitionTo(HenryItems.INCOMPLETE_KINETIC_MECHANISM.get())
             .addOutput(HenryItems.KINETIC_MECHANISM.get(), 480)
             .addOutput(AllItems.ANDESITE_ALLOY.get(), 16)
@@ -43,9 +44,7 @@ public class AdvancedCraftingRecipeGen extends CreateRecipeProvider {
             .addStep(DeployerApplicationRecipe::new, rb -> rb.require(AllItems.ZINC_NUGGET.get()))
     ),
 
-
-    //MECHANICAL CRAFTING RECIPE
-
+    // MECHANICAL CRAFTING RECIPE
     HYDRAULIC_PRESS = createMechanicalCrafting(HenryBlocks.HYDRAULIC_PRESS::get).returns(1)
             .recipe(b -> b
                     .key('P', AllBlocks.FLUID_PIPE.get())
@@ -55,20 +54,19 @@ public class AdvancedCraftingRecipeGen extends CreateRecipeProvider {
                     .patternLine(" P ")
                     .patternLine(" H ")
                     .patternLine("CMC")
-            )
+            );
 
-    ;
-
-    public AdvancedCraftingRecipeGen(PackOutput p_i48262_1_) {
-        super(p_i48262_1_);
+    public AdvancedCraftingRecipeGen(PackOutput output) {
+        super(output, HenryCreate.MOD_ID);
     }
 
-    protected GeneratedRecipe createSequencedAssembly(String name, UnaryOperator<SequencedAssemblyRecipeBuilder> transform) {
-        GeneratedRecipe generatedRecipe =
+    protected GeneratedRecipe createSequencedAssembly(String name,
+                                                      UnaryOperator<SequencedAssemblyRecipeBuilder> transform) {
+        GeneratedRecipe recipe =
                 c -> transform.apply(new SequencedAssemblyRecipeBuilder(HenryCreate.asResource(name)))
                         .build(c);
-        all.add(generatedRecipe);
-        return generatedRecipe;
+        all.add(recipe);
+        return recipe;
     }
 
     GeneratedRecipeBuilder createMechanicalCrafting(Supplier<ItemLike> result) {
@@ -101,12 +99,12 @@ public class AdvancedCraftingRecipeGen extends CreateRecipeProvider {
             return register(consumer -> {
                 MechanicalCraftingRecipeBuilder b =
                         builder.apply(MechanicalCraftingRecipeBuilder.shapedRecipe(result.get(), amount));
-                ResourceLocation location = HenryCreate.asResource("mechanical_crafting/" + CatnipServices.REGISTRIES.getKeyOrThrow(result.get()
-                                .asItem())
-                        .getPath() + suffix);
+                ResourceLocation location = HenryCreate.asResource(
+                        "mechanical_crafting/" +
+                                CatnipServices.REGISTRIES.getKeyOrThrow(result.get().asItem()).getPath() +
+                                suffix);
                 b.build(consumer, location);
             });
         }
     }
-
 }

@@ -113,7 +113,7 @@ public class HenryFanProcessingTypes {
         public List<ItemStack> process(ItemStack stack, Level level) {
             SANDING_WRAPPER.setItem(0, stack);
             Optional<SandingRecipe> recipe = HenryRecipeTypes.SANDING.find(SANDING_WRAPPER, level);
-            return recipe.map(sandingRecipe -> RecipeApplier.applyRecipeOn(level, stack, sandingRecipe)).orElse(null);
+            return recipe.map(sandingRecipe -> RecipeApplier.applyRecipeOn(level, stack, sandingRecipe, false)).orElse(null);
         }
 
         @Override
@@ -222,7 +222,7 @@ public class HenryFanProcessingTypes {
         public List<ItemStack> process(ItemStack stack, Level level) {
             SEETHING_WRAPPER.setItem(0, stack);
             Optional<SeethingRecipe> recipe = HenryRecipeTypes.SEETHING.find(SEETHING_WRAPPER, level);
-            return recipe.map(seethingRecipe -> RecipeApplier.applyRecipeOn(level, stack, seethingRecipe)).orElse(null);
+            return recipe.map(seethingRecipe -> RecipeApplier.applyRecipeOn(level, stack, seethingRecipe, false)).orElse(null);
         }
 
         @Override
@@ -310,7 +310,7 @@ public class HenryFanProcessingTypes {
         public List<ItemStack> process(ItemStack stack, Level level) {
             FREEZING_WRAPPER.setItem(0, stack);
             Optional<FreezingRecipe> recipe = HenryRecipeTypes.FREEZING.find(FREEZING_WRAPPER, level);
-            return recipe.map(freezingRecipe -> RecipeApplier.applyRecipeOn(level, stack, freezingRecipe)).orElse(null);
+            return recipe.map(freezingRecipe -> RecipeApplier.applyRecipeOn(level, stack, freezingRecipe, false)).orElse(null);
         }
 
         @Override
@@ -434,7 +434,7 @@ public class HenryFanProcessingTypes {
         public List<ItemStack> process(ItemStack stack, Level level) {
             WITHERING_WRAPPER.setItem(0, stack);
             Optional<WitheringRecipe> recipe = HenryRecipeTypes.WITHERING.find(WITHERING_WRAPPER, level);
-            return recipe.map(witheringRecipe -> RecipeApplier.applyRecipeOn(level, stack, witheringRecipe)).orElse(null);
+            return recipe.map(witheringRecipe -> RecipeApplier.applyRecipeOn(level, stack, witheringRecipe, false)).orElse(null);
         }
 
         @Override
@@ -555,7 +555,7 @@ public class HenryFanProcessingTypes {
         public List<ItemStack> process(ItemStack stack, Level level) {
             DRAGON_BREATHING_WRAPPER.setItem(0, stack);
             Optional<DragonBreathingRecipe> recipe = HenryRecipeTypes.DRAGON_BREATHING.find(DRAGON_BREATHING_WRAPPER, level);
-            return recipe.map(dragonBreathingRecipe -> RecipeApplier.applyRecipeOn(level, stack, dragonBreathingRecipe)).orElse(null);
+            return recipe.map(dragonBreathingRecipe -> RecipeApplier.applyRecipeOn(level, stack, dragonBreathingRecipe, false)).orElse(null);
         }
 
         @Override

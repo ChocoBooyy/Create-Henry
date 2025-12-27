@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "ic2:ingot_uranium"
+      "item": "ic2:ingot/uranium"
     },
     {
       "chance": 0.5,
-      "item": "ic2:ingot_uranium"
+      "item": "ic2:ingot/uranium"
     }
   ]
 }

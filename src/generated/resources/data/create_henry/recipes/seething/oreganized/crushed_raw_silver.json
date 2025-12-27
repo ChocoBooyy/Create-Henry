@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "oreganized:silver_ingot"
+      "item": "oreganized:ingot/silver"
     },
     {
       "chance": 0.5,
-      "item": "oreganized:silver_ingot"
+      "item": "oreganized:ingot/silver"
     }
   ]
 }

@@ -20,6 +20,7 @@ import mezz.jei.api.runtime.IIngredientManager;
 import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -155,6 +156,23 @@ public class HenryJEI implements IModPlugin {
 
         public CategoryBuilder(Class<? extends T> recipeClass) {
             this.recipeClass = recipeClass;
+        }
+
+        private String formatNiceName(String raw) {
+            if (raw.startsWith("fan_"))
+                raw = raw.substring(4);
+
+            String[] parts = raw.split("_");
+            StringBuilder b = new StringBuilder();
+
+            for (String p : parts) {
+                if (p.isEmpty()) continue;
+                b.append(Character.toUpperCase(p.charAt(0)))
+                        .append(p.substring(1))
+                        .append(" ");
+            }
+
+            return "Bulk " + b.toString().trim();
         }
 
         public CategoryBuilder<T> enableIf(Predicate<HRecipes> predicate) {
@@ -322,7 +340,8 @@ public class HenryJEI implements IModPlugin {
 
             CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
                     new mezz.jei.api.recipe.RecipeType<>(HenryCreate.asResource(name), recipeClass),
-                    CreateLang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
+                    Component.literal(formatNiceName(name)),
+                    background, icon, recipesSupplier, catalysts);
             CreateRecipeCategory<T> category = factory.create(info);
             allCategories.add(category);
             return category;

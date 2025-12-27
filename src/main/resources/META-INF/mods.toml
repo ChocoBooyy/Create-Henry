@@ -36,6 +36,6 @@ Create: Henry is an addon for the Create mod that add random QoL, items, & block
 [[dependencies.create_henry]]
     modId="create"
     mandatory=true
-    versionRange="[6.0.2,6.1.0)"
+    versionRange="[6.0.8,6.1.0)"
     ordering="AFTER"
     side="BOTH"

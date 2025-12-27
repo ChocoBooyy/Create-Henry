@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "thermal:silver_ingot"
+      "item": "thermal:ingot/silver"
     },
     {
       "chance": 0.5,
-      "item": "thermal:silver_ingot"
+      "item": "thermal:ingot/silver"
     }
   ]
 }

@@ -90,6 +90,11 @@ repositories {
         url = 'https://maven.tterrag.com/'
     }
     maven {
+        // Registrate
+        name = 'ithundxr maven'
+        url = "https://maven.ithundxr.dev/mirror"
+    }
+    maven {
         // ForgeConfigAPIPort
         name = 'ForgeConfigAPIPort'
         url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"

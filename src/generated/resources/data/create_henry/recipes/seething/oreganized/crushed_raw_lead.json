@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "oreganized:lead_ingot"
+      "item": "oreganized:ingot/lead"
     },
     {
       "chance": 0.5,
-      "item": "oreganized:lead_ingot"
+      "item": "oreganized:ingot/lead"
     }
   ]
 }

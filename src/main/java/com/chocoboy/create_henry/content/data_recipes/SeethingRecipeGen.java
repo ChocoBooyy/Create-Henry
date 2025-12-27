@@ -5,9 +5,10 @@ import com.chocoboy.create_henry.registry.HenryItems;
 import com.chocoboy.create_henry.registry.HenryRecipeTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
-import com.simibubi.create.foundation.data.recipe.CompatMetals;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -19,49 +20,54 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
-import static com.simibubi.create.foundation.data.recipe.CompatMetals.*;
-
 @SuppressWarnings({"unused", "deprecation", "all"})
 public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
 
-		ENDER_EYE = convert(Items.ENDER_PEARL, Items.ENDER_EYE),
-		MAGMA_BLOCK = convert(Blocks.NETHERRACK, Blocks.MAGMA_BLOCK),
-		MAGMA_CREAM = convert(Items.SLIME_BALL, Items.MAGMA_CREAM),
-		BLAZE_ROD = convert(Items.END_ROD, Items.BLAZE_ROD),
-		CRYING_OBSIDIAN = convert(Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
-		COBBLED_DEEPSLATE = convert(Blocks.COBBLESTONE, Blocks.COBBLED_DEEPSLATE),
+			ENDER_EYE = convert(Items.ENDER_PEARL, Items.ENDER_EYE),
+			MAGMA_BLOCK = convert(Blocks.NETHERRACK, Blocks.MAGMA_BLOCK),
+			MAGMA_CREAM = convert(Items.SLIME_BALL, Items.MAGMA_CREAM),
+			BLAZE_ROD = convert(Items.END_ROD, Items.BLAZE_ROD),
+			CRYING_OBSIDIAN = convert(Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
+			COBBLED_DEEPSLATE = convert(Blocks.COBBLESTONE, Blocks.COBBLED_DEEPSLATE),
 
-		LAPIS_LAZULI_SHARD_FROM_CALCITE = convertChanceRecipe(
-				() -> Items.CALCITE,
-				HenryItems.LAPIS_LAZULI_SHARD::get,
-				0.75f
-		),
-		LAPIS_LAZULI_SHARD_FROM_LIMESTONE = convertChanceRecipe(
-				() -> AllPaletteStoneTypes.LIMESTONE.baseBlock.get(),
-				HenryItems.LAPIS_LAZULI_SHARD::get,
-				0.05f
-		),
+	LAPIS_LAZULI_SHARD_FROM_CALCITE = convertChanceRecipe(
+			() -> Items.CALCITE,
+			HenryItems.LAPIS_LAZULI_SHARD::get,
+			0.75f
+	),
+			LAPIS_LAZULI_SHARD_FROM_LIMESTONE = convertChanceRecipe(
+					() -> AllPaletteStoneTypes.LIMESTONE.baseBlock.get(),
+					HenryItems.LAPIS_LAZULI_SHARD::get,
+					0.05f
+			),
 
-		NETHERITE_SCRAP = secondaryRecipe(() -> Items.ANCIENT_DEBRIS, () -> Items.NETHERITE_SCRAP, () -> Items.NETHERITE_SCRAP, .35f),
+	NETHERITE_SCRAP = secondaryRecipe(
+			() -> Items.ANCIENT_DEBRIS,
+			() -> Items.NETHERITE_SCRAP,
+			() -> Items.NETHERITE_SCRAP,
+			.35f
+	),
 
-		CRUSHED_COPPER = crushedOre(AllItems.CRUSHED_COPPER, () -> Items.COPPER_INGOT, () -> Items.COPPER_INGOT, .5f),
-		CRUSHED_ZINC = crushedOre(AllItems.CRUSHED_ZINC, AllItems.ZINC_INGOT::get, () -> AllItems.ZINC_INGOT::get, .25f),
-		CRUSHED_GOLD = crushedOre(AllItems.CRUSHED_GOLD, () -> Items.GOLD_INGOT, () -> Items.GOLD_INGOT, .5f),
-		CRUSHED_IRON = crushedOre(AllItems.CRUSHED_IRON, () -> Items.IRON_INGOT, () -> Items.IRON_INGOT, .75f),
+	CRUSHED_COPPER = crushedOre(AllItems.CRUSHED_COPPER,
+			() -> Items.COPPER_INGOT, () -> Items.COPPER_INGOT, .5f),
+			CRUSHED_ZINC = crushedOre(AllItems.CRUSHED_ZINC,
+					AllItems.ZINC_INGOT::get, AllItems.ZINC_INGOT::get, .25f),
+			CRUSHED_GOLD = crushedOre(AllItems.CRUSHED_GOLD,
+					() -> Items.GOLD_INGOT, () -> Items.GOLD_INGOT, .5f),
+			CRUSHED_IRON = crushedOre(AllItems.CRUSHED_IRON,
+					() -> Items.IRON_INGOT, () -> Items.IRON_INGOT, .75f),
 
-		CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, OSMIUM),
-		CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, PLATINUM),
-		CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, SILVER),
-		CRUSHED_TIN = moddedCrushedOre(AllItems.CRUSHED_TIN, TIN),
-		CRUSHED_LEAD = moddedCrushedOre(AllItems.CRUSHED_LEAD, LEAD),
-		CRUSHED_QUICKSILVER = moddedCrushedOre(AllItems.CRUSHED_QUICKSILVER, QUICKSILVER),
-		CRUSHED_BAUXITE = moddedCrushedOre(AllItems.CRUSHED_BAUXITE, ALUMINUM),
-		CRUSHED_URANIUM = moddedCrushedOre(AllItems.CRUSHED_URANIUM, URANIUM),
-		CRUSHED_NICKEL = moddedCrushedOre(AllItems.CRUSHED_NICKEL, NICKEL)
-
-	;
+	CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, CommonMetal.OSMIUM),
+			CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, CommonMetal.PLATINUM),
+			CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, CommonMetal.SILVER),
+			CRUSHED_TIN = moddedCrushedOre(AllItems.CRUSHED_TIN, CommonMetal.TIN),
+			CRUSHED_LEAD = moddedCrushedOre(AllItems.CRUSHED_LEAD, CommonMetal.LEAD),
+			CRUSHED_QUICKSILVER = moddedCrushedOre(AllItems.CRUSHED_QUICKSILVER, CommonMetal.QUICKSILVER),
+			CRUSHED_BAUXITE = moddedCrushedOre(AllItems.CRUSHED_BAUXITE, CommonMetal.ALUMINUM),
+			CRUSHED_URANIUM = moddedCrushedOre(AllItems.CRUSHED_URANIUM, CommonMetal.URANIUM),
+			CRUSHED_NICKEL = moddedCrushedOre(AllItems.CRUSHED_NICKEL, CommonMetal.NICKEL);
 
 	public GeneratedRecipe convert(Block block, Block result) {
 		return create(() -> block, b -> b.output(result));
@@ -72,44 +78,72 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 	}
 
 	public GeneratedRecipe convert(Supplier<ItemLike> item, Supplier<ItemLike> result) {
-		return create(item, b -> b.output((ItemLike) result));
+		return create(item, b -> b.output(result.get()));
 	}
 
 	public GeneratedRecipe convert(ItemEntry<Item> item, ItemEntry<Item> result) {
 		return create(item::get, b -> b.output(result::get));
 	}
 
-	public GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item, Supplier<ItemLike> first, Supplier<ItemLike> secondary,
+	// --- Chance-based / secondary recipes ---
+
+	public GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item,
+										   Supplier<ItemLike> first,
+										   Supplier<ItemLike> secondary,
+										   float secondaryChance) {
+		return create(
+				HenryCreate.asResource(getItemName(first.get()) + "_from_" + getItemName(item.get())),
+				b -> b.withItemIngredients(Ingredient.of(item.get()))
+						.output(first.get(), 1)
+						.output(secondaryChance, secondary.get(), 1)
+		);
+	}
+
+	public GeneratedRecipe convertChanceRecipe(Supplier<ItemLike> item,
+											   Supplier<ItemLike> result,
+											   float chance) {
+		return create(
+				HenryCreate.asResource(getItemName(result.get()) + "_from_" + getItemName(item.get())),
+				b -> b.withItemIngredients(Ingredient.of(item.get()))
+						.output(chance, result.get(), 1)
+		);
+	}
+
+	// --- Vanilla crushed ores ---
+
+	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed,
+									  Supplier<ItemLike> ingot,
+									  Supplier<ItemLike> secondary,
 									  float secondaryChance) {
-		return create(HenryCreate.asResource(getItemName(first.get()) + "_from_" + getItemName(item.get())), b -> b.withItemIngredients(Ingredient.of(item.get())).output(first.get(), 1)
-				.output(secondaryChance, secondary.get(), 1));
-	}
-	public GeneratedRecipe convertChanceRecipe(Supplier<ItemLike> item, Supplier<ItemLike> result, float chance) {
-		return create(HenryCreate.asResource(getItemName(result.get()) + "_from_" + getItemName(item.get())), b -> b.withItemIngredients(Ingredient.of(item.get())).output(chance, result.get(), 1));
-	}
-
-	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed, Supplier<ItemLike> ingot, Supplier<ItemLike> secondary,
-		float secondaryChance) {
-		return create(crushed::get, b -> b.output(ingot.get(), 1)
-			.output(secondaryChance, secondary.get(), 1));
+		return create(crushed::get,
+				b -> b.output(ingot.get(), 1)
+						.output(secondaryChance, secondary.get(), 1)
+		);
 	}
 
-	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CompatMetals metal) {
-		String metalName = metal.getName();
-		for (Mods mod : metal.getMods()) {
-			ResourceLocation ingot = mod.ingotOf(metalName);
-			create(mod.getId() + "/" + crushed.getId()
-				.getPath(),
-				b -> b.withItemIngredients(Ingredient.of(crushed::get))
-					.output(1, ingot, 1)
-					.output(0.5f, ingot, 1)
-					.whenModLoaded(mod.getId()));
+	// --- Modded crushed ores using CommonMetal ---
+
+	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CommonMetal metal) {
+
+		for (Mods mod : Mods.values()) {
+
+			if (!CommonMetal.of(mod).contains(metal))
+				continue;
+
+			String metalName = metal.getName(mod);
+			ResourceLocation ingotId = new ResourceLocation(mod.getId(), "ingot/" + metalName);
+
+			create(mod.getId() + "/" + crushed.getId().getPath(),
+					b -> b.withItemIngredients(Ingredient.of(crushed::get))
+							.output(1, ingotId, 1)
+							.output(0.5f, ingotId, 1)
+							.whenModLoaded(mod.getId()));
 		}
 		return null;
 	}
 
-	public SeethingRecipeGen(PackOutput dataGenerator) {
-		super(dataGenerator);
+	public SeethingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
 	@Override
@@ -117,4 +151,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 		return HenryRecipeTypes.SEETHING;
 	}
 
+	protected static String getItemName(ItemLike itemLike) {
+		return CatnipServices.REGISTRIES.getKeyOrThrow(itemLike.asItem()).getPath();
+	}
 }
