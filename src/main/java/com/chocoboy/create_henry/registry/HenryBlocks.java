@@ -1,6 +1,6 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.content.blocks.henrys.HenryBlock;
+import com.chocoboy.create_henry.content.blocks.decorative.HenryBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.HenryBlockStressValues;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlock;
 import com.simibubi.create.AllBlocks;
@@ -36,7 +36,7 @@ import com.chocoboy.create_henry.content.blocks.contraptions.bore_block.BoreBloc
 import com.chocoboy.create_henry.content.blocks.contraptions.bore_block.BoreBlockMovementBehaviour;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.hydraulic_press.HydraulicPressBlock;
-import com.chocoboy.create_henry.content.blocks.kinetics.industrial_fan_block.IndustrialFanBlock;
+import com.chocoboy.create_henry.content.blocks.kinetics.industrial_fan.IndustrialFanBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.FurnaceEngineBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.FurnaceEngineGenerator;
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.PoweredFlywheelBlock;

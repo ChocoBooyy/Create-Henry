@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
-import com.chocoboy.create_henry.registry.helper.Lang;
+import com.chocoboy.create_henry.util.Lang;
 
 import java.util.Optional;
 import java.util.function.Supplier;

@@ -1,7 +1,7 @@
 package com.chocoboy.create_henry.registry;
 
 import com.simibubi.create.foundation.particle.ICustomParticleData;
-import com.chocoboy.create_henry.registry.helper.Lang;
+import com.chocoboy.create_henry.util.Lang;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
