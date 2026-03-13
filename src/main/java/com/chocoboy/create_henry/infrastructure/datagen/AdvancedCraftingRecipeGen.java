@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.content.data_recipes;
+package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.google.common.base.Supplier;
 import com.simibubi.create.AllBlocks;

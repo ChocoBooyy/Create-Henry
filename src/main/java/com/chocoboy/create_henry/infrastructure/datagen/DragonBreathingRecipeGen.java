@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.content.data_recipes;
+package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.chocoboy.create_henry.registry.HenryRecipeTypes;
 import net.minecraft.data.PackOutput;

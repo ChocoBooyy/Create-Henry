@@ -1,9 +1,8 @@
-package com.chocoboy.create_henry.content.data_recipes;
+package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.ItemTags;
 import com.chocoboy.create_henry.registry.HenryBlocks;

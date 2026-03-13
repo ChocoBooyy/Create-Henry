@@ -1,8 +1,7 @@
-package com.chocoboy.create_henry.content.data_recipes;
+package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.chocoboy.create_henry.registry.HenryRecipeTypes;
 import com.chocoboy.create_henry.registry.HenryTags;
-import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;

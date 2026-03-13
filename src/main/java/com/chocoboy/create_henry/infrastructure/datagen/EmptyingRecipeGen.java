@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.content.data_recipes;
+package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;

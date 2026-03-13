@@ -1,16 +1,6 @@
-package com.chocoboy.create_henry.infrastructure.data;
+package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.content.data_recipes.AdvancedCraftingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.DragonBreathingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.EmptyingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.FreezingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.ItemApplicationRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.MixingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.SandingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.SeethingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.WashingRecipeGen;
-import com.chocoboy.create_henry.content.data_recipes.WitheringRecipeGen;
 import com.chocoboy.create_henry.infrastructure.ponder.HenryPonderPlugin;
 import com.chocoboy.create_henry.registry.HenryLangPartial;
 import com.tterrag.registrate.providers.ProviderType;

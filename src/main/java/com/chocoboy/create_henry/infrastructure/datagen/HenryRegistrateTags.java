@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.infrastructure.data;
+package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.chocoboy.create_henry.compat.HenryMods;
 import com.chocoboy.create_henry.registry.HenryFluids;

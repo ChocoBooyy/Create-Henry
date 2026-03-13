@@ -17,7 +17,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import com.chocoboy.create_henry.registry.HenryPackets;
+import com.chocoboy.create_henry.infrastructure.network.HenryPackets;
+import com.chocoboy.create_henry.infrastructure.network.GaugeObservedPacket;
 
 import java.util.List;
 
