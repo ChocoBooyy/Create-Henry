@@ -28,8 +28,8 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.content.jei.HProcessingViaFanCategory;
-import com.chocoboy.create_henry.infrastructure.config.HRecipes;
+import com.chocoboy.create_henry.content.jei.HenryFanProcessingCategory;
+import com.chocoboy.create_henry.infrastructure.config.HenryRecipesConfig;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
 import com.simibubi.create.foundation.utility.CreateLang;
 
@@ -67,31 +67,31 @@ public class HenryJEI implements IModPlugin {
 
                 sanding = builder(SandingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.SANDING)
-                        .catalystStack(HProcessingViaFanCategory.getFan("fan_sanding"))
+                        .catalystStack(HenryFanProcessingCategory.getFan("fan_sanding"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.SAND)
                         .emptyBackground(178, 72)
                         .build("fan_sanding", FanSandingCategory::new),
                 freezing = builder(FreezingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.FREEZING)
-                        .catalystStack(HProcessingViaFanCategory.getFan("fan_freezing"))
+                        .catalystStack(HenryFanProcessingCategory.getFan("fan_freezing"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.POWDER_SNOW_BUCKET)
                         .emptyBackground(178, 72)
                         .build("fan_freezing", FanFreezingCategory::new),
                 seething = builder(SeethingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.SEETHING)
-                        .catalystStack(HProcessingViaFanCategory.getFan("fan_seething"))
+                        .catalystStack(HenryFanProcessingCategory.getFan("fan_seething"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), AllItems.BLAZE_CAKE.get())
                         .emptyBackground(178, 72)
                         .build("fan_seething", FanSeethingCategory::new),
                 withering = builder(WitheringRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.WITHERING)
-                        .catalystStack(HProcessingViaFanCategory.getFan("fan_withering"))
+                        .catalystStack(HenryFanProcessingCategory.getFan("fan_withering"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.WITHER_ROSE)
                         .emptyBackground(178, 72)
                         .build("fan_withering", FanWitheringCategory::new),
                 dragon_breathing = builder(DragonBreathingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.DRAGON_BREATHING)
-                        .catalystStack(HProcessingViaFanCategory.getFan("fan_dragon_breathing"))
+                        .catalystStack(HenryFanProcessingCategory.getFan("fan_dragon_breathing"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.DRAGON_HEAD)
                         .emptyBackground(178, 72)
                         .build("fan_dragon_breathing", FanDragonBreathingCategory::new);
@@ -146,7 +146,7 @@ public class HenryJEI implements IModPlugin {
 
     private static class CategoryBuilder<T extends Recipe<?>> {
         private final Class<? extends T> recipeClass;
-        private Predicate<HRecipes> predicate = hRecipes -> true;
+        private Predicate<HenryRecipesConfig> predicate = hRecipes -> true;
 
         private IDrawable background;
         private IDrawable icon;
@@ -175,12 +175,12 @@ public class HenryJEI implements IModPlugin {
             return "Bulk " + b.toString().trim();
         }
 
-        public CategoryBuilder<T> enableIf(Predicate<HRecipes> predicate) {
+        public CategoryBuilder<T> enableIf(Predicate<HenryRecipesConfig> predicate) {
             this.predicate = predicate;
             return this;
         }
 
-        public CategoryBuilder<T> enableWhen(Function<HRecipes, ConfigBase.ConfigBool> configValue) {
+        public CategoryBuilder<T> enableWhen(Function<HenryRecipesConfig, ConfigBase.ConfigBool> configValue) {
             predicate = c -> configValue.apply(c).get();
             return this;
         }

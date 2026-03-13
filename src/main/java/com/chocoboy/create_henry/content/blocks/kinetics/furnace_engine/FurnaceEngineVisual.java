@@ -63,8 +63,11 @@ public class FurnaceEngineVisual extends AbstractBlockEntityVisual<FurnaceEngine
             this.piston.setVisible(false);
             this.linkage.setVisible(false);
             this.connector.setVisible(false);
-            return;
         } else {
+            this.piston.setVisible(true);
+            this.linkage.setVisible(true);
+            this.connector.setVisible(true);
+
             Direction facing = SteamEngineBlock.getFacing(blockState);
             Axis facingAxis = facing.getAxis();
 

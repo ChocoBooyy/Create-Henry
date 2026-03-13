@@ -23,14 +23,14 @@ public class HenryConfigs {
 
 	private static final Map<ModConfig.Type, ConfigBase> CONFIGS = new EnumMap<>(ModConfig.Type.class);
 
-	private static HClient client;
-	private static HServer server;
+	private static HenryClientConfig client;
+	private static HenryServerConfig server;
 
-	public static HClient client() {
+	public static HenryClientConfig client() {
 		return client;
 	}
 
-	public static HServer server() {
+	public static HenryServerConfig server() {
 		return server;
 	}
 
@@ -52,13 +52,13 @@ public class HenryConfigs {
 	}
 
 	public static void register(ModLoadingContext context) {
-		client = register(HClient::new, ModConfig.Type.CLIENT);
-		server = register(HServer::new, ModConfig.Type.SERVER);
+		client = register(HenryClientConfig::new, ModConfig.Type.CLIENT);
+		server = register(HenryServerConfig::new, ModConfig.Type.SERVER);
 
 		for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
 			context.registerConfig(pair.getKey(), pair.getValue().specification);
 
-		HStress stress = server().kinetics.stressValues;
+		HenryStressConfig stress = server().kinetics.stressValues;
 		BlockStressValues.IMPACTS.registerProvider(stress::getImpact);
 		BlockStressValues.CAPACITIES.registerProvider(stress::getCapacity);
 	}

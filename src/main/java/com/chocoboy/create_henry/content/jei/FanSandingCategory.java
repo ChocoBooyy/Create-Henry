@@ -7,7 +7,7 @@ import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 
-public class FanSandingCategory extends HProcessingViaFanCategory.MultiOutput<SandingRecipe> {
+public class FanSandingCategory extends HenryFanProcessingCategory.MultiOutput<SandingRecipe> {
 
     public FanSandingCategory(Info<SandingRecipe> info) {
         super(info);

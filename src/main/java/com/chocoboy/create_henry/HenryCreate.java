@@ -1,6 +1,7 @@
 package com.chocoboy.create_henry;
 
 import com.chocoboy.create_henry.registry.*;
+import com.chocoboy.create_henry.infrastructure.network.HenryPackets;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.FurnaceEngineBlock;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
-import com.chocoboy.create_henry.infrastructure.data.HenryDatagen;
+import com.chocoboy.create_henry.infrastructure.datagen.HenryDatagen;
 
 import java.util.Random;
 

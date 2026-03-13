@@ -7,7 +7,7 @@ import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 
-public class FanFreezingCategory extends HProcessingViaFanCategory.MultiOutput<FreezingRecipe> {
+public class FanFreezingCategory extends HenryFanProcessingCategory.MultiOutput<FreezingRecipe> {
 
     public FanFreezingCategory(Info<FreezingRecipe> info) {
         super(info);

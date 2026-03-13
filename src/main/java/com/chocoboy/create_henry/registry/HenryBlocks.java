@@ -1,7 +1,6 @@
 package com.chocoboy.create_henry.registry;
 
 import com.chocoboy.create_henry.content.blocks.decorative.HenryBlock;
-import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.HenryBlockStressValues;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlock;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDisplaySources;
@@ -13,7 +12,8 @@ import com.simibubi.create.content.kinetics.gauge.GaugeGenerator;
 import com.simibubi.create.content.kinetics.motor.CreativeMotorGenerator;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.foundation.data.*;
-import com.chocoboy.create_henry.infrastructure.config.HStress;
+import com.chocoboy.create_henry.infrastructure.config.HenryStressConfig;
+import com.chocoboy.create_henry.registry.HenryStressValues;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -104,8 +104,8 @@ public class HenryBlocks {
 			.blockstate(BlockStateGen.directionalBlockProvider(true))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(pickaxeOnly())
-			.transform(HStress.setImpact(4.0))
-			.transform(HStress.setCapacity(16))
+			.transform(HenryStressConfig.setImpact(4.0))
+			.transform(HenryStressConfig.setCapacity(16))
 			.recipe((c, p) -> {
 				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
 						.pattern("CIP")
@@ -127,7 +127,7 @@ public class HenryBlocks {
 			.properties(p -> p.noOcclusion().mapColor(MapColor.TERRACOTTA_ORANGE))
 			.transform(pickaxeOnly())
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
-			.transform(HStress.setImpact(64.0))
+			.transform(HenryStressConfig.setImpact(64.0))
 			.item(AssemblyOperatorBlockItem::new)
 			.transform(customItemModel())
 			.register();
@@ -161,7 +161,7 @@ public class HenryBlocks {
 			.initialProperties(SharedProperties::wooden)
 			.properties(p -> p.mapColor(MapColor.PODZOL))
 			.transform(axeOrPickaxe())
-			.transform(HStress.setNoImpact())
+			.transform(HenryStressConfig.setNoImpact())
 			.blockstate(new GaugeGenerator()::generate)
 			.transform(displaySource(AllDisplaySources.KINETIC_SPEED))
 			.transform(displaySource(AllDisplaySources.KINETIC_STRESS))
@@ -180,7 +180,7 @@ public class HenryBlocks {
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(HStress.setNoImpact())
+			.transform(HenryStressConfig.setNoImpact())
 			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> {
 			int power = s.getValue(BlockStateProperties.POWER);
@@ -205,7 +205,7 @@ public class HenryBlocks {
 			.initialProperties(SharedProperties::stone)
 			.properties(p -> p.noOcclusion().mapColor(MapColor.PODZOL))
 			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(HStress.setNoImpact())
+			.transform(HenryStressConfig.setNoImpact())
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.axisBlockProvider(true))
 			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
@@ -229,7 +229,7 @@ public class HenryBlocks {
 					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get()))
 					.save(p, HenryCreate.asResource("crafting/kinetics/kinetic_motor")))
 			.blockstate(new CreativeMotorGenerator()::generate)
-			.transform(HStress.setCapacity(48))
+			.transform(HenryStressConfig.setCapacity(48))
 			.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
 			.item()
 			.transform(customItemModel())
@@ -248,7 +248,7 @@ public class HenryBlocks {
 					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get()))
 					.save(p, HenryCreate.asResource("crafting/kinetics/industrial_brake")))
 			.blockstate(new CreativeMotorGenerator()::generate)
-			.onRegister(HenryBlockStressValues.setTakenSU(256, true))
+			.onRegister(HenryStressValues.setTakenSU(256, true))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -274,7 +274,7 @@ public class HenryBlocks {
 								.save(p, HenryCreate.asResource("crafting/" + c.getName()));
 					})
 					.blockstate(new FurnaceEngineGenerator()::generate)
-					.transform(HStress.setCapacity(256.0))
+					.transform(HenryStressConfig.setCapacity(256.0))
 					.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
 					.item()
 					.transform(ModelGen.customItemModel())

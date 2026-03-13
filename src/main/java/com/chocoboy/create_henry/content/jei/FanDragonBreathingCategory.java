@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 import com.chocoboy.create_henry.content.recipes.DragonBreathingRecipe;
 
-public class FanDragonBreathingCategory extends HProcessingViaFanCategory.MultiOutput<DragonBreathingRecipe> {
+public class FanDragonBreathingCategory extends HenryFanProcessingCategory.MultiOutput<DragonBreathingRecipe> {
 
     public FanDragonBreathingCategory(Info<DragonBreathingRecipe> info) {
         super(info);

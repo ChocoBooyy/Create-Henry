@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 import com.chocoboy.create_henry.content.recipes.WitheringRecipe;
 
-public class FanWitheringCategory extends HProcessingViaFanCategory.MultiOutput<WitheringRecipe> {
+public class FanWitheringCategory extends HenryFanProcessingCategory.MultiOutput<WitheringRecipe> {
 
     public FanWitheringCategory(Info<WitheringRecipe> info) {
         super(info);

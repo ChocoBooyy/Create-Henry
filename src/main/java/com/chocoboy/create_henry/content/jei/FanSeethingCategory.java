@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Blocks;
 
-public class FanSeethingCategory extends HProcessingViaFanCategory.MultiOutput<SeethingRecipe> {
+public class FanSeethingCategory extends HenryFanProcessingCategory.MultiOutput<SeethingRecipe> {
 
     public FanSeethingCategory(Info<SeethingRecipe> info) {
         super(info);
