@@ -20,6 +20,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
@@ -90,10 +91,26 @@ public class HenryCreate
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        forgeEventBus.addListener(HenryCreate::onAddReloadListeners);
 
     }
 
     public static void init(final FMLCommonSetupEvent event) {
+    }
+
+    public static void onAddReloadListeners(final AddReloadListenerEvent event) {
+        net.minecraft.world.item.crafting.RecipeManager recipeManager =
+                event.getServerResources().getRecipeManager();
+        event.addListener(new net.minecraft.server.packs.resources.SimplePreparableReloadListener<Void>() {
+            @Override
+            protected Void prepare(net.minecraft.server.packs.resources.ResourceManager mgr,
+                                   net.minecraft.util.profiling.ProfilerFiller p) { return null; }
+            @Override
+            protected void apply(Void v, net.minecraft.server.packs.resources.ResourceManager mgr,
+                                 net.minecraft.util.profiling.ProfilerFiller p) {
+                HenryFanProcessingTypes.SandingType.buildPolishCache(recipeManager);
+            }
+        });
     }
 
 

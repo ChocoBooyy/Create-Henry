@@ -2,6 +2,13 @@ package com.chocoboy.create_henry.registry;
 
 import com.chocoboy.create_henry.compat.HenryMods;
 import com.chocoboy.create_henry.content.recipes.*;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraftforge.registries.ForgeRegistries;
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
@@ -27,6 +34,7 @@ import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -37,6 +45,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import com.chocoboy.create_henry.HenryCreate;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -85,6 +95,47 @@ public class HenryFanProcessingTypes {
     public static class SandingType implements FanProcessingType {
         private static final SandingRecipe.SandingWrapper SANDING_WRAPPER = new SandingRecipe.SandingWrapper();
 
+        private static List<SandingRecipe> polishRecipes = null;
+
+        public static boolean isPolishProcessingRecipe(net.minecraft.world.item.crafting.Recipe<?> recipe) {
+            if (!(recipe instanceof ProcessingRecipe<?>)) return false;
+            ResourceLocation serializerId = ForgeRegistries.RECIPE_SERIALIZERS.getKey(recipe.getSerializer());
+            if (serializerId == null) return false;
+            return serializerId.getPath().equals("sandpaper_polishing");
+        }
+
+        @Nullable
+        public static SandingRecipe toSandingRecipe(ProcessingRecipe<?> processing) {
+            List<Ingredient> ingredients = processing.getIngredients();
+            if (ingredients.size() != 1) return null;
+            List<ProcessingOutput> outputs = processing.getRollableResults();
+            if (outputs.isEmpty()) return null;
+
+            ResourceLocation id = HenryCreate.asResource(
+                    "compat/" + processing.getId().getNamespace() + "/" + processing.getId().getPath());
+            ProcessingRecipeBuilder<SandingRecipe> builder =
+                    new ProcessingRecipeBuilder<>(SandingRecipe::new, id);
+            builder.require(ingredients.get(0));
+            for (ProcessingOutput output : outputs)
+                builder.output(output.getChance(), output.getStack());
+            return builder.build();
+        }
+
+        public static void buildPolishCache(RecipeManager manager) {
+            List<SandingRecipe> list = new ArrayList<>();
+            for (net.minecraft.world.item.crafting.Recipe<?> recipe : manager.getRecipes()) {
+                if (!isPolishProcessingRecipe(recipe)) continue;
+                SandingRecipe converted = toSandingRecipe((ProcessingRecipe<?>) recipe);
+                if (converted != null) list.add(converted);
+            }
+            polishRecipes = list;
+        }
+
+        @Nullable
+        public static List<SandingRecipe> getPolishRecipes() {
+            return polishRecipes;
+        }
+
         @Override
         public boolean isValidAt(Level level, BlockPos pos) {
             FluidState fluidState = level.getFluidState(pos);
@@ -102,10 +153,12 @@ public class HenryFanProcessingTypes {
 
         @Override
         public boolean canProcess(ItemStack stack, Level level) {
-
             SANDING_WRAPPER.setItem(0, stack);
-            Optional<SandingRecipe> recipe = HenryRecipeTypes.SANDING.find(SANDING_WRAPPER, level);
-            return recipe.isPresent();
+            if (HenryRecipeTypes.SANDING.find(SANDING_WRAPPER, level).isPresent()) return true;
+            if (polishRecipes != null)
+                for (SandingRecipe r : polishRecipes)
+                    if (r.matches(SANDING_WRAPPER, level)) return true;
+            return false;
         }
 
         @Override
@@ -113,7 +166,13 @@ public class HenryFanProcessingTypes {
         public List<ItemStack> process(ItemStack stack, Level level) {
             SANDING_WRAPPER.setItem(0, stack);
             Optional<SandingRecipe> recipe = HenryRecipeTypes.SANDING.find(SANDING_WRAPPER, level);
-            return recipe.map(sandingRecipe -> RecipeApplier.applyRecipeOn(level, stack, sandingRecipe, false)).orElse(null);
+            if (recipe.isPresent())
+                return RecipeApplier.applyRecipeOn(level, stack, recipe.get(), false);
+            if (polishRecipes != null)
+                for (SandingRecipe r : polishRecipes)
+                    if (r.matches(SANDING_WRAPPER, level))
+                        return RecipeApplier.applyRecipeOn(level, stack, r, false);
+            return null;
         }
 
         @Override

@@ -29,6 +29,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.content.jei.HenryFanProcessingCategory;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.chocoboy.create_henry.infrastructure.config.HenryRecipesConfig;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
 import com.simibubi.create.foundation.utility.CreateLang;
@@ -67,6 +68,13 @@ public class HenryJEI implements IModPlugin {
 
                 sanding = builder(SandingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.SANDING)
+                        .addRecipeListConsumer(recipes -> consumeAllRecipes(recipe -> {
+                            if (HenryFanProcessingTypes.SandingType.isPolishProcessingRecipe(recipe)) {
+                                SandingRecipe r = HenryFanProcessingTypes.SandingType
+                                        .toSandingRecipe((ProcessingRecipe<?>) recipe);
+                                if (r != null) recipes.add(r);
+                            }
+                        }))
                         .catalystStack(HenryFanProcessingCategory.getFan("fan_sanding"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.SAND)
                         .emptyBackground(178, 72)
