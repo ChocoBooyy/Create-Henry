@@ -12,7 +12,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidStack;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 
-class SolidRenderedPlaceableFluidType extends TintedFluidType {
+public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 
 	private Vector3f fogColor;
 	private Supplier<Float> fogDistance;

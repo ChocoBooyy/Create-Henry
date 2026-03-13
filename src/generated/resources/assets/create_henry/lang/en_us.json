@@ -14,6 +14,7 @@
   "block.create_henry.raw_rubber_block": "Block of Raw Rubber",
   "block.create_henry.redstone_divider": "Redstone Divider",
   "block.create_henry.rubber_block": "Block of Rubber",
+  "block.create_henry.sap": "Sap",
   "create_henry.recipe.fan_dragon_breathing": "Bulk Dragon Breathing",
   "create_henry.recipe.fan_dragon_breathing.fan": "Fan behind Dragon Head",
   "create_henry.recipe.fan_freezing": "Bulk Freezing",
@@ -24,12 +25,13 @@
   "create_henry.recipe.fan_seething.fan": "Fan behind Super Heated Blaze Burner",
   "create_henry.recipe.fan_withering": "Bulk Withering",
   "create_henry.recipe.fan_withering.fan": "Fan behind Wither Rose",
-  "fluid.create_henry.sap": "Sap Liquid",
+  "fluid.create_henry.sap": "Sap",
   "item.create_henry.coal_piece": "Coal Piece",
   "item.create_henry.incomplete_kinetic_mechanism": "Incomplete Kinetic Mechanism",
   "item.create_henry.kinetic_mechanism": "Kinetic Mechanism",
   "item.create_henry.lapis_lazuli_shard": "Lapis Lazuli Shard",
   "item.create_henry.raw_rubber": "Raw Rubber",
   "item.create_henry.rubber": "Rubber",
+  "item.create_henry.sap_bucket": "Sap Bucket",
   "itemGroup.create_henry.base": "Create: Henry"
 }

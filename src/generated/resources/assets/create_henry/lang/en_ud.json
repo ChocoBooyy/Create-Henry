@@ -14,6 +14,7 @@
   "block.create_henry.raw_rubber_block": "ɹǝqqnᴚ ʍɐᴚ ɟo ʞɔoןᗺ",
   "block.create_henry.redstone_divider": "ɹǝpıʌıᗡ ǝuoʇspǝᴚ",
   "block.create_henry.rubber_block": "ɹǝqqnᴚ ɟo ʞɔoןᗺ",
+  "block.create_henry.sap": "dɐS",
   "create_henry.recipe.fan_dragon_breathing": "buıɥʇɐǝɹᗺ uobɐɹᗡ ʞןnᗺ",
   "create_henry.recipe.fan_dragon_breathing.fan": "pɐǝH uobɐɹᗡ puıɥǝq uɐℲ",
   "create_henry.recipe.fan_freezing": "buızǝǝɹℲ ʞןnᗺ",
@@ -24,12 +25,13 @@
   "create_henry.recipe.fan_seething.fan": "ɹǝuɹnᗺ ǝzɐןᗺ pǝʇɐǝH ɹǝdnS puıɥǝq uɐℲ",
   "create_henry.recipe.fan_withering": "buıɹǝɥʇıM ʞןnᗺ",
   "create_henry.recipe.fan_withering.fan": "ǝsoᴚ ɹǝɥʇıM puıɥǝq uɐℲ",
-  "fluid.create_henry.sap": "pınbıꞀ dɐS",
+  "fluid.create_henry.sap": "dɐS",
   "item.create_henry.coal_piece": "ǝɔǝıԀ ןɐoƆ",
   "item.create_henry.incomplete_kinetic_mechanism": "ɯsıuɐɥɔǝW ɔıʇǝuıʞ ǝʇǝןdɯoɔuI",
   "item.create_henry.kinetic_mechanism": "ɯsıuɐɥɔǝW ɔıʇǝuıʞ",
   "item.create_henry.lapis_lazuli_shard": "pɹɐɥS ıןnzɐꞀ sıdɐꞀ",
   "item.create_henry.raw_rubber": "ɹǝqqnᴚ ʍɐᴚ",
   "item.create_henry.rubber": "ɹǝqqnᴚ",
+  "item.create_henry.sap_bucket": "ʇǝʞɔnᗺ dɐS",
   "itemGroup.create_henry.base": "ʎɹuǝH :ǝʇɐǝɹƆ"
 }
