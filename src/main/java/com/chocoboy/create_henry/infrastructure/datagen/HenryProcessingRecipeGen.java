@@ -4,9 +4,15 @@ import com.chocoboy.create_henry.HenryCreate;
 import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import com.tterrag.registrate.util.entry.ItemEntry;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+
+import java.util.function.Supplier;
 
 /**
  * Base class for Henry's processing recipe generators.
@@ -21,6 +27,8 @@ public abstract class HenryProcessingRecipeGen extends ProcessingRecipeGen {
     @Override
     protected abstract IRecipeTypeInfo getRecipeType();
 
+    // Quantity helpers
+
     protected static void require(ProcessingRecipeBuilder<?> b, ItemLike item, int count) {
         for (int i = 0; i < count; i++)
             b.require(item);
@@ -29,5 +37,29 @@ public abstract class HenryProcessingRecipeGen extends ProcessingRecipeGen {
     protected static void require(ProcessingRecipeBuilder<?> b, Ingredient ingredient, int count) {
         for (int i = 0; i < count; i++)
             b.require(ingredient);
+    }
+
+    // Conversion helpers
+
+    protected GeneratedRecipe convert(Block block, Block result) {
+        return create(() -> block, b -> b.output(result));
+    }
+
+    protected GeneratedRecipe convert(Item item, Item result) {
+        return create(() -> item, b -> b.output(result));
+    }
+
+    protected GeneratedRecipe convert(Supplier<ItemLike> item, Supplier<ItemLike> result) {
+        return create(item, b -> b.output(result.get()));
+    }
+
+    protected GeneratedRecipe convert(ItemEntry<Item> item, ItemEntry<Item> result) {
+        return create(item::get, b -> b.output(result::get));
+    }
+
+    // Utilities
+
+    protected static String getItemName(ItemLike itemLike) {
+        return CatnipServices.REGISTRIES.getKeyOrThrow(itemLike.asItem()).getPath();
     }
 }

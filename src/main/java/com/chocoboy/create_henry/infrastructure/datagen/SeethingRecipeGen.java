@@ -8,19 +8,17 @@ import com.simibubi.create.content.decoration.palettes.AllPaletteStoneTypes;
 import com.simibubi.create.foundation.data.recipe.CommonMetal;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
-@SuppressWarnings({"unused", "deprecation", "all"})
+@SuppressWarnings("unused")
 public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -32,26 +30,26 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 			CRYING_OBSIDIAN = convert(Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN),
 			COBBLED_DEEPSLATE = convert(Blocks.COBBLESTONE, Blocks.COBBLED_DEEPSLATE),
 
-	LAPIS_LAZULI_SHARD_FROM_CALCITE = convertChanceRecipe(
-			() -> Items.CALCITE,
-			HenryItems.LAPIS_LAZULI_SHARD::get,
-			0.75f
-	),
+			LAPIS_LAZULI_SHARD_FROM_CALCITE = convertChanceRecipe(
+					() -> Items.CALCITE,
+					HenryItems.LAPIS_LAZULI_SHARD::get,
+					0.75f
+			),
 			LAPIS_LAZULI_SHARD_FROM_LIMESTONE = convertChanceRecipe(
 					() -> AllPaletteStoneTypes.LIMESTONE.baseBlock.get(),
 					HenryItems.LAPIS_LAZULI_SHARD::get,
 					0.05f
 			),
 
-	NETHERITE_SCRAP = secondaryRecipe(
-			() -> Items.ANCIENT_DEBRIS,
-			() -> Items.NETHERITE_SCRAP,
-			() -> Items.NETHERITE_SCRAP,
-			.35f
-	),
+			NETHERITE_SCRAP = secondaryRecipe(
+					() -> Items.ANCIENT_DEBRIS,
+					() -> Items.NETHERITE_SCRAP,
+					() -> Items.NETHERITE_SCRAP,
+					.35f
+			),
 
-	CRUSHED_COPPER = crushedOre(AllItems.CRUSHED_COPPER,
-			() -> Items.COPPER_INGOT, () -> Items.COPPER_INGOT, .5f),
+			CRUSHED_COPPER = crushedOre(AllItems.CRUSHED_COPPER,
+					() -> Items.COPPER_INGOT, () -> Items.COPPER_INGOT, .5f),
 			CRUSHED_ZINC = crushedOre(AllItems.CRUSHED_ZINC,
 					AllItems.ZINC_INGOT::get, AllItems.ZINC_INGOT::get, .25f),
 			CRUSHED_GOLD = crushedOre(AllItems.CRUSHED_GOLD,
@@ -59,7 +57,9 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 			CRUSHED_IRON = crushedOre(AllItems.CRUSHED_IRON,
 					() -> Items.IRON_INGOT, () -> Items.IRON_INGOT, .75f),
 
-	CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, CommonMetal.OSMIUM),
+			// Modded crushed ores — registers one recipe per compatible mod found at datagen time.
+			// Returns null intentionally; the field is only used to trigger the side effects of create().
+			CRUSHED_OSMIUM = moddedCrushedOre(AllItems.CRUSHED_OSMIUM, CommonMetal.OSMIUM),
 			CRUSHED_PLATINUM = moddedCrushedOre(AllItems.CRUSHED_PLATINUM, CommonMetal.PLATINUM),
 			CRUSHED_SILVER = moddedCrushedOre(AllItems.CRUSHED_SILVER, CommonMetal.SILVER),
 			CRUSHED_TIN = moddedCrushedOre(AllItems.CRUSHED_TIN, CommonMetal.TIN),
@@ -69,20 +69,13 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 			CRUSHED_URANIUM = moddedCrushedOre(AllItems.CRUSHED_URANIUM, CommonMetal.URANIUM),
 			CRUSHED_NICKEL = moddedCrushedOre(AllItems.CRUSHED_NICKEL, CommonMetal.NICKEL);
 
-	public GeneratedRecipe convert(Block block, Block result) {
-		return create(() -> block, b -> b.output(result));
+	public SeethingRecipeGen(PackOutput output) {
+		super(output);
 	}
 
-	public GeneratedRecipe convert(Item item, Item result) {
-		return create(() -> item, b -> b.output(result));
-	}
-
-	public GeneratedRecipe convert(Supplier<ItemLike> item, Supplier<ItemLike> result) {
-		return create(item, b -> b.output(result.get()));
-	}
-
-	public GeneratedRecipe convert(ItemEntry<Item> item, ItemEntry<Item> result) {
-		return create(item::get, b -> b.output(result::get));
+	@Override
+	protected HenryRecipeTypes getRecipeType() {
+		return HenryRecipeTypes.SEETHING;
 	}
 
 	// --- Chance-based / secondary recipes ---
@@ -123,10 +116,9 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 
 	// --- Modded crushed ores using CommonMetal ---
 
+	@SuppressWarnings("deprecation")
 	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CommonMetal metal) {
-
 		for (Mods mod : Mods.values()) {
-
 			if (!CommonMetal.of(mod).contains(metal))
 				continue;
 
@@ -139,19 +131,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 							.output(0.5f, ingotId, 1)
 							.whenModLoaded(mod.getId()));
 		}
+		// Returns null intentionally — this method registers recipes as a side effect.
 		return null;
-	}
-
-	public SeethingRecipeGen(PackOutput output) {
-		super(output);
-	}
-
-	@Override
-	protected HenryRecipeTypes getRecipeType() {
-		return HenryRecipeTypes.SEETHING;
-	}
-
-	protected static String getItemName(ItemLike itemLike) {
-		return CatnipServices.REGISTRIES.getKeyOrThrow(itemLike.asItem()).getPath();
 	}
 }

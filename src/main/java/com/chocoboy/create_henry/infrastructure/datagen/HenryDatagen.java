@@ -39,17 +39,8 @@ public class HenryDatagen {
 
 		HenryCreate.registrate().addDataGenerator(ProviderType.LANG, provider -> {
 			BiConsumer<String, String> langConsumer = provider::add;
-
-			providePartialLang(langConsumer);
-			providePonderLang();
+			HenryLangPartial.provideLang(langConsumer);
+			PonderIndex.addPlugin(new HenryPonderPlugin());
 		});
-	}
-
-	private static void providePartialLang(BiConsumer<String, String> consumer) {
-		HenryLangPartial.provideLang(consumer);
-	}
-
-	private static void providePonderLang() {
-		PonderIndex.addPlugin(new HenryPonderPlugin());
 	}
 }

@@ -1,12 +1,11 @@
 package com.chocoboy.create_henry.infrastructure.datagen;
 
-import com.google.common.base.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.BaseRecipeProvider;
+import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
-import com.simibubi.create.api.data.recipe.MechanicalCraftingRecipeBuilder;
 import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 import com.chocoboy.create_henry.registry.HenryItems;
@@ -17,10 +16,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 @ParametersAreNonnullByDefault
-@SuppressWarnings({"unused", "all"})
+@SuppressWarnings("unused")
 public class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
 
     GeneratedRecipe
@@ -60,8 +60,7 @@ public class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
         super(output, HenryCreate.MOD_ID);
     }
 
-    protected GeneratedRecipe createSequencedAssembly(String name,
-                                                      UnaryOperator<SequencedAssemblyRecipeBuilder> transform) {
+    private GeneratedRecipe createSequencedAssembly(String name, UnaryOperator<SequencedAssemblyRecipeBuilder> transform) {
         GeneratedRecipe recipe =
                 c -> transform.apply(new SequencedAssemblyRecipeBuilder(HenryCreate.asResource(name)))
                         .build(c);
@@ -69,18 +68,15 @@ public class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
         return recipe;
     }
 
-    GeneratedRecipeBuilder createMechanicalCrafting(Supplier<ItemLike> result) {
+    private GeneratedRecipeBuilder createMechanicalCrafting(Supplier<ItemLike> result) {
         return new GeneratedRecipeBuilder(result);
     }
 
     class GeneratedRecipeBuilder {
-
-        private String suffix;
-        private Supplier<ItemLike> result;
+        private final Supplier<ItemLike> result;
         private int amount;
 
-        public GeneratedRecipeBuilder(Supplier<ItemLike> result) {
-            this.suffix = "";
+        private GeneratedRecipeBuilder(Supplier<ItemLike> result) {
             this.result = result;
             this.amount = 1;
         }
@@ -90,19 +86,13 @@ public class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
             return this;
         }
 
-        GeneratedRecipeBuilder withSuffix(String suffix) {
-            this.suffix = suffix;
-            return this;
-        }
-
         GeneratedRecipe recipe(UnaryOperator<MechanicalCraftingRecipeBuilder> builder) {
             return register(consumer -> {
                 MechanicalCraftingRecipeBuilder b =
                         builder.apply(MechanicalCraftingRecipeBuilder.shapedRecipe(result.get(), amount));
                 ResourceLocation location = HenryCreate.asResource(
                         "mechanical_crafting/" +
-                                CatnipServices.REGISTRIES.getKeyOrThrow(result.get().asItem()).getPath() +
-                                suffix);
+                                CatnipServices.REGISTRIES.getKeyOrThrow(result.get().asItem()).getPath());
                 b.build(consumer, location);
             });
         }

@@ -2,10 +2,9 @@ package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.simibubi.create.AllRecipeTypes;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings("unused")
 public class WashingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -26,10 +25,6 @@ public class WashingRecipeGen extends HenryProcessingRecipeGen {
 			WEATHERED_CUT_COPPER_STAIRS = convert(Blocks.EXPOSED_CUT_COPPER_STAIRS, Blocks.WEATHERED_CUT_COPPER_STAIRS),
 			OXIDIZED_CUT_COPPER_STAIRS = convert(Blocks.WEATHERED_CUT_COPPER_STAIRS, Blocks.OXIDIZED_CUT_COPPER_STAIRS);
 
-	public GeneratedRecipe convert(Block block, Block result) {
-		return create(() -> block, b -> b.output(result));
-	}
-
 	public WashingRecipeGen(PackOutput dataGenerator) {
 		super(dataGenerator);
 	}
@@ -38,5 +33,4 @@ public class WashingRecipeGen extends HenryProcessingRecipeGen {
 	protected AllRecipeTypes getRecipeType() {
 		return AllRecipeTypes.SPLASHING;
 	}
-
 }

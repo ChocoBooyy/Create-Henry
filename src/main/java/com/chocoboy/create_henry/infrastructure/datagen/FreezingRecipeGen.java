@@ -2,17 +2,13 @@ package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.chocoboy.create_henry.registry.HenryRecipeTypes;
 import com.simibubi.create.AllItems;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
-
-@SuppressWarnings({"unused"})
+@SuppressWarnings("unused")
 public class FreezingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -26,26 +22,7 @@ public class FreezingRecipeGen extends HenryProcessingRecipeGen {
 			SNOW_BLOCK = convert(Items.SNOW, Items.SNOW_BLOCK),
 			OBSIDIAN = convert(Items.CRYING_OBSIDIAN, Items.OBSIDIAN);
 
-	;
-
-	public GeneratedRecipe convert(Block block, Block result) {
-		return create(() -> block, b -> b.output(result));
-	}
-
-	public GeneratedRecipe convert(Item item, Item result) {
-		return create(() -> item, b -> b.output(result));
-	}
-
-	public GeneratedRecipe convert(Supplier<ItemLike> item, Supplier<ItemLike> result) {
-		return create(item, b -> b.output((ItemLike) result));
-	}
-
-	public GeneratedRecipe convert(ItemEntry<Item> item, ItemEntry<Item> result) {
-		return create(item::get, b -> b.output(result::get));
-	}
-
-	public GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item, Supplier<ItemLike> first, Supplier<ItemLike> secondary,
-									  float secondaryChance) {
+	public GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item, Supplier<ItemLike> first, Supplier<ItemLike> secondary, float secondaryChance) {
 		return create(item, b -> b.output(first.get(), 1)
 				.output(secondaryChance, secondary.get(), 1));
 	}
@@ -58,5 +35,4 @@ public class FreezingRecipeGen extends HenryProcessingRecipeGen {
 	protected HenryRecipeTypes getRecipeType() {
 		return HenryRecipeTypes.FREEZING;
 	}
-
 }

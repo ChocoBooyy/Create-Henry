@@ -1,11 +1,12 @@
 package com.chocoboy.create_henry.infrastructure.datagen;
 
+import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.compat.HenryMods;
-import com.chocoboy.create_henry.registry.HenryFluids;
+import com.chocoboy.create_henry.registry.HenryBlocks;
+import com.chocoboy.create_henry.registry.HenryTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
-import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.TagGen;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
@@ -13,20 +14,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.registry.HenryBlocks;
-import com.chocoboy.create_henry.registry.HenryTags;
-import net.minecraft.world.level.material.Fluid;
 
 import static com.chocoboy.create_henry.registry.HenryTags.forgeItemTag;
 
 @SuppressWarnings({"deprecation"})
 public class HenryRegistrateTags {
-    private static final CreateRegistrate REGISTRATE = HenryCreate.registrate();
 
     public static void addGenerators() {
         HenryCreate.REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, HenryRegistrateTags::genBlockTags);
-        HenryCreate.REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, HenryRegistrateTags::genFluidTags);
         HenryCreate.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, HenryRegistrateTags::genItemTags);
     }
     private static void genItemTags(RegistrateTagsProvider<Item> provIn) {
@@ -130,7 +125,6 @@ public class HenryRegistrateTags {
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_FREEZING.tag)
                 .add(Blocks.POWDER_SNOW);
 
-        // Seething catalysts: always add vanilla Blaze Burner
         var seething = prov
                 .tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SEETHING.tag)
                 .add(AllBlocks.BLAZE_BURNER.get());
@@ -162,6 +156,4 @@ public class HenryRegistrateTags {
 
     }
 
-    private static void genFluidTags(RegistrateTagsProvider<Fluid> provIn) {
-    }
 }

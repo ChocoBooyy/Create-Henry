@@ -2,16 +2,11 @@ package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.chocoboy.create_henry.registry.HenryRecipeTypes;
 import com.simibubi.create.AllItems;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.function.Supplier;
-
+@SuppressWarnings("unused")
 public class SandingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
@@ -56,26 +51,9 @@ public class SandingRecipeGen extends HenryProcessingRecipeGen {
 			NETHERRACK = convert(Items.MAGMA_BLOCK, Items.NETHERRACK),
 
 			POLISHED_ROSE_QUARTZ = convert(AllItems.ROSE_QUARTZ, AllItems.POLISHED_ROSE_QUARTZ);
-	;
 
 	public SandingRecipeGen(PackOutput dataGenerator) {
 		super(dataGenerator);
-	}
-
-	public GeneratedRecipe convert(Block block, Block result) {
-		return create(() -> block, b -> b.output(result));
-	}
-
-	public GeneratedRecipe convert(Item item, Item result) {
-		return create(() -> item, b -> b.output(result));
-	}
-
-	public GeneratedRecipe convert(Supplier<ItemLike> item, Supplier<ItemLike> result) {
-		return create(item, b -> b.output(result.get()));
-	}
-
-	public GeneratedRecipe convert(ItemEntry<Item> item, ItemEntry<Item> result) {
-		return create(item::get, b -> b.output(result::get));
 	}
 
 	@Override
