@@ -1,10 +1,7 @@
 package com.chocoboy.create_henry.infrastructure.config;
 
 import com.simibubi.create.api.stress.BlockStressValues;
-import com.tterrag.registrate.providers.ProviderType;
 import net.createmod.catnip.config.ConfigBase;
-import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -16,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
@@ -65,17 +63,17 @@ public class HenryConfigs {
 
 	@SubscribeEvent
 	public static void onLoad(ModConfigEvent.Loading event) {
-		for (ConfigBase config : CONFIGS.values())
-			if (config.specification == event.getConfig()
-				.getSpec())
-				config.onLoad();
+		handleConfigEvent(event, ConfigBase::onLoad);
 	}
 
 	@SubscribeEvent
 	public static void onReload(ModConfigEvent.Reloading event) {
-		for (ConfigBase config : CONFIGS.values())
-			if (config.specification == event.getConfig()
-				.getSpec())
-				config.onReload();
+		handleConfigEvent(event, ConfigBase::onReload);
+	}
+
+	private static void handleConfigEvent(ModConfigEvent event, Consumer<ConfigBase> action) {
+		CONFIGS.values().stream()
+				.filter(config -> config.specification == event.getConfig().getSpec())
+				.forEach(action);
 	}
 }

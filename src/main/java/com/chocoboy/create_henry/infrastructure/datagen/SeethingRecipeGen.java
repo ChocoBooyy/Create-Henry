@@ -80,7 +80,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 
 	// --- Chance-based / secondary recipes ---
 
-	public GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item,
+	private GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item,
 										   Supplier<ItemLike> first,
 										   Supplier<ItemLike> secondary,
 										   float secondaryChance) {
@@ -92,7 +92,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 		);
 	}
 
-	public GeneratedRecipe convertChanceRecipe(Supplier<ItemLike> item,
+	private GeneratedRecipe convertChanceRecipe(Supplier<ItemLike> item,
 											   Supplier<ItemLike> result,
 											   float chance) {
 		return create(
@@ -104,7 +104,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 
 	// --- Vanilla crushed ores ---
 
-	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed,
+	private GeneratedRecipe crushedOre(ItemEntry<Item> crushed,
 									  Supplier<ItemLike> ingot,
 									  Supplier<ItemLike> secondary,
 									  float secondaryChance) {
@@ -117,7 +117,7 @@ public class SeethingRecipeGen extends HenryProcessingRecipeGen {
 	// --- Modded crushed ores using CommonMetal ---
 
 	@SuppressWarnings("deprecation")
-	public GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CommonMetal metal) {
+	private GeneratedRecipe moddedCrushedOre(ItemEntry<? extends Item> crushed, CommonMetal metal) {
 		for (Mods mod : Mods.values()) {
 			if (!CommonMetal.of(mod).contains(metal))
 				continue;

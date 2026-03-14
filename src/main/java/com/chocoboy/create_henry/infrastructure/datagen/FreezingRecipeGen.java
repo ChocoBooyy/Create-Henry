@@ -22,7 +22,7 @@ public class FreezingRecipeGen extends HenryProcessingRecipeGen {
 			SNOW_BLOCK = convert(Items.SNOW, Items.SNOW_BLOCK),
 			OBSIDIAN = convert(Items.CRYING_OBSIDIAN, Items.OBSIDIAN);
 
-	public GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item, Supplier<ItemLike> first, Supplier<ItemLike> secondary, float secondaryChance) {
+	private GeneratedRecipe secondaryRecipe(Supplier<ItemLike> item, Supplier<ItemLike> first, Supplier<ItemLike> secondary, float secondaryChance) {
 		return create(item, b -> b.output(first.get(), 1)
 				.output(secondaryChance, secondary.get(), 1));
 	}

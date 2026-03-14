@@ -4,13 +4,10 @@ import com.chocoboy.create_henry.HenryCreate;
 import com.simibubi.create.api.data.recipe.ProcessingRecipeGen;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
@@ -41,20 +38,12 @@ public abstract class HenryProcessingRecipeGen extends ProcessingRecipeGen {
 
     // Conversion helpers
 
-    protected GeneratedRecipe convert(Block block, Block result) {
-        return create(() -> block, b -> b.output(result));
-    }
-
-    protected GeneratedRecipe convert(Item item, Item result) {
+    protected GeneratedRecipe convert(ItemLike item, ItemLike result) {
         return create(() -> item, b -> b.output(result));
     }
 
-    protected GeneratedRecipe convert(Supplier<ItemLike> item, Supplier<ItemLike> result) {
-        return create(item, b -> b.output(result.get()));
-    }
-
-    protected GeneratedRecipe convert(ItemEntry<Item> item, ItemEntry<Item> result) {
-        return create(item::get, b -> b.output(result::get));
+    protected GeneratedRecipe convert(Supplier<? extends ItemLike> item, Supplier<? extends ItemLike> result) {
+        return create(() -> item.get(), b -> b.output(result.get()));
     }
 
     // Utilities

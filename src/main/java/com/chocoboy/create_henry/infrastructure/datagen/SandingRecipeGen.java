@@ -50,7 +50,7 @@ public class SandingRecipeGen extends HenryProcessingRecipeGen {
 			CRIMSON_NYLIUM = convert(Items.CRIMSON_NYLIUM, Items.NETHERRACK),
 			NETHERRACK = convert(Items.MAGMA_BLOCK, Items.NETHERRACK),
 
-			POLISHED_ROSE_QUARTZ = convert(AllItems.ROSE_QUARTZ, AllItems.POLISHED_ROSE_QUARTZ);
+			POLISHED_ROSE_QUARTZ = convert(AllItems.ROSE_QUARTZ::get, AllItems.POLISHED_ROSE_QUARTZ::get);
 
 	public SandingRecipeGen(PackOutput dataGenerator) {
 		super(dataGenerator);
