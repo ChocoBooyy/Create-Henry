@@ -2,6 +2,7 @@ package com.chocoboy.create_henry.registry;
 
 import com.chocoboy.create_henry.compat.HenryMods;
 import com.chocoboy.create_henry.content.recipes.*;
+import com.chocoboy.create_henry.content.recipes.HenryFanProcessingRecipe.Wrapper;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -93,7 +94,7 @@ public class HenryFanProcessingTypes {
     }
 
     public static class SandingType implements FanProcessingType {
-        private static final SandingRecipe.SandingWrapper SANDING_WRAPPER = new SandingRecipe.SandingWrapper();
+        private static final Wrapper SANDING_WRAPPER = new Wrapper();
 
         private static List<SandingRecipe> polishRecipes = null;
 
@@ -234,7 +235,7 @@ public class HenryFanProcessingTypes {
     }
 
     public static class SeethingType implements FanProcessingType {
-        private static final SeethingRecipe.SeethingWrapper SEETHING_WRAPPER = new SeethingRecipe.SeethingWrapper();
+        private static final Wrapper SEETHING_WRAPPER = new Wrapper();
 
         @Override
         public boolean isValidAt(Level level, BlockPos pos) {
@@ -340,7 +341,7 @@ public class HenryFanProcessingTypes {
     }
 
     public static class FreezingType implements FanProcessingType {
-        private static final FreezingRecipe.FreezingWrapper FREEZING_WRAPPER = new FreezingRecipe.FreezingWrapper();
+        private static final Wrapper FREEZING_WRAPPER = new Wrapper();
 
         @Override
         public boolean isValidAt(Level level, BlockPos pos) {
@@ -464,7 +465,7 @@ public class HenryFanProcessingTypes {
     }
 
     public static class WitheringType implements FanProcessingType {
-        private static final WitheringRecipe.WitheringWrapper WITHERING_WRAPPER = new WitheringRecipe.WitheringWrapper();
+        private static final Wrapper WITHERING_WRAPPER = new Wrapper();
 
         @Override
         public boolean isValidAt(Level level, BlockPos pos) {
@@ -585,7 +586,7 @@ public class HenryFanProcessingTypes {
     }
 
     public static class DragonBreathingType implements FanProcessingType {
-        private static final DragonBreathingRecipe.dragonBreathingWrapper DRAGON_BREATHING_WRAPPER = new DragonBreathingRecipe.dragonBreathingWrapper();
+        private static final Wrapper DRAGON_BREATHING_WRAPPER = new Wrapper();
 
         @Override
         public boolean isValidAt(Level level, BlockPos pos) {
