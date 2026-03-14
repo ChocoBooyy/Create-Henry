@@ -56,11 +56,13 @@ public class KineticMotorBlockEntity extends GeneratingKineticBlockEntity {
         if (Mth.equal(stressBase, 0))
             return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
+        float stressTotal = Math.abs(stressBase * getTheoreticalSpeed());
+
         CreateLang.translate("gui.goggles.generator_stats").forGoggles(tooltip);
         CreateLang.translate("tooltip.capacityProvided")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
-        CreateLang.number(stressBase)
+        CreateLang.number(stressTotal)
                 .translate("generic.unit.stress")
                 .style(ChatFormatting.AQUA)
                 .space()
