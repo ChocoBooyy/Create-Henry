@@ -96,6 +96,7 @@ public class HenryCreate
     }
 
     public static void init(final FMLCommonSetupEvent event) {
+        event.enqueueWork(HenryFluids::registerFluidInteractions);
     }
 
     public static void onAddReloadListeners(final AddReloadListenerEvent event) {

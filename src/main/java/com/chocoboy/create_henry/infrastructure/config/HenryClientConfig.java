@@ -11,6 +11,16 @@ public class HenryClientConfig extends ConfigBase {
 	public final ConfigGroup fluidFogSettings = group(1, "fluidFogSettings", Comments.fluidFogSettings);
 	public final ConfigFloat sapTransparencyMultiplier =
 		f(1, .125f, 128, "sap", Comments.sapTransparencyMultiplier);
+	public final ConfigFloat chocolateTransparencyMultiplier =
+		f(1, .125f, 128, "chocolate_milkshake", Comments.milkshakeTransparencyMultiplier);
+	public final ConfigFloat vanillaTransparencyMultiplier =
+		f(1, .125f, 128, "vanilla_milkshake", Comments.milkshakeTransparencyMultiplier);
+	public final ConfigFloat strawberryTransparencyMultiplier =
+		f(1, .125f, 128, "strawberry_milkshake", Comments.milkshakeTransparencyMultiplier);
+	public final ConfigFloat glowberryTransparencyMultiplier =
+		f(1, .125f, 128, "glowberry_milkshake", Comments.milkshakeTransparencyMultiplier);
+	public final ConfigFloat pumpkinTransparencyMultiplier =
+		f(1, .125f, 128, "pumpkin_milkshake", Comments.milkshakeTransparencyMultiplier);
 
 	//ponder group
 	public final ConfigGroup ponder = group(1, "ponder",
@@ -27,6 +37,7 @@ public class HenryClientConfig extends ConfigBase {
 		static String ponder = "Ponder settings";
 		static String fluidFogSettings = "Configure your vision range when submerged in Create Henry's custom fluids";
 		static String sapTransparencyMultiplier = "The vision range through sap will be multiplied by this factor";
+		static String milkshakeTransparencyMultiplier = "The vision range through this milkshake will be multiplied by this factor";
 	}
 
 }

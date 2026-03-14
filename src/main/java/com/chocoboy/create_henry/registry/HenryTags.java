@@ -84,7 +84,9 @@ public class HenryTags {
 		FAN_PROCESSING_CATALYSTS_SEETHING(NameSpace.MOD, "fan_processing_catalysts/seething"),
 		FAN_PROCESSING_CATALYSTS_WITHERING(NameSpace.MOD, "fan_processing_catalysts/withering"),
 		FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING(NameSpace.MOD, "fan_processing_catalysts/dragon_breathing"),
-		INDUSTRIAL_FAN_TRANSPARENT
+		INDUSTRIAL_FAN_TRANSPARENT,
+		ORE_GENERATOR,
+		ARTIFICIAL_ORE_GENERATOR
 
 		;
 
@@ -197,7 +199,12 @@ public class HenryTags {
 		FAN_PROCESSING_CATALYSTS_WITHERING(NameSpace.MOD, "fan_processing_catalysts/withering"),
 		FAN_PROCESSING_CATALYSTS_DRAGON_BREATHING(NameSpace.MOD, "fan_processing_catalysts/dragon_breathing"),
 
-		SAP(FORGE)
+		SAP(FORGE),
+		CHOCOLATE(FORGE),
+		VANILLA(FORGE),
+		STRAWBERRY(FORGE),
+		GLOWBERRY(FORGE),
+		PUMPKIN(FORGE)
 
 		;
 

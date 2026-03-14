@@ -16,12 +16,24 @@ public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 
 	private Vector3f fogColor;
 	private Supplier<Float> fogDistance;
+	private int tintRGB = -1; // -1 means no tint
 
 	public static FluidTypeFactory create(int fogColor, Supplier<Float> fogDistance) {
 		return (p, s, f) -> {
 			SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, s, f);
 			fluidType.fogColor = new Color(fogColor, false).asVectorF();
 			fluidType.fogDistance = fogDistance;
+			return fluidType;
+		};
+	}
+
+	public static FluidTypeFactory createTinted(int tintColor, Supplier<Float> fogDistance,
+			ResourceLocation stillTex, ResourceLocation flowTex) {
+		return (p, s, f) -> {
+			SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, stillTex, flowTex);
+			fluidType.fogColor = new Color(tintColor, false).asVectorF();
+			fluidType.fogDistance = fogDistance;
+			fluidType.tintRGB = tintColor & 0x00FFFFFF;
 			return fluidType;
 		};
 	}
@@ -33,7 +45,7 @@ public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 
 	@Override
 	protected int getTintColor(FluidStack stack) {
-		return NO_TINT;
+		return tintRGB == -1 ? NO_TINT : (0xFF000000 | tintRGB);
 	}
 
 	/*
@@ -43,7 +55,8 @@ public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 	 */
 	@Override
 	public int getTintColor(FluidState state, BlockAndTintGetter world, BlockPos pos) {
-		return 0x00ffffff;
+		// alpha=0 prevents optifine from applying biome colors; RGB provides the tint
+		return tintRGB == -1 ? 0x00FFFFFF : tintRGB;
 	}
 
 	@Override
