@@ -27,6 +27,16 @@ public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 		};
 	}
 
+	public static FluidTypeFactory create(int fogColor, Supplier<Float> fogDistance,
+			ResourceLocation stillTex, ResourceLocation flowTex) {
+		return (p, s, f) -> {
+			SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, stillTex, flowTex);
+			fluidType.fogColor = new Color(fogColor, false).asVectorF();
+			fluidType.fogDistance = fogDistance;
+			return fluidType;
+		};
+	}
+
 	public static FluidTypeFactory createTinted(int tintColor, Supplier<Float> fogDistance,
 			ResourceLocation stillTex, ResourceLocation flowTex) {
 		return (p, s, f) -> {

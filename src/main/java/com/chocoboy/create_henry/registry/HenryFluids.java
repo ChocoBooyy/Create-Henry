@@ -33,6 +33,8 @@ public class HenryFluids {
         REGISTRATE.setCreativeTab(HenryCreativeModeTabs.BASE_CREATIVE_TAB);
     }
 
+    private static final float FOG_DISTANCE_SCALE = 0.25f;
+
     private static final ResourceLocation MILKSHAKE_STILL = new ResourceLocation(HenryCreate.MOD_ID, "fluid/milkshake_still");
     private static final ResourceLocation MILKSHAKE_FLOW  = new ResourceLocation(HenryCreate.MOD_ID, "fluid/milkshake_flow");
 
@@ -74,10 +76,11 @@ public class HenryFluids {
     // Registration helpers
 
     @SafeVarargs
-    private static FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> newMilkshake(String name, int tintColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
+    private static FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> newMilkshake(
+            String name, int tintColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
         String id = name.toLowerCase().replace(" ", "_");
         return REGISTRATE.standardFluid(id,
-                        SolidRenderedPlaceableFluidType.createTinted(tintColor, () -> 1f / 4f * transparency.get(), MILKSHAKE_STILL, MILKSHAKE_FLOW))
+                        SolidRenderedPlaceableFluidType.createTinted(tintColor, () -> FOG_DISTANCE_SCALE * transparency.get(), MILKSHAKE_STILL, MILKSHAKE_FLOW))
                 .lang(name)
                 .properties(b -> b.viscosity(1000).density(1400))
                 .fluidProperties(p -> p.levelDecreasePerBlock(2).tickRate(10).slopeFindDistance(3).explosionResistance(100f))
@@ -96,11 +99,13 @@ public class HenryFluids {
     }
 
     @SafeVarargs
-    private static FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> newFluid(String name, int fogColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
+    private static FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> newFluid(
+            String name, int fogColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
         String id = name.toLowerCase().replace(" ", "_");
         ResourceLocation stillTex = new ResourceLocation(HenryCreate.MOD_ID, "fluid/" + id + "_still");
+        ResourceLocation flowTex  = new ResourceLocation(HenryCreate.MOD_ID, "fluid/" + id + "_flow");
         return REGISTRATE.standardFluid(id,
-                        SolidRenderedPlaceableFluidType.create(fogColor, () -> 1f / 4f * transparency.get()))
+                        SolidRenderedPlaceableFluidType.create(fogColor, () -> FOG_DISTANCE_SCALE * transparency.get(), stillTex, flowTex))
                 .lang(name)
                 .properties(b -> b.viscosity(2000).density(1400))
                 .fluidProperties(p -> p.levelDecreasePerBlock(2).tickRate(25).slopeFindDistance(3).explosionResistance(100f))
@@ -121,49 +126,50 @@ public class HenryFluids {
     // Lava interactions
 
     public static void registerFluidInteractions() {
-        addMilkshakeInteraction(CHOCOLATE_MILKSHAKE.get(),
+        addMilkshakeLavaInteraction(CHOCOLATE_MILKSHAKE.get(),
                 AllPaletteStoneTypes.VERIDIUM.getBaseBlock().get(), AllPaletteStoneTypes.SCORCHIA.getBaseBlock().get());
-        addMilkshakeInteraction(STRAWBERRY_MILKSHAKE.get(),
+        addMilkshakeLavaInteraction(STRAWBERRY_MILKSHAKE.get(),
                 AllPaletteStoneTypes.CRIMSITE.getBaseBlock().get(), Blocks.COBBLED_DEEPSLATE);
     }
 
     @Nullable
     public static BlockState getLavaInteraction(FluidState fluidState, Level level, BlockPos pos) {
-        if (addMilkshakeFlag(fluidState, CHOCOLATE_MILKSHAKE.get(), level, pos))
-            return addMilkshakeStones(AllPaletteStoneTypes.VERIDIUM.getBaseBlock().get(), AllPaletteStoneTypes.SCORCHIA.getBaseBlock().get(), level, pos);
-        if (addMilkshakeFlag(fluidState, STRAWBERRY_MILKSHAKE.get(), level, pos))
-            return addMilkshakeStones(AllPaletteStoneTypes.CRIMSITE.getBaseBlock().get(), Blocks.COBBLED_DEEPSLATE, level, pos);
+        if (isNearMilkshake(fluidState, CHOCOLATE_MILKSHAKE.get(), level, pos))
+            return selectLavaStoneResult(AllPaletteStoneTypes.VERIDIUM.getBaseBlock().get(), AllPaletteStoneTypes.SCORCHIA.getBaseBlock().get(), level, pos);
+        if (isNearMilkshake(fluidState, STRAWBERRY_MILKSHAKE.get(), level, pos))
+            return selectLavaStoneResult(AllPaletteStoneTypes.CRIMSITE.getBaseBlock().get(), Blocks.COBBLED_DEEPSLATE, level, pos);
         return null;
     }
 
-    public static void addMilkshakeInteraction(Fluid fluid, Block oreStone, Block defaultStone) {
-        FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new FluidInteractionRegistry.InteractionInformation(
+    private static void addMilkshakeLavaInteraction(Fluid fluid, Block oreStone, Block defaultStone) {
+        var lavaType = ForgeMod.LAVA_TYPE.get();
+        FluidInteractionRegistry.addInteraction(lavaType, new FluidInteractionRegistry.InteractionInformation(
                 (level, currentPos, relativePos, fluidState) ->
                         level.getFluidState(relativePos).is(fluid) && fluidState.isSource(),
                 Blocks.OBSIDIAN.defaultBlockState()
         ));
-        FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new FluidInteractionRegistry.InteractionInformation(
+        FluidInteractionRegistry.addInteraction(lavaType, new FluidInteractionRegistry.InteractionInformation(
                 (level, currentPos, relativePos, fluidState) ->
                         randomChance(HenryConfigs.server().chanceForOreStone.get(), level) &&
                         level.getBlockState(currentPos.below()).is(HenryTags.AllBlockTags.ORE_GENERATOR.tag) &&
                         level.getFluidState(relativePos).is(fluid) && !fluidState.isSource(),
                 oreStone.defaultBlockState()
         ));
-        FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new FluidInteractionRegistry.InteractionInformation(
+        FluidInteractionRegistry.addInteraction(lavaType, new FluidInteractionRegistry.InteractionInformation(
                 (level, currentPos, relativePos, fluidState) ->
                         randomChance(HenryConfigs.server().chanceForArtificialOreStone.get(), level) &&
                         level.getBlockState(currentPos.below()).is(HenryTags.AllBlockTags.ARTIFICIAL_ORE_GENERATOR.tag) &&
                         level.getFluidState(relativePos).is(fluid) && !fluidState.isSource(),
                 oreStone.defaultBlockState()
         ));
-        FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new FluidInteractionRegistry.InteractionInformation(
+        FluidInteractionRegistry.addInteraction(lavaType, new FluidInteractionRegistry.InteractionInformation(
                 (level, currentPos, relativePos, fluidState) ->
                         level.getFluidState(relativePos).is(fluid) && !fluidState.isSource(),
                 defaultStone.defaultBlockState()
         ));
     }
 
-    public static boolean addMilkshakeFlag(FluidState fluidState, Fluid milkshake, Level level, BlockPos pos) {
+    private static boolean isNearMilkshake(FluidState fluidState, Fluid milkshake, Level level, BlockPos pos) {
         boolean isMilkshake = fluidState.getType().isSame(milkshake);
         boolean adjacentMilkshake = level.getFluidState(pos.relative(Direction.Axis.X, 1)).is(milkshake)
                 || level.getFluidState(pos.relative(Direction.Axis.Y, 1)).is(milkshake)
@@ -172,7 +178,7 @@ public class HenryFluids {
         return isMilkshake || (adjacentMilkshake && replaceable && level.getFluidState(pos).isEmpty());
     }
 
-    public static BlockState addMilkshakeStones(Block oreStone, Block defaultStone, Level level, BlockPos pos) {
+    private static BlockState selectLavaStoneResult(Block oreStone, Block defaultStone, Level level, BlockPos pos) {
         if (level.getBlockState(pos.below()).is(HenryTags.AllBlockTags.ORE_GENERATOR.tag)
                 && randomChance(HenryConfigs.server().chanceForOreStone.get(), level))
             return oreStone.defaultBlockState();
