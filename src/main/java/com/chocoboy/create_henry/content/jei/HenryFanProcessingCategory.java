@@ -12,9 +12,12 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 import com.chocoboy.create_henry.registry.HenryPartialModels;
 
@@ -134,8 +137,26 @@ public abstract class HenryFanProcessingCategory<T extends Recipe<?>> extends Cr
             AllGuiTextures.JEI_SHADOW.render(graphics, 46, 29);
             getBlockShadow().render(graphics, 65, 39);
             AllGuiTextures.JEI_LONG_ARROW.render(graphics, 7 * xOffsetAmount + 54, 51);
-
         }
 
+    }
+
+    public static abstract class SimpleBlock<T extends ProcessingRecipe<?>> extends MultiOutput<T> {
+
+        private final BlockState blockState;
+
+        public SimpleBlock(Info<T> info, Block block) {
+            super(info);
+            this.blockState = block.defaultBlockState();
+        }
+
+        @Override
+        protected void renderAttachedBlock(GuiGraphics graphics) {
+            GuiGameElement.of(blockState)
+                    .scale(SCALE)
+                    .atLocal(0, 0, 2)
+                    .lighting(AnimatedKinetics.DEFAULT_LIGHTING)
+                    .render(graphics);
+        }
     }
 }
