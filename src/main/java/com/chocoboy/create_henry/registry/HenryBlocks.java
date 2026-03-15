@@ -15,8 +15,11 @@ import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.foundation.data.*;
 import com.chocoboy.create_henry.infrastructure.config.HenryStressConfig;
 import com.chocoboy.create_henry.registry.HenryStressValues;
+import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
@@ -66,13 +69,11 @@ public class HenryBlocks {
             .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
             .addLayer(() -> RenderType::cutoutMipped)
             .transform(HenryStressConfig.setImpact(8.0))
-            .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+            .recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                     .pattern("A").pattern("B").pattern("C")
                     .define('A', AllItems.PRECISION_MECHANISM.get())
                     .define('B', AllBlocks.BRASS_CASING.get())
-                    .define('C', HenryItems.GOLDEN_WHISK.get())
-                    .unlockedBy("has_" + c.getName(), has(c.get()))
-                    .save(p, HenryCreate.asResource("crafting/" + c.getName())))
+                    .define('C', HenryItems.GOLDEN_WHISK.get()), c, p))
             .item(AssemblyOperatorBlockItem::new)
             .transform(customItemModel())
             .lang("Golden Mixer")
@@ -126,15 +127,13 @@ public class HenryBlocks {
 			.transform(pickaxeOnly())
 			.transform(HenryStressConfig.setImpact(4.0))
 			.transform(HenryStressConfig.setCapacity(16))
-			.recipe((c, p) -> {
-				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
-						.pattern("CIP")
-						.define('P', AllItems.PROPELLER.get())
-						.define('C', AllBlocks.COGWHEEL.get())
-						.define('I', HenryBlocks.INDUSTRIAL_CASING.get())
-						.unlockedBy("has_casing", has(HenryBlocks.INDUSTRIAL_CASING.get()))
-						.save(p, HenryCreate.asResource("crafting/" + c.getName()));
-			})
+			.recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
+					.pattern("CIP")
+					.define('P', AllItems.PROPELLER.get())
+					.define('C', AllBlocks.COGWHEEL.get())
+					.define('I', HenryBlocks.INDUSTRIAL_CASING.get())
+					.unlockedBy("has_casing", has(HenryBlocks.INDUSTRIAL_CASING.get())),
+				p, "crafting/" + c.getName()))
 			.lang("Industrial Fan")
 			.item()
 			.transform(customItemModel())
@@ -161,17 +160,11 @@ public class HenryBlocks {
 					() -> SoundEvents.NETHERITE_BLOCK_HIT, () -> SoundEvents.NETHERITE_BLOCK_FALL)))
 			.onRegister(movementBehaviour(new BoreBlockMovementBehaviour()))
 			.transform(pickaxeOnly())
-			.recipe((c, p) -> {
-				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
-						.pattern("AIA")
-						.pattern("ICI")
-						.pattern("AIA")
-						.define('A', AllItems.ANDESITE_ALLOY.get())
-						.define('C', AllBlocks.ANDESITE_ALLOY_BLOCK.get())
-						.define('I', Items.IRON_INGOT)
-						.unlockedBy("has_" + c.getName(), has(c.get()))
-						.save(p, HenryCreate.asResource("crafting/" + c.getName()));
-			})
+			.recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
+					.pattern("AIA").pattern("ICI").pattern("AIA")
+					.define('A', AllItems.ANDESITE_ALLOY.get())
+					.define('C', AllBlocks.ANDESITE_ALLOY_BLOCK.get())
+					.define('I', Items.IRON_INGOT), c, p))
 			.item()
 			.build()
 			.register();
@@ -185,11 +178,11 @@ public class HenryBlocks {
 			.blockstate(new GaugeGenerator()::generate)
 			.transform(displaySource(AllDisplaySources.KINETIC_SPEED))
 			.transform(displaySource(AllDisplaySources.KINETIC_STRESS))
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 2)
+			.recipe((c, p) -> save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 2)
 					.requires(AllBlocks.STRESSOMETER.get())
 					.requires(AllBlocks.SPEEDOMETER.get())
-					.unlockedBy("has_compass", has(Items.COMPASS))
-					.save(p, HenryCreate.asResource("crafting/multimeter")))
+					.unlockedBy("has_compass", has(Items.COMPASS)),
+				p, "crafting/multimeter"))
 			.item()
 			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.transform(ModelGen.customItemModel("gauge", "_", "item"))
@@ -210,12 +203,12 @@ public class HenryBlocks {
 				power == 6 || power == 7 || power == 8 ? 2 :
 				power == 9 || power == 10 || power == 11 ? 3 : 4));
 			}))
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+			.recipe((c, p) -> save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 					.requires(AllBlocks.ANDESITE_CASING.get())
 					.requires(AllBlocks.LARGE_COGWHEEL.get())
 					.requires(Items.REDSTONE)
-					.unlockedBy("has_cogwheel", has(AllBlocks.COGWHEEL.get()))
-					.save(p, HenryCreate.asResource("crafting/kinetics/redstone_divider")))
+					.unlockedBy("has_cogwheel", has(AllBlocks.COGWHEEL.get())),
+				p, "crafting/kinetics/redstone_divider"))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -228,11 +221,11 @@ public class HenryBlocks {
 			.transform(HenryStressConfig.setNoImpact())
 			.transform(axeOrPickaxe())
 			.blockstate(BlockStateGen.axisBlockProvider(true))
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+			.recipe((c, p) -> save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 					.requires(AllBlocks.ANDESITE_CASING.get())
 					.requires(AllBlocks.COGWHEEL.get())
-					.unlockedBy("has_cogwheel", has(AllBlocks.COGWHEEL.get()))
-					.save(p, HenryCreate.asResource("crafting/kinetics/inverse_box")))
+					.unlockedBy("has_cogwheel", has(AllBlocks.COGWHEEL.get())),
+				p, "crafting/kinetics/inverse_box"))
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -243,11 +236,11 @@ public class HenryBlocks {
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY))
 			.tag(AllTags.AllBlockTags.SAFE_NBT.tag)
 			.transform(axeOrPickaxe())
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+			.recipe((c, p) -> save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 					.requires(AllBlocks.ANDESITE_CASING.get())
 					.requires(HenryItems.KINETIC_MECHANISM.get())
-					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get()))
-					.save(p, HenryCreate.asResource("crafting/kinetics/kinetic_motor")))
+					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get())),
+				p, "crafting/kinetics/kinetic_motor"))
 			.blockstate(new CreativeMotorGenerator()::generate)
 			.transform(HenryStressConfig.setCapacity(48))
 			.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
@@ -261,12 +254,12 @@ public class HenryBlocks {
 			.properties(p -> p.mapColor(MapColor.COLOR_GRAY))
 			.tag(AllTags.AllBlockTags.SAFE_NBT.tag)
 			.transform(axeOrPickaxe())
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+			.recipe((c, p) -> save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 					.requires(INDUSTRIAL_CASING.get())
 					.requires(HenryItems.KINETIC_MECHANISM.get())
 					.requires(HenryItems.RUBBER.get())
-					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get()))
-					.save(p, HenryCreate.asResource("crafting/kinetics/industrial_brake")))
+					.unlockedBy("has_kinetic_mechanism", has(HenryItems.KINETIC_MECHANISM.get())),
+				p, "crafting/kinetics/industrial_brake"))
 			.blockstate(new CreativeMotorGenerator()::generate)
 			.onRegister(HenryStressValues.setTakenSU(256, true))
 			.item()
@@ -281,18 +274,12 @@ public class HenryBlocks {
 					.properties(BlockBehaviour.Properties::noOcclusion)
 					.transform(pickaxeOnly())
 					.tag(AllTags.AllBlockTags.BRITTLE.tag)
-					.recipe((c, p) -> {
-						ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
-								.pattern("AAB")
-								.pattern("ACD")
-								.pattern("AAB")
-								.define('A', AllItems.BRASS_SHEET)
-								.define('B', AllItems.BRASS_INGOT)
-								.define('C', AllBlocks.BRASS_CASING)
-								.define('D', Ingredient.of(Blocks.PISTON , Blocks.STICKY_PISTON))
-								.unlockedBy("has_" + c.getName(), has(c.get()))
-								.save(p, HenryCreate.asResource("crafting/" + c.getName()));
-					})
+					.recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+							.pattern("AAB").pattern("ACD").pattern("AAB")
+							.define('A', AllItems.BRASS_SHEET)
+							.define('B', AllItems.BRASS_INGOT)
+							.define('C', AllBlocks.BRASS_CASING)
+							.define('D', Ingredient.of(Blocks.PISTON, Blocks.STICKY_PISTON)), c, p))
 					.blockstate(new FurnaceEngineGenerator()::generate)
 					.transform(HenryStressConfig.setCapacity(256.0))
 					.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
@@ -315,18 +302,29 @@ public class HenryBlocks {
 					.strength(0.5f, 1.5f)
 					.sound(SoundType.WOOL)
 			)
-			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
+			.recipe((c, p) -> save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 1)
 					.requires(Items.YELLOW_DYE)
 					.requires(Items.FEATHER)
 					.requires(HenryItems.RUBBER.get())
-					.unlockedBy("has_rubber", has(HenryItems.RUBBER.get()))
-					.save(p, HenryCreate.asResource("crafting/henry_block")))
+					.unlockedBy("has_rubber", has(HenryItems.RUBBER.get())),
+				p, "crafting/henry_block"))
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.lang("Henry Block")
 			.item()
 			.transform(com.simibubi.create.foundation.data.ModelGen.customItemModel())
 			.register();
+
+	// Saves with default unlock (has the block being registered) and default path (crafting/<name>)
+	private static <B extends Block> void save(RecipeBuilder b, DataGenContext<Block, B> c, RegistrateRecipeProvider p) {
+		b.unlockedBy("has_" + c.getName(), has(c.get()))
+		 .save(p, HenryCreate.asResource("crafting/" + c.getName()));
+	}
+
+	// Saves to a custom path; caller is responsible for calling .unlockedBy() on the builder
+	private static void save(RecipeBuilder b, RegistrateRecipeProvider p, String path) {
+		b.save(p, HenryCreate.asResource(path));
+	}
 
 	// Load this class
 	public static void register() {}

@@ -6,14 +6,16 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.item.CombustibleItem;
+import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -81,14 +83,12 @@ public class HenryItems {
             .model((c, p) -> p.withExistingParent(c.getId().getPath(),
                     new ResourceLocation("item/generated")).texture("layer0",
                     new ResourceLocation(HenryCreate.MOD_ID,"item/" + c.getId().getPath())))
-            .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+            .recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                         .pattern(" A ")
                         .pattern("GAG")
                         .pattern("GGG")
                         .define('A', AllItems.ANDESITE_ALLOY.get())
-                        .define('G', AllItems.GOLDEN_SHEET.get())
-                        .unlockedBy("has_" + c.getName(), has(c.get()))
-                        .save(p, HenryCreate.asResource("crafting/" + c.getName())))
+                        .define('G', AllItems.GOLDEN_SHEET.get()), c, p))
             .lang("Golden Whisk")
             .tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
             .register();
@@ -100,17 +100,15 @@ public class HenryItems {
 			.tag(forgeItemTag("raw_rubbers"))
 			.recipe((c, p) -> {
 				Item output = HenryBlocks.RAW_RUBBER_BLOCK.get().asItem();
-				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
-						.pattern("CCC")
-						.pattern("CCC")
-						.pattern("CCC")
+				save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
+						.pattern("CCC").pattern("CCC").pattern("CCC")
 						.define('C', c.get())
-						.unlockedBy("has_" + getItemName(output), has(output))
-						.save(p, HenryCreate.asResource("crafting/" + getItemName(output) + "_from_" + c.getName()));
-				ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 9)
+						.unlockedBy("has_" + getItemName(output), has(output)),
+					p, "crafting/" + getItemName(output) + "_from_" + c.getName());
+				save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 9)
 						.requires(output)
-						.unlockedBy("has_" + c.getName(), has(c.get()))
-						.save(p, HenryCreate.asResource("crafting/" + c.getName() + "_from_" + getItemName(output)));
+						.unlockedBy("has_" + c.getName(), has(c.get())),
+					p, "crafting/" + c.getName() + "_from_" + getItemName(output));
 			})
 			.lang("Raw Rubber")
 			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
@@ -123,21 +121,18 @@ public class HenryItems {
 			.tag(forgeItemTag("rubbers"), forgeItemTag("crude_rubbers"))
 			.recipe((c, p) -> {
 				Item output = HenryBlocks.RUBBER_BLOCK.get().asItem();
-				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
-						.pattern("CCC")
-						.pattern("CCC")
-						.pattern("CCC")
+				save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
+						.pattern("CCC").pattern("CCC").pattern("CCC")
 						.define('C', c.get())
-						.unlockedBy("has_" + getItemName(output), has(output))
-						.save(p, HenryCreate.asResource("crafting/" + getItemName(output) + "_from_" + c.getName()));
-				ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 9)
+						.unlockedBy("has_" + getItemName(output), has(output)),
+					p, "crafting/" + getItemName(output) + "_from_" + c.getName());
+				save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 9)
 						.requires(output)
-						.unlockedBy("has_" + c.getName(), has(c.get()))
-						.save(p, HenryCreate.asResource("crafting/" + c.getName() + "_from_" + getItemName(output)));
-
-				SimpleCookingRecipeBuilder.smoking(Ingredient.of(RAW_RUBBER),RecipeCategory.BUILDING_BLOCKS , c.get(), 2, 600)
-						.unlockedBy("has_" + getItemName(RAW_RUBBER.get()), has(HenryItems.RAW_RUBBER.get()))
-						.save(p, HenryCreate.asResource("smoking/" + c.getId().getPath()));
+						.unlockedBy("has_" + c.getName(), has(c.get())),
+					p, "crafting/" + c.getName() + "_from_" + getItemName(output));
+				save(SimpleCookingRecipeBuilder.smoking(Ingredient.of(RAW_RUBBER), RecipeCategory.BUILDING_BLOCKS, c.get(), 2, 600)
+						.unlockedBy("has_" + getItemName(RAW_RUBBER.get()), has(HenryItems.RAW_RUBBER.get())),
+					p, "smoking/" + c.getId().getPath());
 			})
 			.lang("Rubber")
 			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
@@ -150,16 +145,15 @@ public class HenryItems {
 			.tag(forgeItemTag("nuggets/lapis"), forgeItemTag("nuggets"))
 			.recipe((c, p) -> {
 				Item output = Items.LAPIS_LAZULI;
-				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
-						.pattern("CC")
-						.pattern("CC")
+				save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
+						.pattern("CC").pattern("CC")
 						.define('C', c.get())
-						.unlockedBy("has_" + getItemName(output), has(output))
-						.save(p, HenryCreate.asResource("crafting/" + getItemName(output) + "_from_" + c.getName()));
-				ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
+						.unlockedBy("has_" + getItemName(output), has(output)),
+					p, "crafting/" + getItemName(output) + "_from_" + c.getName());
+				save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
 						.requires(output)
-						.unlockedBy("has_" + c.getName(), has(c.get()))
-						.save(p, HenryCreate.asResource("crafting/" + c.getName() + "_from_" + getItemName(output)));
+						.unlockedBy("has_" + c.getName(), has(c.get())),
+					p, "crafting/" + c.getName() + "_from_" + getItemName(output));
 			})
 			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.register();
@@ -172,20 +166,29 @@ public class HenryItems {
 			.tag(forgeItemTag("nuggets/coal"), forgeItemTag("nuggets"))
 			.recipe((c, p) -> {
 				Item output = Items.COAL;
-				ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
-						.pattern("CCC")
-						.pattern("CCC")
-						.pattern("CCC")
+				save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 1)
+						.pattern("CCC").pattern("CCC").pattern("CCC")
 						.define('C', c.get())
-						.unlockedBy("has_" + getItemName(output), has(output))
-						.save(p, HenryCreate.asResource("crafting/" + getItemName(output) + "_from_" + c.getName()));
-				ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 9)
+						.unlockedBy("has_" + getItemName(output), has(output)),
+					p, "crafting/" + getItemName(output) + "_from_" + c.getName());
+				save(ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get(), 9)
 						.requires(output)
-						.unlockedBy("has_" + c.getName(), has(c.get()))
-						.save(p, HenryCreate.asResource("crafting/" + c.getName() + "_from_" + getItemName(output)));
+						.unlockedBy("has_" + c.getName(), has(c.get())),
+					p, "crafting/" + c.getName() + "_from_" + getItemName(output));
 			})
 			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
 			.register();
+
+	// Saves with default unlock (has the item being registered) and default path (crafting/<name>)
+	private static <I extends Item> void save(RecipeBuilder b, DataGenContext<Item, I> c, RegistrateRecipeProvider p) {
+		b.unlockedBy("has_" + c.getName(), has(c.get()))
+		 .save(p, HenryCreate.asResource("crafting/" + c.getName()));
+	}
+
+	// Saves to a custom path; caller is responsible for calling .unlockedBy() on the builder
+	private static void save(RecipeBuilder b, RegistrateRecipeProvider p, String path) {
+		b.save(p, HenryCreate.asResource(path));
+	}
 
 	private static ItemEntry<MilkshakeItem> milkshake(String name, Supplier<MobEffectInstance> effect) {
 		String id = name.toLowerCase().replace(" ", "_");
@@ -211,8 +214,6 @@ public class HenryItems {
 		return REGISTRATE.item(name, SequencedAssemblyItem::new)
 				.register();
 	}
-	// Load this class
 
 	public static void register() {}
-
 }
