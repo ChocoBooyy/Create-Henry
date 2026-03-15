@@ -94,24 +94,48 @@ public class HenryCreativeModeTabs {
             return exclusions::contains;
 		}
 
-		private static List<RegistrateDisplayItemsGenerator.ItemOrdering> makeOrderings() {
-			List<RegistrateDisplayItemsGenerator.ItemOrdering> orderings = new ReferenceArrayList<>();
+        private static List<RegistrateDisplayItemsGenerator.ItemOrdering> makeOrderings() {
+            List<RegistrateDisplayItemsGenerator.ItemOrdering> orderings = new ReferenceArrayList<>();
 
-			// All milkshake drinks first, then all milkshake buckets in the same flavor order
-			Item chocolateBucket = HenryFluids.CHOCOLATE_MILKSHAKE.get().getBucket();
-			Item vanillaBucket = HenryFluids.VANILLA_MILKSHAKE.get().getBucket();
-			Item strawberryBucket = HenryFluids.STRAWBERRY_MILKSHAKE.get().getBucket();
-			Item glowberryBucket = HenryFluids.GLOWBERRY_MILKSHAKE.get().getBucket();
-			Item pumpkinBucket = HenryFluids.PUMPKIN_MILKSHAKE.get().getBucket();
+            // Items
 
-			orderings.add(ItemOrdering.after(chocolateBucket, HenryItems.PUMPKIN_MILKSHAKE.asItem()));
-			orderings.add(ItemOrdering.after(vanillaBucket, chocolateBucket));
-			orderings.add(ItemOrdering.after(strawberryBucket, vanillaBucket));
-			orderings.add(ItemOrdering.after(glowberryBucket, strawberryBucket));
-			orderings.add(ItemOrdering.after(pumpkinBucket, glowberryBucket));
+            // Drinks: chocolate -> vanilla -> strawberry -> glowberry -> pumpkin
+            // Buckets: same flavor order, right after all drinks
+            Item chocolateBucket = HenryFluids.CHOCOLATE_MILKSHAKE.get().getBucket();
+            Item vanillaBucket = HenryFluids.VANILLA_MILKSHAKE.get().getBucket();
+            Item strawberryBucket = HenryFluids.STRAWBERRY_MILKSHAKE.get().getBucket();
+            Item glowberryBucket = HenryFluids.GLOWBERRY_MILKSHAKE.get().getBucket();
+            Item pumpkinBucket = HenryFluids.PUMPKIN_MILKSHAKE.get().getBucket();
+            Item sapBucket = HenryFluids.SAP.get().getBucket();
 
-			return orderings;
-		}
+            orderings.add(ItemOrdering.after(chocolateBucket, HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+            orderings.add(ItemOrdering.after(vanillaBucket, chocolateBucket));
+            orderings.add(ItemOrdering.after(strawberryBucket, vanillaBucket));
+            orderings.add(ItemOrdering.after(glowberryBucket, strawberryBucket));
+            orderings.add(ItemOrdering.after(pumpkinBucket, glowberryBucket));
+            orderings.add(ItemOrdering.after(sapBucket, pumpkinBucket));
+
+            // Small materials: coal piece -> lapis shard (after all buckets)
+            orderings.add(ItemOrdering.after(HenryItems.COAL_PIECE.asItem(), sapBucket));
+            orderings.add(ItemOrdering.after(HenryItems.LAPIS_LAZULI_SHARD.asItem(), HenryItems.COAL_PIECE.asItem()));
+
+            // Rubber materials -> kinetic mechanism (crafted from rubber)
+            orderings.add(ItemOrdering.after(HenryItems.RAW_RUBBER.asItem(), HenryItems.LAPIS_LAZULI_SHARD.asItem()));
+            orderings.add(ItemOrdering.after(HenryItems.RUBBER.asItem(), HenryItems.RAW_RUBBER.asItem()));
+            orderings.add(ItemOrdering.after(HenryItems.KINETIC_MECHANISM.asItem(), HenryItems.RUBBER.asItem()));
+
+            // Blocks
+
+            // Casings -> processing machines -> kinetics -> redstone/utility -> rubber blocks -> decorative
+            orderings.add(ItemOrdering.after(HenryBlocks.KINETIC_MOTOR.asItem(), HenryBlocks.BORE_BLOCK.asItem()));
+            orderings.add(ItemOrdering.after(HenryBlocks.INDUSTRIAL_BRAKE.asItem(), HenryBlocks.KINETIC_MOTOR.asItem()));
+            orderings.add(ItemOrdering.after(HenryBlocks.FURNACE_ENGINE.asItem(), HenryBlocks.INDUSTRIAL_BRAKE.asItem()));
+            orderings.add(ItemOrdering.after(HenryBlocks.POWERED_FLYWHEEL.asItem(), HenryBlocks.FURNACE_ENGINE.asItem()));
+            orderings.add(ItemOrdering.after(HenryBlocks.RAW_RUBBER_BLOCK.asItem(), HenryBlocks.INVERSE_BOX.asItem()));
+            orderings.add(ItemOrdering.after(HenryBlocks.RUBBER_BLOCK.asItem(), HenryBlocks.RAW_RUBBER_BLOCK.asItem()));
+
+            return orderings;
+        }
 
 		private static Function<Item, ItemStack> makeStackFunc() {
 			Map<Item, Function<Item, ItemStack>> factories = new Reference2ReferenceOpenHashMap<>();
