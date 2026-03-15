@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import it.unimi.dsi.fastutil.objects.*;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
@@ -101,22 +102,29 @@ public class HenryCreativeModeTabs {
 
             // Drinks: chocolate -> vanilla -> strawberry -> glowberry -> pumpkin
             // Buckets: same flavor order, right after all drinks
-            Item chocolateBucket = HenryFluids.CHOCOLATE_MILKSHAKE.get().getBucket();
-            Item vanillaBucket = HenryFluids.VANILLA_MILKSHAKE.get().getBucket();
-            Item strawberryBucket = HenryFluids.STRAWBERRY_MILKSHAKE.get().getBucket();
-            Item glowberryBucket = HenryFluids.GLOWBERRY_MILKSHAKE.get().getBucket();
-            Item pumpkinBucket = HenryFluids.PUMPKIN_MILKSHAKE.get().getBucket();
-            Item sapBucket = HenryFluids.SAP.get().getBucket();
+            Item chocolateBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("chocolate_milkshake_bucket"));
+            Item vanillaBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("vanilla_milkshake_bucket"));
+            Item strawberryBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("strawberry_milkshake_bucket"));
+            Item glowberryBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("glowberry_milkshake_bucket"));
+            Item pumpkinBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("pumpkin_milkshake_bucket"));
+            Item sapBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("sap_bucket"));
 
-            orderings.add(ItemOrdering.after(chocolateBucket, HenryItems.PUMPKIN_MILKSHAKE.asItem()));
-            orderings.add(ItemOrdering.after(vanillaBucket, chocolateBucket));
-            orderings.add(ItemOrdering.after(strawberryBucket, vanillaBucket));
-            orderings.add(ItemOrdering.after(glowberryBucket, strawberryBucket));
-            orderings.add(ItemOrdering.after(pumpkinBucket, glowberryBucket));
-            orderings.add(ItemOrdering.after(sapBucket, pumpkinBucket));
+            if (chocolateBucket != null && chocolateBucket != Items.AIR)
+                orderings.add(ItemOrdering.after(chocolateBucket, HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+            if (vanillaBucket != null && vanillaBucket != Items.AIR)
+                orderings.add(ItemOrdering.after(vanillaBucket, chocolateBucket != null ? chocolateBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+            if (strawberryBucket != null && strawberryBucket != Items.AIR)
+                orderings.add(ItemOrdering.after(strawberryBucket, vanillaBucket != null ? vanillaBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+            if (glowberryBucket != null && glowberryBucket != Items.AIR)
+                orderings.add(ItemOrdering.after(glowberryBucket, strawberryBucket != null ? strawberryBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+            if (pumpkinBucket != null && pumpkinBucket != Items.AIR)
+                orderings.add(ItemOrdering.after(pumpkinBucket, glowberryBucket != null ? glowberryBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+            if (sapBucket != null && sapBucket != Items.AIR)
+                orderings.add(ItemOrdering.after(sapBucket, pumpkinBucket != null ? pumpkinBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
 
             // Small materials: coal piece -> lapis shard (after all buckets)
-            orderings.add(ItemOrdering.after(HenryItems.COAL_PIECE.asItem(), sapBucket));
+            if (sapBucket != null && sapBucket != Items.AIR)
+                orderings.add(ItemOrdering.after(HenryItems.COAL_PIECE.asItem(), sapBucket));
             orderings.add(ItemOrdering.after(HenryItems.LAPIS_LAZULI_SHARD.asItem(), HenryItems.COAL_PIECE.asItem()));
 
             // Rubber materials -> kinetic mechanism (crafted from rubber)
@@ -203,6 +211,8 @@ public class HenryCreativeModeTabs {
 				if (!CreateRegistrate.isInCreativeTab(entry, tabFilter))
 					continue;
 				Item item = entry.get();
+				if (item == Items.AIR)
+					continue;
 				if (item instanceof BlockItem)
 					continue;
 				if (!exclusionPredicate.test(item))
@@ -216,6 +226,7 @@ public class HenryCreativeModeTabs {
 				int anchorIndex = items.indexOf(ordering.anchor());
 				if (anchorIndex != -1) {
 					Item item = ordering.item();
+					if (item == null || item == Items.AIR) continue;
 					int itemIndex = items.indexOf(item);
 					if (itemIndex != -1) {
 						items.remove(itemIndex);
@@ -234,6 +245,7 @@ public class HenryCreativeModeTabs {
 
 		private static void outputAll(CreativeModeTab.Output output, List<Item> items, Function<Item, ItemStack> stackFunc, Function<Item, CreativeModeTab.TabVisibility> visibilityFunc) {
 			for (Item item : items) {
+				if (item == null || item == Items.AIR) continue;
 				output.accept(stackFunc.apply(item), visibilityFunc.apply(item));
 			}
 		}
