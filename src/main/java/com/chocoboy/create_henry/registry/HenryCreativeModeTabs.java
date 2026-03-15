@@ -19,6 +19,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.mutable.MutableObject;
 import com.chocoboy.create_henry.HenryCreate;
+import com.chocoboy.create_henry.registry.HenryFluids;
+import com.chocoboy.create_henry.registry.HenryItems;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -94,7 +96,20 @@ public class HenryCreativeModeTabs {
 
 		private static List<RegistrateDisplayItemsGenerator.ItemOrdering> makeOrderings() {
 			List<RegistrateDisplayItemsGenerator.ItemOrdering> orderings = new ReferenceArrayList<>();
-			
+
+			// All milkshake drinks first, then all milkshake buckets in the same flavor order
+			Item chocolateBucket = HenryFluids.CHOCOLATE_MILKSHAKE.get().getBucket();
+			Item vanillaBucket = HenryFluids.VANILLA_MILKSHAKE.get().getBucket();
+			Item strawberryBucket = HenryFluids.STRAWBERRY_MILKSHAKE.get().getBucket();
+			Item glowberryBucket = HenryFluids.GLOWBERRY_MILKSHAKE.get().getBucket();
+			Item pumpkinBucket = HenryFluids.PUMPKIN_MILKSHAKE.get().getBucket();
+
+			orderings.add(ItemOrdering.after(chocolateBucket, HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+			orderings.add(ItemOrdering.after(vanillaBucket, chocolateBucket));
+			orderings.add(ItemOrdering.after(strawberryBucket, vanillaBucket));
+			orderings.add(ItemOrdering.after(glowberryBucket, strawberryBucket));
+			orderings.add(ItemOrdering.after(pumpkinBucket, glowberryBucket));
+
 			return orderings;
 		}
 
