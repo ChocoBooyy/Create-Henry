@@ -2,6 +2,8 @@ package com.chocoboy.create_henry.registry;
 
 import com.chocoboy.create_henry.content.items.MilkshakeItem;
 import java.util.function.Supplier;
+
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.simibubi.create.foundation.item.CombustibleItem;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -11,6 +13,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -74,8 +77,21 @@ public class HenryItems {
 	public static final ItemEntry<Item>
 			KINETIC_MECHANISM = item("kinetic_mechanism");
 
-	public static final ItemEntry<Item>
-			GOLDEN_WHISK = item("golden_whisk");
+	public static final ItemEntry<Item> GOLDEN_WHISK = REGISTRATE.item("golden_whisk", Item::new)
+            .model((c, p) -> p.withExistingParent(c.getId().getPath(),
+                    new ResourceLocation("item/generated")).texture("layer0",
+                    new ResourceLocation(HenryCreate.MOD_ID,"item/" + c.getId().getPath())))
+            .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                        .pattern(" A ")
+                        .pattern("GAG")
+                        .pattern("GGG")
+                        .define('A', AllItems.ANDESITE_ALLOY.get())
+                        .define('G', AllItems.GOLDEN_SHEET.get())
+                        .unlockedBy("has_" + c.getName(), has(c.get()))
+                        .save(p, HenryCreate.asResource("crafting/" + c.getName())))
+            .lang("Golden Whisk")
+            .tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
+            .register();
 
 	public static final ItemEntry<Item> RAW_RUBBER = REGISTRATE.item("raw_rubber", Item::new)
 			.model((c, p) -> p.withExistingParent(c.getId().getPath(),

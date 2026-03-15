@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-15T20:44:42.4231921	Registrate Provider for create_henry [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2026-03-15T23:52:11.9446015	Registrate Provider for create_henry [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 e4acf7d15f00e1eba45f3643cba88209974a1a34 assets/create_henry/blockstates/bore_block.json
 4c936b05bc00c461296ca26b3b4cf018f577367e assets/create_henry/blockstates/chocolate_milkshake.json
 5767b79bff60e207ef02b8db33ab2fe82eee6b81 assets/create_henry/blockstates/furnace_engine.json
@@ -91,6 +91,7 @@ f91fd2525e84046d588a891a3cf695946f95f4b0 data/create_henry/advancements/recipes/
 d765126e6d53b2afb8296ba8bb284d7e63375ea0 data/create_henry/advancements/recipes/building_blocks/crafting/rubber_from_rubber_block.json
 763104e727d5bb8a3aa88af664d92d4f8dee300f data/create_henry/advancements/recipes/building_blocks/smoking/rubber.json
 181a2c9bfa9845c282abf2cc144d5f40d6fb0b3f data/create_henry/advancements/recipes/misc/crafting/golden_mixer.json
+b069e6f71e673f6f7f7d17e0cbbe12efeafc53ec data/create_henry/advancements/recipes/misc/crafting/golden_whisk.json
 6f3ec3e35aef1c4faeb932460219221db60910dc data/create_henry/loot_tables/blocks/bore_block.json
 5db183ab0947cd7bf7deeffdb21296b32bdf5467 data/create_henry/loot_tables/blocks/furnace_engine.json
 d358615dde29415091c636336976206fefaf3aa5 data/create_henry/loot_tables/blocks/golden_mixer.json
@@ -112,6 +113,7 @@ df03e9dc37c0fd7c433964c7b91763b9d8756db2 data/create_henry/loot_tables/blocks/re
 80cc8e104058d037f76b2cf7a556d120d8c222cf data/create_henry/recipes/crafting/coal_piece_from_coal.json
 37c7b3f41da303970ce192f1f16df6938f5de851 data/create_henry/recipes/crafting/furnace_engine.json
 ef817b20b892e38e1b685fff8837e6c974254b1c data/create_henry/recipes/crafting/golden_mixer.json
+24b01098807ce2bcffe741762b850bc314ffd531 data/create_henry/recipes/crafting/golden_whisk.json
 c0467803bada1cbd40a4204cfeb87c3a63f3e30c data/create_henry/recipes/crafting/henry_block.json
 6401d3de04866cf460c4fe431e52301875a3b563 data/create_henry/recipes/crafting/industrial_fan.json
 ccdef79d288150016a3891c8ab0e98d3106be8b8 data/create_henry/recipes/crafting/kinetics/industrial_brake.json
