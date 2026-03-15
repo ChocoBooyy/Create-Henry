@@ -2,7 +2,15 @@
   "sources": [
     { "type": "single", "resource": "create_henry:fluid/sap_flow" },
     { "type": "single", "resource": "create_henry:fluid/sap_still" },
-    { "type": "single", "resource": "create_henry:fluid/milkshake_flow" },
-    { "type": "single", "resource": "create_henry:fluid/milkshake_still" }
+    { "type": "single", "resource": "create_henry:fluid/chocolate_milkshake_still" },
+    { "type": "single", "resource": "create_henry:fluid/chocolate_milkshake_flow" },
+    { "type": "single", "resource": "create_henry:fluid/vanilla_milkshake_still" },
+    { "type": "single", "resource": "create_henry:fluid/vanilla_milkshake_flow" },
+    { "type": "single", "resource": "create_henry:fluid/strawberry_milkshake_still" },
+    { "type": "single", "resource": "create_henry:fluid/strawberry_milkshake_flow" },
+    { "type": "single", "resource": "create_henry:fluid/glowberry_milkshake_still" },
+    { "type": "single", "resource": "create_henry:fluid/glowberry_milkshake_flow" },
+    { "type": "single", "resource": "create_henry:fluid/pumpkin_milkshake_still" },
+    { "type": "single", "resource": "create_henry:fluid/pumpkin_milkshake_flow" }
   ]
 }

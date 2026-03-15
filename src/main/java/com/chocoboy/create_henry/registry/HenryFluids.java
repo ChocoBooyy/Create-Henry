@@ -35,38 +35,39 @@ public class HenryFluids {
 
     private static final float FOG_DISTANCE_SCALE = 0.25f;
 
-    private static final ResourceLocation MILKSHAKE_STILL = new ResourceLocation(HenryCreate.MOD_ID, "fluid/milkshake_still");
-    private static final ResourceLocation MILKSHAKE_FLOW  = new ResourceLocation(HenryCreate.MOD_ID, "fluid/milkshake_flow");
-
-    // Tinted milkshakes — share a single grayscale texture, tinted per-flavor at render time
     public static final FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE_MILKSHAKE = newMilkshake(
-            "Chocolate Milkshake", 0xB57847,
+            "Chocolate Milkshake",
+            () -> HenryConfigs.client().chocolateFogColor.get(),
             () -> HenryConfigs.client().chocolateTransparencyMultiplier.getF(),
             HenryTags.AllFluidTags.CHOCOLATE.tag).register();
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> VANILLA_MILKSHAKE = newMilkshake(
-            "Vanilla Milkshake", 0xFFDF8C,
+            "Vanilla Milkshake",
+            () -> HenryConfigs.client().vanillaFogColor.get(),
             () -> HenryConfigs.client().vanillaTransparencyMultiplier.getF(),
             HenryTags.AllFluidTags.VANILLA.tag).register();
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> STRAWBERRY_MILKSHAKE = newMilkshake(
-            "Strawberry Milkshake", 0xFF7BAA,
+            "Strawberry Milkshake",
+            () -> HenryConfigs.client().strawberryFogColor.get(),
             () -> HenryConfigs.client().strawberryTransparencyMultiplier.getF(),
             HenryTags.AllFluidTags.STRAWBERRY.tag).register();
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> GLOWBERRY_MILKSHAKE = newMilkshake(
-            "Glowberry Milkshake", 0xFFD22A,
+            "Glowberry Milkshake",
+            () -> HenryConfigs.client().glowberryFogColor.get(),
             () -> HenryConfigs.client().glowberryTransparencyMultiplier.getF(),
             HenryTags.AllFluidTags.GLOWBERRY.tag).register();
 
     public static final FluidEntry<ForgeFlowingFluid.Flowing> PUMPKIN_MILKSHAKE = newMilkshake(
-            "Pumpkin Milkshake", 0xFFAB4D,
+            "Pumpkin Milkshake",
+            () -> HenryConfigs.client().pumpkinFogColor.get(),
             () -> HenryConfigs.client().pumpkinTransparencyMultiplier.getF(),
             HenryTags.AllFluidTags.PUMPKIN.tag).register();
 
-    // Non-tinted fluid — uses its own dedicated colored texture
     public static final FluidEntry<ForgeFlowingFluid.Flowing> SAP = newFluid(
-            "Sap", 0xEAAE2F,
+            "Sap",
+            () -> HenryConfigs.client().sapFogColor.get(),
             () -> HenryConfigs.client().sapTransparencyMultiplier.getF(),
             HenryTags.AllFluidTags.SAP.tag).register();
 
@@ -77,10 +78,12 @@ public class HenryFluids {
 
     @SafeVarargs
     private static FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> newMilkshake(
-            String name, int tintColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
+            String name, Supplier<Integer> fogColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
         String id = name.toLowerCase().replace(" ", "_");
+        ResourceLocation stillTex = new ResourceLocation(HenryCreate.MOD_ID, "fluid/" + id + "_still");
+        ResourceLocation flowTex  = new ResourceLocation(HenryCreate.MOD_ID, "fluid/" + id + "_flow");
         return REGISTRATE.standardFluid(id,
-                        SolidRenderedPlaceableFluidType.createTinted(tintColor, () -> FOG_DISTANCE_SCALE * transparency.get(), MILKSHAKE_STILL, MILKSHAKE_FLOW))
+                        SolidRenderedPlaceableFluidType.create(fogColor, () -> FOG_DISTANCE_SCALE * transparency.get(), stillTex, flowTex))
                 .lang(name)
                 .properties(b -> b.viscosity(1000).density(1400))
                 .fluidProperties(p -> p.levelDecreasePerBlock(2).tickRate(10).slopeFindDistance(3).explosionResistance(100f))
@@ -89,7 +92,7 @@ public class HenryFluids {
                 .block()
                 .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models()
                         .getBuilder(ctx.getName())
-                        .texture("particle", MILKSHAKE_STILL.toString())))
+                        .texture("particle", stillTex.toString())))
                 .build()
                 .bucket()
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation("minecraft", "item/generated"))
@@ -100,7 +103,7 @@ public class HenryFluids {
 
     @SafeVarargs
     private static FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> newFluid(
-            String name, int fogColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
+            String name, Supplier<Integer> fogColor, Supplier<Float> transparency, TagKey<Fluid>... tags) {
         String id = name.toLowerCase().replace(" ", "_");
         ResourceLocation stillTex = new ResourceLocation(HenryCreate.MOD_ID, "fluid/" + id + "_still");
         ResourceLocation flowTex  = new ResourceLocation(HenryCreate.MOD_ID, "fluid/" + id + "_flow");

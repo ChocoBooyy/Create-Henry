@@ -14,14 +14,15 @@ import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 
 public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 
-	private Vector3f fogColor;
+	private Supplier<Vector3f> fogColor;
 	private Supplier<Float> fogDistance;
 	private int tintRGB = -1; // -1 means no tint
 
 	public static FluidTypeFactory create(int fogColor, Supplier<Float> fogDistance) {
 		return (p, s, f) -> {
 			SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, s, f);
-			fluidType.fogColor = new Color(fogColor, false).asVectorF();
+			Vector3f baked = new Color(fogColor, false).asVectorF();
+			fluidType.fogColor = () -> baked;
 			fluidType.fogDistance = fogDistance;
 			return fluidType;
 		};
@@ -31,7 +32,18 @@ public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 			ResourceLocation stillTex, ResourceLocation flowTex) {
 		return (p, s, f) -> {
 			SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, stillTex, flowTex);
-			fluidType.fogColor = new Color(fogColor, false).asVectorF();
+			Vector3f baked = new Color(fogColor, false).asVectorF();
+			fluidType.fogColor = () -> baked;
+			fluidType.fogDistance = fogDistance;
+			return fluidType;
+		};
+	}
+
+	public static FluidTypeFactory create(Supplier<Integer> fogColor, Supplier<Float> fogDistance,
+			ResourceLocation stillTex, ResourceLocation flowTex) {
+		return (p, s, f) -> {
+			SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, stillTex, flowTex);
+			fluidType.fogColor = () -> new Color(fogColor.get(), false).asVectorF();
 			fluidType.fogDistance = fogDistance;
 			return fluidType;
 		};
@@ -41,7 +53,8 @@ public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 			ResourceLocation stillTex, ResourceLocation flowTex) {
 		return (p, s, f) -> {
 			SolidRenderedPlaceableFluidType fluidType = new SolidRenderedPlaceableFluidType(p, stillTex, flowTex);
-			fluidType.fogColor = new Color(tintColor, false).asVectorF();
+			Vector3f baked = new Color(tintColor, false).asVectorF();
+			fluidType.fogColor = () -> baked;
 			fluidType.fogDistance = fogDistance;
 			fluidType.tintRGB = tintColor & 0x00FFFFFF;
 			return fluidType;
@@ -71,7 +84,7 @@ public class SolidRenderedPlaceableFluidType extends TintedFluidType {
 
 	@Override
 	protected Vector3f getCustomFogColor() {
-		return fogColor;
+		return fogColor.get();
 	}
 
 	@Override
