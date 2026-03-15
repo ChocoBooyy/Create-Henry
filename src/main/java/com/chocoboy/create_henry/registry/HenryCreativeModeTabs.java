@@ -1,27 +1,24 @@
 package com.chocoboy.create_henry.registry;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import net.minecraft.network.chat.Component;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import it.unimi.dsi.fastutil.objects.*;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.mutable.MutableObject;
 import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.registry.HenryFluids;
-import com.chocoboy.create_henry.registry.HenryItems;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +36,7 @@ public class HenryCreativeModeTabs {
 					.title(Component.translatable("itemGroup.create_henry.base"))
 					.withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
 					.icon(HenryBlocks.INDUSTRIAL_FAN::asStack)
-					.displayItems(new HenryCreativeModeTabs.RegistrateDisplayItemsGenerator(true, HenryCreativeModeTabs.BASE_CREATIVE_TAB))
+					.displayItems(new RegistrateDisplayItemsGenerator(true, HenryCreativeModeTabs.BASE_CREATIVE_TAB))
 					.build());
 
 	public static void register(IEventBus modEventBus) {
@@ -51,25 +48,12 @@ public class HenryCreativeModeTabs {
 
 		static {
 			MutableObject<Predicate<Item>> isItem3d = new MutableObject<>(item -> false);
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-				isItem3d.setValue(item -> {
-					ItemRenderer itemRenderer = Minecraft.getInstance()
-							.getItemRenderer();
-					BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
-					return model.isGui3d();
-				});
-			});
-			IS_ITEM_3D_PREDICATE = isItem3d.getValue();
-		}
-
-		@OnlyIn(Dist.CLIENT)
-		private static Predicate<Item> makeClient3dItemPredicate() {
-			return item -> {
-				ItemRenderer itemRenderer = Minecraft.getInstance()
-						.getItemRenderer();
-				BakedModel model = itemRenderer.getModel(new ItemStack(item), null, null, 0);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> isItem3d.setValue(item -> {
+				ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
+				BakedModel model = renderer.getModel(new ItemStack(item), null, null, 0);
 				return model.isGui3d();
-			};
+			}));
+			IS_ITEM_3D_PREDICATE = isItem3d.getValue();
 		}
 
 		private final boolean addItems;
@@ -80,110 +64,86 @@ public class HenryCreativeModeTabs {
 			this.tabFilter = tabFilter;
 		}
 
-		@SuppressWarnings({"removal"})
+		@SuppressWarnings("removal")
 		private static Predicate<Item> makeExclusionPredicate() {
-			Set<Item> exclusions = new ReferenceOpenHashSet<>();
-
-			List<ItemProviderEntry<?>> simpleExclusions = List.of(
-					HenryItems.INCOMPLETE_KINETIC_MECHANISM
-			);
-
-			for (ItemProviderEntry<?> entry : simpleExclusions) {
-				exclusions.add(entry.asItem());
-			}
-
-            return exclusions::contains;
+			return Set.of(HenryItems.INCOMPLETE_KINETIC_MECHANISM.asItem())::contains;
 		}
 
-        private static List<RegistrateDisplayItemsGenerator.ItemOrdering> makeOrderings() {
-            List<RegistrateDisplayItemsGenerator.ItemOrdering> orderings = new ReferenceArrayList<>();
+		private static List<ItemOrdering> makeOrderings() {
+			List<ItemOrdering> orderings = new ReferenceArrayList<>();
 
-            // Items
+			// Items
+			// Drinks are in natural Registrate order (chocolate -> vanilla -> strawberry -> glowberry -> pumpkin).
+			// All buckets follow in the same flavor order, starting after the last drink.
+			Item[] milkshakeBuckets = {
+				bucket("chocolate_milkshake"), bucket("vanilla_milkshake"),
+				bucket("strawberry_milkshake"), bucket("glowberry_milkshake"),
+				bucket("pumpkin_milkshake")
+			};
+			Item sapBucket = bucket("sap");
 
-            // Drinks: chocolate -> vanilla -> strawberry -> glowberry -> pumpkin
-            // Buckets: same flavor order, right after all drinks
-            Item chocolateBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("chocolate_milkshake_bucket"));
-            Item vanillaBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("vanilla_milkshake_bucket"));
-            Item strawberryBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("strawberry_milkshake_bucket"));
-            Item glowberryBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("glowberry_milkshake_bucket"));
-            Item pumpkinBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("pumpkin_milkshake_bucket"));
-            Item sapBucket = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource("sap_bucket"));
+			Item bucketAnchor = HenryItems.PUMPKIN_MILKSHAKE.asItem();
+			for (Item b : milkshakeBuckets) {
+				if (b != null) {
+					orderings.add(ItemOrdering.after(b, bucketAnchor));
+					bucketAnchor = b;
+				}
+			}
+			if (sapBucket != null) {
+				orderings.add(ItemOrdering.after(sapBucket, bucketAnchor));
+				bucketAnchor = sapBucket;
+			}
 
-            if (chocolateBucket != null && chocolateBucket != Items.AIR)
-                orderings.add(ItemOrdering.after(chocolateBucket, HenryItems.PUMPKIN_MILKSHAKE.asItem()));
-            if (vanillaBucket != null && vanillaBucket != Items.AIR)
-                orderings.add(ItemOrdering.after(vanillaBucket, chocolateBucket != null ? chocolateBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
-            if (strawberryBucket != null && strawberryBucket != Items.AIR)
-                orderings.add(ItemOrdering.after(strawberryBucket, vanillaBucket != null ? vanillaBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
-            if (glowberryBucket != null && glowberryBucket != Items.AIR)
-                orderings.add(ItemOrdering.after(glowberryBucket, strawberryBucket != null ? strawberryBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
-            if (pumpkinBucket != null && pumpkinBucket != Items.AIR)
-                orderings.add(ItemOrdering.after(pumpkinBucket, glowberryBucket != null ? glowberryBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
-            if (sapBucket != null && sapBucket != Items.AIR)
-                orderings.add(ItemOrdering.after(sapBucket, pumpkinBucket != null ? pumpkinBucket : HenryItems.PUMPKIN_MILKSHAKE.asItem()));
+			// Small materials: coal piece -> lapis shard
+			orderings.add(ItemOrdering.after(HenryItems.COAL_PIECE.asItem(), bucketAnchor));
+			orderings.add(ItemOrdering.after(HenryItems.LAPIS_LAZULI_SHARD.asItem(), HenryItems.COAL_PIECE.asItem()));
 
-            // Small materials: coal piece -> lapis shard (after all buckets)
-            if (sapBucket != null && sapBucket != Items.AIR)
-                orderings.add(ItemOrdering.after(HenryItems.COAL_PIECE.asItem(), sapBucket));
-            orderings.add(ItemOrdering.after(HenryItems.LAPIS_LAZULI_SHARD.asItem(), HenryItems.COAL_PIECE.asItem()));
+			// Rubber materials -> kinetic mechanism
+			orderings.add(ItemOrdering.after(HenryItems.RAW_RUBBER.asItem(), HenryItems.LAPIS_LAZULI_SHARD.asItem()));
+			orderings.add(ItemOrdering.after(HenryItems.RUBBER.asItem(), HenryItems.RAW_RUBBER.asItem()));
+			orderings.add(ItemOrdering.after(HenryItems.KINETIC_MECHANISM.asItem(), HenryItems.RUBBER.asItem()));
 
-            // Rubber materials -> kinetic mechanism (crafted from rubber)
-            orderings.add(ItemOrdering.after(HenryItems.RAW_RUBBER.asItem(), HenryItems.LAPIS_LAZULI_SHARD.asItem()));
-            orderings.add(ItemOrdering.after(HenryItems.RUBBER.asItem(), HenryItems.RAW_RUBBER.asItem()));
-            orderings.add(ItemOrdering.after(HenryItems.KINETIC_MECHANISM.asItem(), HenryItems.RUBBER.asItem()));
+			// Blocks: casings -> processing machines -> kinetics -> redstone/utility -> rubber blocks -> decorative
+			orderings.add(ItemOrdering.after(HenryBlocks.KINETIC_MOTOR.asItem(), HenryBlocks.BORE_BLOCK.asItem()));
+			orderings.add(ItemOrdering.after(HenryBlocks.INDUSTRIAL_BRAKE.asItem(), HenryBlocks.KINETIC_MOTOR.asItem()));
+			orderings.add(ItemOrdering.after(HenryBlocks.FURNACE_ENGINE.asItem(), HenryBlocks.INDUSTRIAL_BRAKE.asItem()));
+			orderings.add(ItemOrdering.after(HenryBlocks.POWERED_FLYWHEEL.asItem(), HenryBlocks.FURNACE_ENGINE.asItem()));
+			orderings.add(ItemOrdering.after(HenryBlocks.RAW_RUBBER_BLOCK.asItem(), HenryBlocks.INVERSE_BOX.asItem()));
+			orderings.add(ItemOrdering.after(HenryBlocks.RUBBER_BLOCK.asItem(), HenryBlocks.RAW_RUBBER_BLOCK.asItem()));
 
-            // Blocks
+			return orderings;
+		}
 
-            // Casings -> processing machines -> kinetics -> redstone/utility -> rubber blocks -> decorative
-            orderings.add(ItemOrdering.after(HenryBlocks.KINETIC_MOTOR.asItem(), HenryBlocks.BORE_BLOCK.asItem()));
-            orderings.add(ItemOrdering.after(HenryBlocks.INDUSTRIAL_BRAKE.asItem(), HenryBlocks.KINETIC_MOTOR.asItem()));
-            orderings.add(ItemOrdering.after(HenryBlocks.FURNACE_ENGINE.asItem(), HenryBlocks.INDUSTRIAL_BRAKE.asItem()));
-            orderings.add(ItemOrdering.after(HenryBlocks.POWERED_FLYWHEEL.asItem(), HenryBlocks.FURNACE_ENGINE.asItem()));
-            orderings.add(ItemOrdering.after(HenryBlocks.RAW_RUBBER_BLOCK.asItem(), HenryBlocks.INVERSE_BOX.asItem()));
-            orderings.add(ItemOrdering.after(HenryBlocks.RUBBER_BLOCK.asItem(), HenryBlocks.RAW_RUBBER_BLOCK.asItem()));
-
-            return orderings;
-        }
+		// Returns the registered bucket item for the given fluid id, or null if missing/AIR
+		private static Item bucket(String fluidId) {
+			Item item = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource(fluidId + "_bucket"));
+			return (item == null || item == Items.AIR) ? null : item;
+		}
 
 		private static Function<Item, ItemStack> makeStackFunc() {
 			Map<Item, Function<Item, ItemStack>> factories = new Reference2ReferenceOpenHashMap<>();
-
 			return item -> {
 				Function<Item, ItemStack> factory = factories.get(item);
-				if (factory != null) {
-					return factory.apply(item);
-				}
-				return new ItemStack(item);
+				return factory != null ? factory.apply(item) : new ItemStack(item);
 			};
 		}
 
 		private static Function<Item, CreativeModeTab.TabVisibility> makeVisibilityFunc() {
 			Map<Item, CreativeModeTab.TabVisibility> visibilities = new Reference2ObjectOpenHashMap<>();
-
-			return item -> {
-				CreativeModeTab.TabVisibility visibility = visibilities.get(item);
-				if (visibility != null) {
-					return visibility;
-				}
-				return CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS;
-			};
+			return item -> visibilities.getOrDefault(item, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 		}
 
 		@Override
 		public void accept(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
 			Predicate<Item> exclusionPredicate = makeExclusionPredicate();
-			List<RegistrateDisplayItemsGenerator.ItemOrdering> orderings = makeOrderings();
+			List<ItemOrdering> orderings = makeOrderings();
 			Function<Item, ItemStack> stackFunc = makeStackFunc();
 			Function<Item, CreativeModeTab.TabVisibility> visibilityFunc = makeVisibilityFunc();
 
 			List<Item> items = new LinkedList<>();
-			if (addItems) {
-				items.addAll(collectItems(exclusionPredicate.or(IS_ITEM_3D_PREDICATE.negate())));
-			}
+			if (addItems) items.addAll(collectItems(exclusionPredicate.or(IS_ITEM_3D_PREDICATE.negate())));
 			items.addAll(collectBlocks(exclusionPredicate));
-			if (addItems) {
-				items.addAll(collectItems(exclusionPredicate.or(IS_ITEM_3D_PREDICATE)));
-			}
+			if (addItems) items.addAll(collectItems(exclusionPredicate.or(IS_ITEM_3D_PREDICATE)));
 
 			applyOrderings(items, orderings);
 			outputAll(output, items, stackFunc, visibilityFunc);
@@ -192,78 +152,61 @@ public class HenryCreativeModeTabs {
 		private List<Item> collectBlocks(Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 			for (RegistryEntry<Block> entry : HenryCreate.REGISTRATE.getAll(Registries.BLOCK)) {
-				if (!CreateRegistrate.isInCreativeTab(entry, tabFilter))
-					continue;
-				Item item = entry.get()
-						.asItem();
-				if (item == Items.AIR)
-					continue;
-				if (!exclusionPredicate.test(item))
-					items.add(item);
+				if (!CreateRegistrate.isInCreativeTab(entry, tabFilter)) continue;
+				Item item = entry.get().asItem();
+				if (item == Items.AIR) continue;
+				if (!exclusionPredicate.test(item)) items.add(item);
 			}
-			items = new ReferenceArrayList<>(new ReferenceLinkedOpenHashSet<>(items));
-			return items;
+			return new ReferenceArrayList<>(new ReferenceLinkedOpenHashSet<>(items));
 		}
 
 		private List<Item> collectItems(Predicate<Item> exclusionPredicate) {
 			List<Item> items = new ReferenceArrayList<>();
 			for (RegistryEntry<Item> entry : HenryCreate.REGISTRATE.getAll(Registries.ITEM)) {
-				if (!CreateRegistrate.isInCreativeTab(entry, tabFilter))
-					continue;
+				if (!CreateRegistrate.isInCreativeTab(entry, tabFilter)) continue;
 				Item item = entry.get();
-				if (item == Items.AIR)
-					continue;
-				if (item instanceof BlockItem)
-					continue;
-				if (!exclusionPredicate.test(item))
-					items.add(item);
+				if (item == Items.AIR || item instanceof BlockItem) continue;
+				if (!exclusionPredicate.test(item)) items.add(item);
 			}
 			return items;
 		}
 
-		private static void applyOrderings(List<Item> items, List<RegistrateDisplayItemsGenerator.ItemOrdering> orderings) {
-			for (RegistrateDisplayItemsGenerator.ItemOrdering ordering : orderings) {
+		private static void applyOrderings(List<Item> items, List<ItemOrdering> orderings) {
+			for (ItemOrdering ordering : orderings) {
 				int anchorIndex = items.indexOf(ordering.anchor());
-				if (anchorIndex != -1) {
-					Item item = ordering.item();
-					if (item == null || item == Items.AIR) continue;
-					int itemIndex = items.indexOf(item);
-					if (itemIndex != -1) {
-						items.remove(itemIndex);
-						if (itemIndex < anchorIndex) {
-							anchorIndex--;
-						}
-					}
-					if (ordering.type() == RegistrateDisplayItemsGenerator.ItemOrdering.Type.AFTER) {
-						items.add(anchorIndex + 1, item);
-					} else {
-						items.add(anchorIndex, item);
-					}
+				if (anchorIndex == -1) continue;
+				Item item = ordering.item();
+				if (item == null || item == Items.AIR) continue;
+				int itemIndex = items.indexOf(item);
+				if (itemIndex != -1) {
+					items.remove(itemIndex);
+					if (itemIndex < anchorIndex) anchorIndex--;
 				}
+				items.add(ordering.type() == ItemOrdering.Type.AFTER ? anchorIndex + 1 : anchorIndex, item);
 			}
 		}
 
-		private static void outputAll(CreativeModeTab.Output output, List<Item> items, Function<Item, ItemStack> stackFunc, Function<Item, CreativeModeTab.TabVisibility> visibilityFunc) {
+		private static void outputAll(CreativeModeTab.Output output, List<Item> items,
+				Function<Item, ItemStack> stackFunc, Function<Item, CreativeModeTab.TabVisibility> visibilityFunc) {
 			for (Item item : items) {
 				if (item == null || item == Items.AIR) continue;
 				output.accept(stackFunc.apply(item), visibilityFunc.apply(item));
 			}
 		}
 
-		private record ItemOrdering(Item item, Item anchor, RegistrateDisplayItemsGenerator.ItemOrdering.Type type) {
-			public static RegistrateDisplayItemsGenerator.ItemOrdering before(Item item, Item anchor) {
-				return new RegistrateDisplayItemsGenerator.ItemOrdering(item, anchor, RegistrateDisplayItemsGenerator.ItemOrdering.Type.BEFORE);
+		private record ItemOrdering(Item item, Item anchor, ItemOrdering.Type type) {
+			public static ItemOrdering before(Item item, Item anchor) {
+				return new ItemOrdering(item, anchor, Type.BEFORE);
 			}
 
-			public static RegistrateDisplayItemsGenerator.ItemOrdering after(Item item, Item anchor) {
-				return new RegistrateDisplayItemsGenerator.ItemOrdering(item, anchor, RegistrateDisplayItemsGenerator.ItemOrdering.Type.AFTER);
+			public static ItemOrdering after(Item item, Item anchor) {
+				return new ItemOrdering(item, anchor, Type.AFTER);
 			}
 
 			public enum Type {
-				BEFORE,
-				AFTER;
-			}
+                BEFORE,
+                AFTER
+            }
 		}
 	}
-
 }
