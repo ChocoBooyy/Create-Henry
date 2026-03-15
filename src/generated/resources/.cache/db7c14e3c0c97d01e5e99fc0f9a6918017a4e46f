@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-15T16:02:50.1416504	Registrate Provider for create_henry [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2026-03-15T17:38:48.9421612	Registrate Provider for create_henry [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 e4acf7d15f00e1eba45f3643cba88209974a1a34 assets/create_henry/blockstates/bore_block.json
 4c936b05bc00c461296ca26b3b4cf018f577367e assets/create_henry/blockstates/chocolate_milkshake.json
 5767b79bff60e207ef02b8db33ab2fe82eee6b81 assets/create_henry/blockstates/furnace_engine.json
@@ -120,12 +120,14 @@ d924448d6072c9702e2108aab761c0a4715b01f7 data/create_henry/recipes/crafting/raw_
 da6dc128ebdbae3538bb840a227612ccf4197226 data/create_henry/recipes/crafting/rubber_block_from_rubber.json
 0a2ad9e6807946c11495a167b5556acc09777166 data/create_henry/recipes/crafting/rubber_from_rubber_block.json
 f5f56195ac362f702e5856a831c212da1a072507 data/create_henry/recipes/smoking/rubber.json
+c1c2cdc05b8f96ccaf7e16f34d80e77b18dba644 data/create_henry/tags/blocks/artificial_ore_generator.json
 32d67056c0094b9de935582a815713a7c1a6688f data/create_henry/tags/blocks/fan_processing_catalysts/dragon_breathing.json
 bc8701774f57ab000a8f0f1d390702175a6cdbb8 data/create_henry/tags/blocks/fan_processing_catalysts/freezing.json
 e85d473045cf55c6f706798af73a74b69875c186 data/create_henry/tags/blocks/fan_processing_catalysts/sanding.json
 f675c20350ed60da4878b5d6301f02c8c05624bd data/create_henry/tags/blocks/fan_processing_catalysts/seething.json
 199f846e50e5c4bbc441db88bfe1214be3fe1683 data/create_henry/tags/blocks/fan_processing_catalysts/withering.json
 636205e8f4f879824788cc9cc61dbc08448c1aef data/create_henry/tags/blocks/industrial_fan_transparent.json
+cfab2ab481bf476a645d326b87627918009b9e50 data/create_henry/tags/blocks/ore_generator.json
 3f40e44b36575a2043f567d4f23aa1aa17d9d9e2 data/create_henry/tags/items/freezable.json
 49a9279bef13fc9bdfe271ec29776c6ecf4981e7 data/create_henry/tags/items/meat.json
 997d0cb88885adf0a2682269718db4de3fc180e9 data/create_henry/tags/items/sandable.json

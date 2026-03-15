@@ -118,9 +118,13 @@ public class HenryRegistrateTags {
     private static void genBlockTags(RegistrateTagsProvider<Block> provIn) {
         TagGen.CreateTagsProvider<Block> prov = new TagGen.CreateTagsProvider<>(provIn, Block::builtInRegistryHolder);
 
+        prov.tag(HenryTags.AllBlockTags.ORE_GENERATOR.tag)
+                .add(Blocks.BEDROCK);
+        prov.tag(HenryTags.AllBlockTags.ARTIFICIAL_ORE_GENERATOR.tag)
+                .add(Blocks.NETHERITE_BLOCK, Blocks.REINFORCED_DEEPSLATE, Blocks.DRAGON_EGG, Blocks.END_PORTAL, Blocks.BEACON);
+
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_SANDING.tag)
-                .add(Blocks.SAND)
-                .add(Blocks.RED_SAND);
+                .add(Blocks.SAND, Blocks.RED_SAND);
 
         prov.tag(HenryTags.AllBlockTags.FAN_PROCESSING_CATALYSTS_FREEZING.tag)
                 .add(Blocks.POWDER_SNOW);
