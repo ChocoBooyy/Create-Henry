@@ -1,6 +1,7 @@
 package com.chocoboy.create_henry.registry;
 
 import com.chocoboy.create_henry.content.blocks.decorative.HenryBlock;
+import com.chocoboy.create_henry.content.blocks.kinetics.golden_mixer.GoldenMixerBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlock;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDisplaySources;
@@ -57,6 +58,25 @@ public class HenryBlocks {
 	static {
 		REGISTRATE.setCreativeTab(HenryCreativeModeTabs.BASE_CREATIVE_TAB);
 	}
+
+    public static final BlockEntry<GoldenMixerBlock> GOLDEN_MIXER = REGISTRATE.block("golden_mixer", GoldenMixerBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.noOcclusion().mapColor(MapColor.STONE))
+            .transform(axeOrPickaxe())
+            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+            .addLayer(() -> RenderType::cutoutMipped)
+            .transform(HenryStressConfig.setImpact(8.0))
+            .recipe((c, p) -> ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .pattern("A").pattern("B").pattern("C")
+                    .define('A', AllItems.PRECISION_MECHANISM.get())
+                    .define('B', AllBlocks.BRASS_CASING.get())
+                    .define('C', HenryItems.GOLDEN_WHISK.get())
+                    .unlockedBy("has_" + c.getName(), has(c.get()))
+                    .save(p, HenryCreate.asResource("crafting/" + c.getName())))
+            .item(AssemblyOperatorBlockItem::new)
+            .transform(customItemModel())
+            .lang("Golden Mixer")
+            .register();
 
 	public static final BlockEntry<Block> RAW_RUBBER_BLOCK = REGISTRATE.block("raw_rubber_block", Block::new)
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_WHITE))

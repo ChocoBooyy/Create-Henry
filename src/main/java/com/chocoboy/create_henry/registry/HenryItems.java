@@ -74,6 +74,9 @@ public class HenryItems {
 	public static final ItemEntry<Item>
 			KINETIC_MECHANISM = item("kinetic_mechanism");
 
+	public static final ItemEntry<Item>
+			GOLDEN_WHISK = item("golden_whisk");
+
 	public static final ItemEntry<Item> RAW_RUBBER = REGISTRATE.item("raw_rubber", Item::new)
 			.model((c, p) -> p.withExistingParent(c.getId().getPath(),
 					new ResourceLocation("item/generated")).texture("layer0",

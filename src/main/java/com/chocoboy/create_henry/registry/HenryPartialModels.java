@@ -17,7 +17,9 @@ public class HenryPartialModels {
 		ENGINE_CONNECTOR = block("furnace_engine/shaft_connector"),
 		GAUGE_DIAL = block("gauge/dial"),
 		GAUGE_INDICATOR = block("gauge/indicator"),
-		GAUGE_HEAD = block("gauge/multimeter/head");
+		GAUGE_HEAD = block("gauge/multimeter/head"),
+		GOLDEN_MIXER_POLE = block("golden_mixer/pole"),
+		GOLDEN_MIXER_HEAD = block("golden_mixer/head");
 
 	private static PartialModel block(String path) {
 		return PartialModel.of(HenryCreate.asResource("block/" + path));

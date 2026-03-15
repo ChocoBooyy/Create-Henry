@@ -1,5 +1,6 @@
 package com.chocoboy.create_henry.registry;
 
+import com.chocoboy.create_henry.content.blocks.kinetics.golden_mixer.*;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.*;
 import com.simibubi.create.content.kinetics.transmission.SplitShaftVisual;
@@ -23,6 +24,13 @@ import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.Indust
 import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
 
 public class HenryBlockEntityTypes {
+
+    public static final BlockEntityEntry<GoldenMixerBlockEntity> GOLDEN_MIXER = REGISTRATE
+            .blockEntity("golden_mixer", GoldenMixerBlockEntity::new)
+            .visual(() -> GoldenMixerVisual::new)
+            .validBlocks(HenryBlocks.GOLDEN_MIXER)
+            .renderer(() -> GoldenMixerRenderer::new)
+            .register();
 
 	public static final BlockEntityEntry<IndustrialFanBlockEntity> INDUSTRIAL_FAN = REGISTRATE
 			.blockEntity("industrial_fan", IndustrialFanBlockEntity::new)
