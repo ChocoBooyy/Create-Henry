@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class SeethingRecipeGen extends HenryProcessingRecipeGen {
+public final class SeethingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
 

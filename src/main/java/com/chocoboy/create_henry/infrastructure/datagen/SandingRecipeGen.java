@@ -7,7 +7,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 @SuppressWarnings("unused")
-public class SandingRecipeGen extends HenryProcessingRecipeGen {
+public final class SandingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
 

@@ -8,7 +8,7 @@ import net.minecraft.world.item.Items;
 import static com.chocoboy.create_henry.registry.HenryTags.minecraftItemTag;
 
 @SuppressWarnings("unused")
-public class WitheringRecipeGen extends HenryProcessingRecipeGen {
+public final class WitheringRecipeGen extends HenryProcessingRecipeGen {
 
     GeneratedRecipe
 

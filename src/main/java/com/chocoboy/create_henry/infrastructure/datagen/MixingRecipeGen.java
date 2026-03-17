@@ -16,7 +16,7 @@ import net.minecraftforge.common.Tags;
 import static com.tterrag.registrate.util.DataIngredient.items;
 
 @SuppressWarnings("unused")
-public class MixingRecipeGen extends HenryProcessingRecipeGen {
+public final class MixingRecipeGen extends HenryProcessingRecipeGen {
 
     GeneratedRecipe
 

@@ -21,7 +21,7 @@ import java.util.function.UnaryOperator;
 
 @ParametersAreNonnullByDefault
 @SuppressWarnings("unused")
-public class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
+public final class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
 
     GeneratedRecipe
             // SEQUENCED ASSEMBLY RECIPE

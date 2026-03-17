@@ -5,7 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Blocks;
 
 @SuppressWarnings("unused")
-public class WashingRecipeGen extends HenryProcessingRecipeGen {
+public final class WashingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
 

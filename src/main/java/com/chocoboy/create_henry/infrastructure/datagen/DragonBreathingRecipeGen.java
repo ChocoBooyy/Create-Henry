@@ -5,7 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 
 @SuppressWarnings("unused")
-public class DragonBreathingRecipeGen extends HenryProcessingRecipeGen {
+public final class DragonBreathingRecipeGen extends HenryProcessingRecipeGen {
 
     GeneratedRecipe
 

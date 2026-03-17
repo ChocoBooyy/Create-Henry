@@ -9,7 +9,7 @@ import net.minecraft.world.level.ItemLike;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class FreezingRecipeGen extends HenryProcessingRecipeGen {
+public final class FreezingRecipeGen extends HenryProcessingRecipeGen {
 
 	GeneratedRecipe
 
