@@ -2,6 +2,7 @@ package com.chocoboy.create_henry.registry;
 
 import com.chocoboy.create_henry.content.recipes.*;
 import com.chocoboy.create_henry.content.jei.*;
+import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.*;
@@ -102,7 +103,13 @@ public class HenryJEI implements IModPlugin {
                         .catalystStack(HenryFanProcessingCategory.getFan("fan_dragon_breathing"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.DRAGON_HEAD)
                         .emptyBackground(178, 72)
-                        .build("fan_dragon_breathing", FanDragonBreathingCategory::new);
+                        .build("fan_dragon_breathing", FanDragonBreathingCategory::new),
+                hydraulic = builder(HydraulicRecipe.class)
+                        .addTypedRecipes(HenryRecipeTypes.HYDRAULIC_COMPACTING)
+                        .catalyst(() -> HenryBlocks.HYDRAULIC_PRESS)
+                        .itemIcon(HenryBlocks.HYDRAULIC_PRESS.get())
+                        .emptyBackground(185, 100)
+                        .build("hydraulic_compacting", info -> (CreateRecipeCategory<HydraulicRecipe>)(Object) new HydraulicCategory((CreateRecipeCategory.Info<BasinRecipe>)(Object) info));
 
     }
 
@@ -141,6 +148,8 @@ public class HenryJEI implements IModPlugin {
                 registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
         registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_dragon_breathing")).ifPresent(type ->
                 registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
+        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "hydraulic_compacting")).ifPresent(type ->
+                registration.addRecipeCatalyst(new ItemStack(HenryBlocks.HYDRAULIC_PRESS.get()), type));
     }
 
     @Override

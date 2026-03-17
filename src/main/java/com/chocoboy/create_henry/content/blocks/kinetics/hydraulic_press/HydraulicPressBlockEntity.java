@@ -1,5 +1,6 @@
 package com.chocoboy.create_henry.content.blocks.kinetics.hydraulic_press;
 
+import com.chocoboy.create_henry.registry.HenryRecipeTypes;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCraftingRecipe;
@@ -119,7 +120,8 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
     protected <C extends Container> boolean matchStaticFilters(Recipe<C> recipe) {
         return (recipe instanceof CraftingRecipe && !(recipe instanceof MechanicalCraftingRecipe) && canCompress(recipe)
                 && !AllRecipeTypes.shouldIgnoreInAutomation(recipe))
-                || recipe.getType() == AllRecipeTypes.COMPACTING.getType();
+                || recipe.getType() == AllRecipeTypes.COMPACTING.getType()
+                || recipe.getType() == HenryRecipeTypes.HYDRAULIC_COMPACTING.getType();
     }
 
     @Override
