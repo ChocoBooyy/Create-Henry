@@ -31,6 +31,7 @@ public class HenryDatagen {
 			generator.addProvider(true, new ItemApplicationRecipeGen(output));
 			generator.addProvider(true, new MixingRecipeGen(output));
 			generator.addProvider(true, new EmptyingRecipeGen(output));
+			generator.addProvider(true, new FillingRecipeGen(output));
 		}
 	}
 
