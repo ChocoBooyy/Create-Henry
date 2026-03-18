@@ -117,6 +117,15 @@ public class HenryBlocks {
 					.sound(SoundType.NETHERITE_BLOCK))
 			.register();
 
+	public static final BlockEntry<CasingBlock> RUBBER_CASING =
+			REGISTRATE.block("rubber_casing", CasingBlock::new)
+			.transform(BuilderTransformers.casing(() -> HenrySpriteShifts.RUBBER_CASING))
+			.properties(p -> p
+					.mapColor(MapColor.TERRACOTTA_WHITE)
+					.requiresCorrectToolForDrops())
+			.lang("Rubber Casing")
+			.register();
+
 	public static final BlockEntry<IndustrialFanBlock> INDUSTRIAL_FAN =
 			REGISTRATE.block("industrial_fan", IndustrialFanBlock::new)
 			.initialProperties(SharedProperties::stone)
@@ -325,7 +334,7 @@ public class HenryBlocks {
             .recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                     .pattern("A").pattern("B")
                     .define('A', AllBlocks.DEPOT.get())
-                    .define('B', RUBBER_BLOCK.get()), c, p))
+                    .define('B', RUBBER_CASING.get()), c, p))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.lang("Roll Table")

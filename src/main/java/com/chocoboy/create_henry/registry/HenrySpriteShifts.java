@@ -10,7 +10,8 @@ public class HenrySpriteShifts {
 
     public static final CTSpriteShiftEntry
             INDUSTRIAL_CASING = omni("industrial_casing"),
-            HYDRAULIC_CASING = omni("hydraulic_casing");
+            HYDRAULIC_CASING = omni("hydraulic_casing"),
+            RUBBER_CASING = omni("rubber_casing");
 
     public static final CTSpriteShiftEntry
             INDUSTRIAL_CASING_COGWHEEL_SIDE = vertical("industrial_encased_cogwheel_side"),

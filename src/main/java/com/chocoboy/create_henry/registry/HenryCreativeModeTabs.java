@@ -103,11 +103,12 @@ public class HenryCreativeModeTabs {
 			orderings.add(ItemOrdering.after(HenryItems.RUBBER.asItem(), HenryItems.RAW_RUBBER.asItem()));
 			orderings.add(ItemOrdering.after(HenryItems.KINETIC_MECHANISM.asItem(), HenryItems.RUBBER.asItem()));
 
-			// Blocks: casings -> processing machines -> kinetics -> redstone/utility -> rubber blocks -> decorative
+			// Blocks: casings (hydraulic, industrial, rubber) -> processing machines -> kinetics -> redstone/utility -> rubber blocks -> decorative
 			orderings.add(ItemOrdering.after(HenryBlocks.KINETIC_MOTOR.asItem(), HenryBlocks.BORE_BLOCK.asItem()));
 			orderings.add(ItemOrdering.after(HenryBlocks.INDUSTRIAL_BRAKE.asItem(), HenryBlocks.KINETIC_MOTOR.asItem()));
 			orderings.add(ItemOrdering.after(HenryBlocks.FURNACE_ENGINE.asItem(), HenryBlocks.INDUSTRIAL_BRAKE.asItem()));
 			orderings.add(ItemOrdering.after(HenryBlocks.POWERED_FLYWHEEL.asItem(), HenryBlocks.FURNACE_ENGINE.asItem()));
+			orderings.add(ItemOrdering.after(HenryBlocks.ROLL_TABLE.asItem(), HenryBlocks.FURNACE_ENGINE.asItem()));
 			orderings.add(ItemOrdering.after(HenryBlocks.RAW_RUBBER_BLOCK.asItem(), HenryBlocks.INVERSE_BOX.asItem()));
 			orderings.add(ItemOrdering.after(HenryBlocks.RUBBER_BLOCK.asItem(), HenryBlocks.RAW_RUBBER_BLOCK.asItem()));
 
