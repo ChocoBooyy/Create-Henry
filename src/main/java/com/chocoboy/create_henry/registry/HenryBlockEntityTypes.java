@@ -20,8 +20,8 @@ import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.*;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeRenderer;
-import com.chocoboy.create_henry.content.blocks.kinetics.roll_table.RollTableBlockEntity;
-import com.chocoboy.create_henry.content.blocks.kinetics.roll_table.RollTableRenderer;
+import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableBlockEntity;
+import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableRenderer;
 
 import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
 

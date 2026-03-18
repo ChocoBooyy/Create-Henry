@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.content.blocks.kinetics.roll_table;
+package com.chocoboy.create_henry.content.blocks.logistics.roll_table;
 
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.item.ItemHelper;

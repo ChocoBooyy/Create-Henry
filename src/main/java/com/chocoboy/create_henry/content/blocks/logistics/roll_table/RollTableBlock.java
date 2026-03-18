@@ -1,4 +1,4 @@
-package com.chocoboy.create_henry.content.blocks.kinetics.roll_table;
+package com.chocoboy.create_henry.content.blocks.logistics.roll_table;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;

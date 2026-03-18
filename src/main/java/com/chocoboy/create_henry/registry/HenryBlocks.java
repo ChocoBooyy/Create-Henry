@@ -14,7 +14,6 @@ import com.simibubi.create.content.kinetics.motor.CreativeMotorGenerator;
 import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.foundation.data.*;
 import com.chocoboy.create_henry.infrastructure.config.HenryStressConfig;
-import com.chocoboy.create_henry.registry.HenryStressValues;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -24,8 +23,6 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
@@ -47,8 +44,7 @@ import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.PoweredF
 import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMotorBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlock;
-import com.chocoboy.create_henry.content.blocks.kinetics.roll_table.RollTableBlock;
-import static com.chocoboy.create_henry.registry.HenryTags.forgeItemTag;
+import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableBlock;
 
 import static com.simibubi.create.api.behaviour.movement.MovementBehaviour.movementBehaviour;
 import static com.simibubi.create.api.behaviour.display.DisplaySource.displaySource;
