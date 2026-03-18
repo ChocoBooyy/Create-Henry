@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-15T23:52:11.9446015	Registrate Provider for create_henry [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.20.1	2026-03-18T03:28:48.1694951	Registrate Provider for create_henry [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 e4acf7d15f00e1eba45f3643cba88209974a1a34 assets/create_henry/blockstates/bore_block.json
 4c936b05bc00c461296ca26b3b4cf018f577367e assets/create_henry/blockstates/chocolate_milkshake.json
 5767b79bff60e207ef02b8db33ab2fe82eee6b81 assets/create_henry/blockstates/furnace_engine.json
@@ -17,12 +17,13 @@ c733e35265fa64da21198a8e96ba8d325dac6728 assets/create_henry/blockstates/powered
 7570d06ec97b2f68eb091878d441d89ad41dd9e0 assets/create_henry/blockstates/pumpkin_milkshake.json
 a1004b91a9f38713fbd59f6f353985aa46a79930 assets/create_henry/blockstates/raw_rubber_block.json
 15ab9ca6bf34385b609402ba3e4f5c202c0dbc14 assets/create_henry/blockstates/redstone_divider.json
+bc17b6265ed9c3f3ddc2356ef1800e4fc8607f9c assets/create_henry/blockstates/roll_table.json
 4c5db09c449f8ed4d1eb394b3de2ddc7848ca194 assets/create_henry/blockstates/rubber_block.json
 4162a41087af05ddf0e52cdee4c173f08d39b11d assets/create_henry/blockstates/sap.json
 d64e2ad290fa4018d677efcd66148d21ebe247fe assets/create_henry/blockstates/strawberry_milkshake.json
 5c8c58d26809a1742a6bb647e71617ba2a48dfd6 assets/create_henry/blockstates/vanilla_milkshake.json
-6e8c5a4fa2c2702f8428b12096e1b343f6f3b601 assets/create_henry/lang/en_ud.json
-c0b3fba17253185cbe8b2bd5bb8bd104abc95576 assets/create_henry/lang/en_us.json
+9d44aec001e21e45d8acdf68527f419f0b6c2fd7 assets/create_henry/lang/en_ud.json
+987348cb8ef62fd0ada6cd44bbd4ffe6f47b6560 assets/create_henry/lang/en_us.json
 bdb5fc0b2bdb30651cc569ad65f28dccfa73d2ce assets/create_henry/models/block/bore_block.json
 1da95f81451647c111630acd715088f5a8afa78f assets/create_henry/models/block/chocolate_milkshake.json
 80d4bd128cace4eeb54bc8a7d2da6f3d99a9efc0 assets/create_henry/models/block/glowberry_milkshake.json
@@ -60,6 +61,7 @@ f32bf1e6f117951545f15f650cb4a71785c5f0cd assets/create_henry/models/item/pumpkin
 e14eaf0df7b15aca2d6818711559d001241b1740 assets/create_henry/models/item/raw_rubber.json
 b416c78a5819ee007fc57e2cd7f6a1f9eedac742 assets/create_henry/models/item/raw_rubber_block.json
 795307347b3138350f1cf886fb29d70712051a67 assets/create_henry/models/item/redstone_divider.json
+6d486ccf62fa295d45bf2814bfe6f08ac4f88d77 assets/create_henry/models/item/roll_table.json
 e6aa8b164936a35362e9732b8b38deefda070326 assets/create_henry/models/item/rubber.json
 e240dc3bb9c82f13d017932e46a5debf9ee6a972 assets/create_henry/models/item/rubber_block.json
 847c2b9878a7728a89341e2b877ef16ad0867122 assets/create_henry/models/item/sap_bucket.json
@@ -92,6 +94,7 @@ d765126e6d53b2afb8296ba8bb284d7e63375ea0 data/create_henry/advancements/recipes/
 763104e727d5bb8a3aa88af664d92d4f8dee300f data/create_henry/advancements/recipes/building_blocks/smoking/rubber.json
 181a2c9bfa9845c282abf2cc144d5f40d6fb0b3f data/create_henry/advancements/recipes/misc/crafting/golden_mixer.json
 b069e6f71e673f6f7f7d17e0cbbe12efeafc53ec data/create_henry/advancements/recipes/misc/crafting/golden_whisk.json
+1ac12553c8fdd01b838e925044b6b07aaf84a1e5 data/create_henry/advancements/recipes/misc/crafting/roll_table.json
 6f3ec3e35aef1c4faeb932460219221db60910dc data/create_henry/loot_tables/blocks/bore_block.json
 5db183ab0947cd7bf7deeffdb21296b32bdf5467 data/create_henry/loot_tables/blocks/furnace_engine.json
 d358615dde29415091c636336976206fefaf3aa5 data/create_henry/loot_tables/blocks/golden_mixer.json
@@ -107,6 +110,7 @@ a8f48e9be66613b22191c5fbf6d683f62765a071 data/create_henry/loot_tables/blocks/ki
 83d0902f9ec22f613293b26aff9b4b227564a86c data/create_henry/loot_tables/blocks/powered_flywheel.json
 91469a13c14e0404f149b0e5e8627e3cc901a352 data/create_henry/loot_tables/blocks/raw_rubber_block.json
 df03e9dc37c0fd7c433964c7b91763b9d8756db2 data/create_henry/loot_tables/blocks/redstone_divider.json
+e7c1abc39e9d0e9c6d7ddb6f9ffc61e02e49895b data/create_henry/loot_tables/blocks/roll_table.json
 421a97416f670511631e9d9c961872e2648c274b data/create_henry/loot_tables/blocks/rubber_block.json
 4145f2d41337b26a8cbb612abd61221441a32c03 data/create_henry/recipes/crafting/bore_block.json
 7982178585f3bf13ea731696ef08abcbe2c129b2 data/create_henry/recipes/crafting/coal_from_coal_piece.json
@@ -125,6 +129,7 @@ a13776129558fa73e059fb08e5152c3952824e40 data/create_henry/recipes/crafting/lapi
 62ed775ca072666fb9f412fc7c7c9235a30ae199 data/create_henry/recipes/crafting/multimeter.json
 882447eb7ef091f7062bd8c5b0ca1b3a4a15f405 data/create_henry/recipes/crafting/raw_rubber_block_from_raw_rubber.json
 d924448d6072c9702e2108aab761c0a4715b01f7 data/create_henry/recipes/crafting/raw_rubber_from_raw_rubber_block.json
+0e5d178de61c69196b72d2679c5a902927cc6560 data/create_henry/recipes/crafting/roll_table.json
 da6dc128ebdbae3538bb840a227612ccf4197226 data/create_henry/recipes/crafting/rubber_block_from_rubber.json
 0a2ad9e6807946c11495a167b5556acc09777166 data/create_henry/recipes/crafting/rubber_from_rubber_block.json
 f5f56195ac362f702e5856a831c212da1a072507 data/create_henry/recipes/smoking/rubber.json
@@ -162,4 +167,4 @@ a42961735e007a8ac6b40932f84d067ef4633576 data/forge/tags/items/nuggets.json
 5dd28abdb5677611e54129c7d45bff45e38b3edf data/forge/tags/items/raw_rubbers.json
 c318e167a2cfe3af3482e889782de3b928fcb99c data/forge/tags/items/rubbers.json
 eea9793e923c99daaa79d1c07fade53c10a6adb8 data/minecraft/tags/blocks/mineable/axe.json
-41ae45b176bd57e3e4a4a56384fe8bc62692eaa4 data/minecraft/tags/blocks/mineable/pickaxe.json
+e310ca7fe68d1c7f2bb8f0acda7062cd591b7663 data/minecraft/tags/blocks/mineable/pickaxe.json

@@ -12,6 +12,7 @@
     "create_henry:kinetic_motor",
     "create_henry:industrial_brake",
     "create_henry:furnace_engine",
-    "create_henry:powered_flywheel"
+    "create_henry:powered_flywheel",
+    "create_henry:roll_table"
   ]
 }

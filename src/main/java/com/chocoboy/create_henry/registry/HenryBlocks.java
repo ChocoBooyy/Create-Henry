@@ -47,6 +47,8 @@ import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.PoweredF
 import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMotorBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlock;
+import com.chocoboy.create_henry.content.blocks.kinetics.roll_table.RollTableBlock;
+import static com.chocoboy.create_henry.registry.HenryTags.forgeItemTag;
 
 import static com.simibubi.create.api.behaviour.movement.MovementBehaviour.movementBehaviour;
 import static com.simibubi.create.api.behaviour.display.DisplaySource.displaySource;
@@ -185,7 +187,7 @@ public class HenryBlocks {
 				p, "crafting/multimeter"))
 			.item()
 			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
-			.transform(ModelGen.customItemModel("gauge", "_", "item"))
+			.transform(customItemModel("gauge", "_", "item"))
 			.register();
 
 	public static final BlockEntry<RedstoneDividerBlock> REDSTONE_DIVIDER =
@@ -284,7 +286,7 @@ public class HenryBlocks {
 					.transform(HenryStressConfig.setCapacity(256.0))
 					.onRegister(BlockStressValues.setGeneratorSpeed(32, true))
 					.item()
-					.transform(ModelGen.customItemModel())
+					.transform(customItemModel())
 					.register();
 
 	public static final BlockEntry<PoweredFlywheelBlock> POWERED_FLYWHEEL =
@@ -312,7 +314,23 @@ public class HenryBlocks {
 			.addLayer(() -> RenderType::cutoutMipped)
 			.lang("Henry Block")
 			.item()
-			.transform(com.simibubi.create.foundation.data.ModelGen.customItemModel())
+			.transform(customItemModel())
+			.register();
+
+	public static final BlockEntry<RollTableBlock> ROLL_TABLE = REGISTRATE
+			.block("roll_table", RollTableBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.noOcclusion().mapColor(MapColor.STONE))
+			.transform(pickaxeOnly())
+            .recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .pattern("A").pattern("B")
+                    .define('A', AllBlocks.DEPOT.get())
+                    .define('B', RUBBER_BLOCK.get()), c, p))
+			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.lang("Roll Table")
+			.item()
+			.transform(customItemModel("roll_table", "block"))
 			.register();
 
 	// Saves with default unlock (has the block being registered) and default path (crafting/<name>)

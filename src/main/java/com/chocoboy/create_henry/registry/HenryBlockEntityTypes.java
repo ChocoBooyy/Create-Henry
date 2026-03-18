@@ -20,6 +20,8 @@ import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.*;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeRenderer;
+import com.chocoboy.create_henry.content.blocks.kinetics.roll_table.RollTableBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.roll_table.RollTableRenderer;
 
 import static com.chocoboy.create_henry.HenryCreate.REGISTRATE;
 
@@ -91,6 +93,12 @@ public class HenryBlockEntityTypes {
 			.visual(() -> SplitShaftVisual::new, false)
 			.validBlocks(HenryBlocks.REDSTONE_DIVIDER)
 			.renderer(() -> SplitShaftRenderer::new)
+			.register();
+
+	public static final BlockEntityEntry<RollTableBlockEntity> ROLL_TABLE = REGISTRATE
+			.blockEntity("roll_table", RollTableBlockEntity::new)
+			.validBlocks(HenryBlocks.ROLL_TABLE)
+			.renderer(() -> RollTableRenderer::new)
 			.register();
 
 	public static void register() {}
