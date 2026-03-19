@@ -17,7 +17,9 @@ import com.chocoboy.create_henry.infrastructure.config.HenryStressConfig;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import net.createmod.catnip.data.Iterate;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -29,8 +31,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.util.ForgeSoundType;
 import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.content.blocks.contraptions.bore_block.BoreBlock;
@@ -45,11 +50,15 @@ import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMo
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlock;
 import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableBlock;
+import com.chocoboy.create_henry.content.blocks.logistics.smart_hopper.SmartHopperBlock;
+
+import java.util.function.Function;
 
 import static com.simibubi.create.api.behaviour.movement.MovementBehaviour.movementBehaviour;
 import static com.simibubi.create.api.behaviour.display.DisplaySource.displaySource;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.TagGen.*;
+import static com.chocoboy.create_henry.registry.HenryTags.forgeItemTag;
 import static com.tterrag.registrate.providers.RegistrateRecipeProvider.has;
 
 @SuppressWarnings({"unused", "removal", "all"})
@@ -337,6 +346,38 @@ public class HenryBlocks {
 			.item()
 			.transform(customItemModel("roll_table", "block"))
 			.register();
+
+    public static final BlockEntry<SmartHopperBlock> SMART_HOPPER = REGISTRATE.block("smart_hopper", SmartHopperBlock::new)
+            .initialProperties(SharedProperties::softMetal)
+            .properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW).requiresCorrectToolForDrops().sound(SoundType.NETHERITE_BLOCK))
+            .transform(pickaxeOnly())
+            .addLayer(() -> RenderType::cutoutMipped)
+            .blockstate((c, p) -> p.getVariantBuilder(c.get()).forAllStates(state -> {
+                var powered = state.getValue(SmartHopperBlock.POWERED);
+                var dir = state.getValue(SmartHopperBlock.FACING);
+                var dirSuffix = getHopperSuffix(dir);
+                var poweredSuffix = powered ? "powered" : "";
+                var combined = poweredSuffix.isEmpty() && dirSuffix.isEmpty() ? new String[0]
+                        : poweredSuffix.isEmpty() ? new String[]{dirSuffix}
+                        : dirSuffix.isEmpty() ? new String[]{poweredSuffix}
+                        : new String[]{poweredSuffix + "_" + dirSuffix};
+                return ConfiguredModel.builder().modelFile(AssetLookup.partialBaseModel(c, p, combined)).build();
+            }))
+            .recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
+                    .pattern("A").pattern("B").pattern("C")
+                    .define('A', forgeItemTag("plates/brass"))
+                    .define('B', Items.HOPPER)
+                    .define('C', AllItems.ELECTRON_TUBE.get())
+                    .unlockedBy("has_hopper", has(Items.HOPPER)),
+                p, "crafting/" + c.getName()))
+            .lang("Smart Hopper")
+            .item()
+            .transform(customItemModel("_", "block"))
+            .register();
+
+	private static String getHopperSuffix(Direction dir) {
+		return dir == Direction.DOWN ? "" : dir.getName();
+	}
 
 	// Saves with default unlock (has the block being registered) and default path (crafting/<name>)
 	private static <B extends Block> void save(RecipeBuilder b, DataGenContext<Block, B> c, RegistrateRecipeProvider p) {
