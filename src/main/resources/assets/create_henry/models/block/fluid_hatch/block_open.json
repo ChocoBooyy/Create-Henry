@@ -1,0 +1,9 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "create:block/item_hatch/block_closed",
+  "textures": {
+    "0": "create_henry:block/fluid_hatch/hatch",
+    "1": "create_henry:block/fluid_hatch/hatch_open",
+    "particle": "create_henry:block/hydraulic_casing"
+  }
+}

@@ -50,6 +50,7 @@ import com.chocoboy.create_henry.content.blocks.kinetics.kinetic_motor.KineticMo
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBoxBlock;
 import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableBlock;
+import com.chocoboy.create_henry.content.blocks.logistics.fluid_hatch.FluidHatchBlock;
 import com.chocoboy.create_henry.content.blocks.logistics.smart_hopper.SmartHopperBlock;
 
 import java.util.function.Function;
@@ -373,6 +374,23 @@ public class HenryBlocks {
             .lang("Smart Hopper")
             .item()
             .transform(customItemModel("_", "block"))
+            .register();
+
+    public static final BlockEntry<FluidHatchBlock> FLUID_HATCH = REGISTRATE.block("fluid_hatch", FluidHatchBlock::new)
+            .initialProperties(SharedProperties::softMetal)
+            .properties(p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).sound(SoundType.COPPER))
+            .transform(pickaxeOnly())
+            .addLayer(() -> RenderType::cutoutMipped)
+            .blockstate((c, p) -> p.horizontalBlock(c.get(),
+                    s -> AssetLookup.partialBaseModel(c, p, s.getValue(FluidHatchBlock.OPEN) ? "open" : "closed")))
+            .recipe((c, p) -> save(ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get(), 1)
+                    .requires(AllBlocks.COPPER_DOOR.get())
+                    .requires(HYDRAULIC_CASING)
+                    .unlockedBy("has_COPPER_DOOR", has(AllBlocks.COPPER_DOOR.get())),
+                p, "crafting/" + c.getName()))
+            .lang("Fluid Hatch")
+            .item()
+            .transform(customItemModel("_", "block_closed"))
             .register();
 
 	private static String getHopperSuffix(Direction dir) {

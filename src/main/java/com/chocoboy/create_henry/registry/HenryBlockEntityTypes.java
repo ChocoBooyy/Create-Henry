@@ -22,6 +22,7 @@ import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBl
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeRenderer;
 import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableBlockEntity;
 import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableRenderer;
+import com.chocoboy.create_henry.content.blocks.logistics.fluid_hatch.FluidHatchBlockEntity;
 import com.chocoboy.create_henry.content.blocks.logistics.smart_hopper.SmartHopperBlockEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 
@@ -101,6 +102,11 @@ public class HenryBlockEntityTypes {
 			.blockEntity("roll_table", RollTableBlockEntity::new)
 			.validBlocks(HenryBlocks.ROLL_TABLE)
 			.renderer(() -> RollTableRenderer::new)
+			.register();
+
+	public static final BlockEntityEntry<FluidHatchBlockEntity> FLUID_HATCH = REGISTRATE
+			.blockEntity("fluid_hatch", FluidHatchBlockEntity::new)
+			.validBlocks(HenryBlocks.FLUID_HATCH)
 			.register();
 
 	public static final BlockEntityEntry<SmartHopperBlockEntity> SMART_HOPPER = REGISTRATE

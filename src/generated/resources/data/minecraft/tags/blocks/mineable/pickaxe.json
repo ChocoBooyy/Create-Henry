@@ -15,6 +15,7 @@
     "create_henry:furnace_engine",
     "create_henry:powered_flywheel",
     "create_henry:roll_table",
-    "create_henry:smart_hopper"
+    "create_henry:smart_hopper",
+    "create_henry:fluid_hatch"
   ]
 }
