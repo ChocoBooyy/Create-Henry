@@ -8,6 +8,7 @@ import com.simibubi.create.content.logistics.tableCloth.TableClothBlock;
 import net.createmod.ponder.api.level.PonderLevel;
 import net.createmod.ponder.api.registration.IndexExclusionHelper;
 import net.createmod.ponder.api.registration.PonderPlugin;
+import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.createmod.ponder.api.registration.SharedTextRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +25,11 @@ public class HenryPonderPlugin implements PonderPlugin {
     @Override
     public void registerTags(PonderTagRegistrationHelper<ResourceLocation> helper) {
         HenryPonderTags.register();
+    }
+
+    @Override
+    public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
+        HenryPonderScenes.register(helper);
     }
 
     @Override

@@ -43,6 +43,7 @@ public class HenryDatagen {
 			BiConsumer<String, String> langConsumer = provider::add;
 			HenryLangPartial.provideLang(langConsumer);
 			PonderIndex.addPlugin(new HenryPonderPlugin());
+			PonderIndex.getLangAccess().provideLang(HenryCreate.MOD_ID, langConsumer);
 		});
 	}
 }
