@@ -3,6 +3,7 @@
 	"parent": "block/block",
 	"texture_size": [32, 32],
 	"textures": {
+		"1": "create_henry:block/indicator",
 		"2": "create_henry:block/multi_gauge",
 		"particle": "create_henry:block/multi_gauge"
 	},
@@ -68,7 +69,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [-4, 8, 8]},
 			"faces": {
 				"east": {"uv": [9, 5, 14, 10], "texture": "#2"},
-				"west": {"uv": [12, 0, 16, 4], "texture": "#2"}
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1"}
 			}
 		},
 		{
@@ -77,7 +78,7 @@
 			"to": [16.075, 12, 12],
 			"rotation": {"angle": 0, "axis": "y", "origin": [12, 8, 8]},
 			"faces": {
-				"east": {"uv": [12, 0, 16, 4], "texture": "#2"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
 				"west": {"uv": [9, 5, 14, 10], "texture": "#2"}
 			}
 		}
