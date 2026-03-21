@@ -36,20 +36,26 @@ public class IndustrialBrakeBlockEntity extends GeneratingKineticBlockEntity {
         );
         impactValue.between(0, MAX_STRESS_PER_RPM);
         impactValue.value = 0;
-        impactValue.withCallback(v -> {
-            updateGeneratedRotation();
-            getOrCreateNetwork().updateStressFor(this, calculateStressApplied());
-            getOrCreateNetwork().updateStress();
-        });
+        // updateGeneratedRotation() already calls calculateStressApplied(), updateStressFor, updateStress, and sendData
+        impactValue.withCallback(v -> updateGeneratedRotation());
         behaviours.add(impactValue);
     }
 
+    // initialize() intentionally not overridden — a brake is never a rotation source,
+    // so setting reActivateSource would incorrectly try to drive the network.
+
     @Override
-    public void initialize() {
-        super.initialize();
-        if (!hasSource() && impactValue != null && impactValue.getValue() > 0) {
-            reActivateSource = true;
-            updateGeneratedRotation();
+    public void onSpeedChanged(float prevSpeed) {
+        super.onSpeedChanged(prevSpeed);
+        // calculateStressApplied() is speed-dependent (draw / speed), so the network's stored
+        // SU/RPM value must be refreshed whenever shaft speed changes, otherwise the actual
+        // SU drain diverges from the intended flat draw value.
+        if (hasNetwork()) {
+            KineticNetwork net = getOrCreateNetwork();
+            if (net != null) {
+                net.updateStressFor(this, calculateStressApplied());
+                net.updateStress();
+            }
         }
     }
 
@@ -57,8 +63,10 @@ public class IndustrialBrakeBlockEntity extends GeneratingKineticBlockEntity {
     public void remove() {
         if (level != null && hasNetwork()) {
             KineticNetwork net = getOrCreateNetwork();
-            if (net != null) net.updateStressFor(this, 0);
-            if (net != null) net.updateStress();
+            if (net != null) {
+                net.updateStressFor(this, 0);
+                net.updateStress();
+            }
         }
         super.remove();
     }
@@ -70,6 +78,7 @@ public class IndustrialBrakeBlockEntity extends GeneratingKineticBlockEntity {
 
     @Override
     public float calculateStressApplied() {
+        if (impactValue == null) return 0;
         float draw = impactValue.getValue();
         float speed = Math.abs(getTheoreticalSpeed());
         if (speed == 0) return 0;
