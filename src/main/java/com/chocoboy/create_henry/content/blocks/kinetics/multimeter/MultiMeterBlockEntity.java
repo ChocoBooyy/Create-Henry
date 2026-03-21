@@ -25,7 +25,14 @@ import java.util.List;
 @SuppressWarnings({"deprecation", "all"})
 public class MultiMeterBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
 
-    public float dialTarget;
+    public float dialTargetSpeed;
+    public float dialStateSpeed;
+    public float prevDialStateSpeed;
+
+    public float dialTargetStress;
+    public float dialStateStress;
+    public float prevDialStateStress;
+
     public int color;
 
     static BlockPos lastSent;
@@ -44,19 +51,19 @@ public class MultiMeterBlockEntity extends KineticBlockEntity implements IHaveGo
         super.updateFromNetwork(maxStress, currentStress, networkSize);
 
         if (!IRotate.StressImpact.isEnabled())
-            dialTarget = 0;
+            dialTargetStress = 0;
         else if (isOverStressed())
-            dialTarget = 1.125f;
+            dialTargetStress = 1.125f;
         else if (maxStress == 0)
-            dialTarget = 0;
+            dialTargetStress = 0;
         else
-            dialTarget = currentStress / maxStress;
+            dialTargetStress = currentStress / maxStress;
 
-        if (dialTarget > 0) {
-            if (dialTarget < .5f)
-                color = Color.mixColors(0x00FF00, 0xFFFF00, dialTarget * 2);
-            else if (dialTarget < 1)
-                color = Color.mixColors(0xFFFF00, 0xFF0000, (dialTarget) * 2 - 1);
+        if (dialTargetStress > 0) {
+            if (dialTargetStress < .5f)
+                color = Color.mixColors(0x00FF00, 0xFFFF00, dialTargetStress * 2);
+            else if (dialTargetStress < 1)
+                color = Color.mixColors(0xFFFF00, 0xFF0000, dialTargetStress * 2 - 1);
             else
                 color = 0xFF0000;
         }
@@ -70,16 +77,13 @@ public class MultiMeterBlockEntity extends KineticBlockEntity implements IHaveGo
         super.onSpeedChanged(prevSpeed);
         float speed = Math.abs(getSpeed());
 
-        dialTarget = getDialTarget(speed);
-        color = Color.mixColors(IRotate.SpeedLevel.of(speed)
-                .getColor(), 0xffffff, .25f);
-
         if (getSpeed() == 0) {
-            dialTarget = 0;
+            dialTargetSpeed = 0;
             setChanged();
             return;
         }
 
+        dialTargetSpeed = getDialTarget(speed);
         setChanged();
         updateFromNetwork(capacity, stress, getOrCreateNetwork().getSize());
     }
@@ -106,14 +110,16 @@ public class MultiMeterBlockEntity extends KineticBlockEntity implements IHaveGo
 
     @Override
     public void write(CompoundTag compound, boolean clientPacket) {
-        compound.putFloat("Value", dialTarget);
+        compound.putFloat("SpeedValue", dialTargetSpeed);
+        compound.putFloat("StressValue", dialTargetStress);
         compound.putInt("Color", color);
         super.write(compound, clientPacket);
     }
 
     @Override
     protected void read(CompoundTag compound, boolean clientPacket) {
-        dialTarget = compound.getFloat("Value");
+        dialTargetSpeed = compound.getFloat("SpeedValue");
+        dialTargetStress = compound.getFloat("StressValue");
         color = compound.getInt("Color");
         super.read(compound, clientPacket);
 
@@ -124,6 +130,12 @@ public class MultiMeterBlockEntity extends KineticBlockEntity implements IHaveGo
     @Override
     public void tick() {
         super.tick();
+        prevDialStateSpeed  = dialStateSpeed;
+        prevDialStateStress = dialStateStress;
+        dialStateSpeed  += (dialTargetSpeed  - dialStateSpeed)  * .125f;
+        dialStateStress += (dialTargetStress - dialStateStress) * .125f;
+        if (dialStateStress > 1 && level.random.nextFloat() < .5f)
+            dialStateStress -= (dialStateStress - 1) * level.random.nextFloat();
     }
 
     @Override
@@ -195,7 +207,7 @@ public class MultiMeterBlockEntity extends KineticBlockEntity implements IHaveGo
     //UNUSED
     public void onObserved() {
         award(AllAdvancements.STRESSOMETER);
-        if (Mth.equal(dialTarget, 1))
+        if (Mth.equal(dialTargetStress, 1))
             award(AllAdvancements.STRESSOMETER_MAXED);
     }
 }

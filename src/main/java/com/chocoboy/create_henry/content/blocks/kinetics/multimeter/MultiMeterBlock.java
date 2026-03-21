@@ -100,7 +100,7 @@ public class MultiMeterBlock extends DirectionalAxisKineticBlock implements IBE<
         if (be == null || !(be instanceof MultiMeterBlockEntity))
             return;
         MultiMeterBlockEntity gaugeBE = (MultiMeterBlockEntity) be;
-        if (gaugeBE.dialTarget == 0)
+        if (Math.max(gaugeBE.dialTargetSpeed, gaugeBE.dialTargetStress) == 0)
             return;
         int color = gaugeBE.color;
 
@@ -112,7 +112,7 @@ public class MultiMeterBlock extends DirectionalAxisKineticBlock implements IBE<
             Vec3 faceVec = Vec3.atLowerCornerOf(face.getNormal());
             Direction positiveFacing = Direction.get(Direction.AxisDirection.POSITIVE, face.getAxis());
             Vec3 positiveFaceVec = Vec3.atLowerCornerOf(positiveFacing.getNormal());
-            int particleCount = gaugeBE.dialTarget > 1 ? 4 : 1;
+            int particleCount = gaugeBE.dialTargetStress > 1 ? 4 : 1;
 
             if (particleCount == 1 && rand.nextFloat() > 1 / 4f)
                 continue;
