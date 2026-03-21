@@ -16,6 +16,18 @@ public class HenryLangPartial {
         consume(consumer, "create_henry.recipe.fan_withering", "Bulk Withering");
         consume(consumer, "create_henry.recipe.fan_dragon_breathing", "Bulk Dragon Breathing");
         consume(consumer, "itemGroup.create_henry.base", "Create: Henry");
+        // Multimeter display link: speed source
+        consume(consumer, "create_henry.display_source.multimeter_speed", "Multimeter Speed (RPM)");
+        consume(consumer, "create_henry.display_source.multimeter_speed.absolute", "Ignore Direction");
+        consume(consumer, "create_henry.display_source.multimeter_speed.directional", "Include Direction");
+        // Multimeter display link: stress source
+        consume(consumer, "create_henry.display_source.multimeter_stress", "Multimeter Network Stress");
+        consume(consumer, "create_henry.display_source.multimeter_stress.display", "Displayed Info");
+        consume(consumer, "create_henry.display_source.multimeter_stress.percent", "Percentage of Capacity");
+        consume(consumer, "create_henry.display_source.multimeter_stress.progress_bar", "Progress Bar");
+        consume(consumer, "create_henry.display_source.multimeter_stress.current", "Current Stress (SU Used)");
+        consume(consumer, "create_henry.display_source.multimeter_stress.remaining", "Remaining SU");
+        consume(consumer, "create_henry.display_source.multimeter_stress.max", "Total SU Capacity");
     }
 
     private static void consume(BiConsumer<String, String> consumer, String key, String enUS) {

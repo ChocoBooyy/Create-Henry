@@ -73,6 +73,7 @@ public class HenryCreate
 
         HenryTags.init();
         HenryCreativeModeTabs.register(modEventBus);
+        HenryDisplaySources.register();
         HenryBlocks.register();
         HenryItems.register();
         HenryFluids.register();
