@@ -22,5 +22,10 @@ public class HenryPonderScenes {
 
         HELPER.forComponents(HenryBlocks.KINETIC_MOTOR)
                 .addStoryBoard("kinetic_motor", ProcessingScenes::kineticMotor, HenryPonderTags.Henry);
+
+        HELPER.forComponents(HenryBlocks.INDUSTRIAL_BRAKE)
+                .addStoryBoard("industrial_brake", KineticsScenes::industrialBrake, HenryPonderTags.Henry);
+
+
     }
 }

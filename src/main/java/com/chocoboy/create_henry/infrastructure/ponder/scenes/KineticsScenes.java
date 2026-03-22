@@ -85,4 +85,57 @@ public class KineticsScenes {
 
         scene.markAsFinished();
     }
+
+    public static void industrialBrake(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("industrial_brake", "Applying Stress Load with the Industrial Brake");
+        scene.configureBasePlate(0, 0, 5);
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+
+        BlockPos brakePos = util.grid().at(3, 1, 2);
+        BlockPos meterPos = util.grid().at(1, 1, 2);
+
+        for (int i = 0; i < 4; i++) {
+            scene.idle(5);
+            scene.world().showSection(util.select().position(i, 1, 2), Direction.DOWN);
+        }
+
+        scene.world().setKineticSpeed(util.select().fromTo(0, 1, 2, 3, 1, 2), 32);
+        scene.world().modifyBlockEntityNBT(util.select().position(meterPos), MultiMeterBlockEntity.class, nbt -> {
+            nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(32));
+            nbt.putFloat("StressValue", 0.35f);
+        });
+        scene.idle(10);
+
+        Vec3 brakeAbove = util.vector().of(3, 2.5f, 2);
+        scene.overlay().showText(70)
+                .text("The Industrial Brake draws a flat amount of Stress from the network, regardless of RPM")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(brakeAbove);
+        scene.idle(80);
+
+        Vec3 brakePanel = util.vector().blockSurface(brakePos, Direction.NORTH).add(1 / 16f, 0, 3 / 16f);
+        scene.overlay().showFilterSlotInput(brakePanel, Direction.NORTH, 80);
+        scene.overlay().showControls(brakePanel, Pointing.DOWN, 60).rightClick();
+        scene.idle(20);
+
+        scene.overlay().showText(60)
+                .text("Right-click the panel to set how many SU it draws (0 to 256)")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(brakeAbove);
+        scene.idle(70);
+
+        scene.world().modifyBlockEntityNBT(util.select().position(meterPos), MultiMeterBlockEntity.class,
+                nbt -> nbt.putFloat("StressValue", 0.85f));
+        scene.overlay().showText(60)
+                .text("Raising the draw increases the load on the network")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().of(1, 2.5f, 2));
+        scene.idle(70);
+
+        scene.markAsFinished();
+    }
 }
