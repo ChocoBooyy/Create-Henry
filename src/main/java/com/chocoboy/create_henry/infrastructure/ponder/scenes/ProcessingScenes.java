@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ProcessingScenes {
 
-    public static void golden_mixing(SceneBuilder builder, SceneBuildingUtil util) {
+    public static void goldenMixing(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("golden_mixer", "Processing Items with the Golden Mixer");
         scene.configureBasePlate(0, 0, 5);
@@ -52,7 +52,7 @@ public class ProcessingScenes {
                 .pointAt(basinSide)
                 .placeNearTarget()
                 .attachKeyFrame()
-                .text("The Golden Mixer is an upgraded Mechanical Mixer that operates at 2.5x the effective speed of its shaft, processing recipes much faster");
+                .text("The Golden Mixer is an upgraded Mechanical Mixer that operates 2.5x times faster, processing recipes much faster");
         scene.idle(70);
 
         ItemStack blue = new ItemStack(Items.BLUE_DYE);
@@ -121,4 +121,43 @@ public class ProcessingScenes {
         scene.idle(80);
     }
 
+    public static void kineticMotor(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("kinetic_motor", "Generating Rotational Force using Kinetic Motors");
+        scene.configureBasePlate(0, 0, 5);
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+
+        BlockPos motor = util.grid().at(3, 1, 2);
+
+        for (int i = 0; i < 3; i++) {
+            scene.idle(5);
+            scene.world().showSection(util.select().position(1 + i, 1, 2), Direction.DOWN);
+        }
+
+        scene.idle(10);
+        scene.effects().rotationSpeedIndicator(motor);
+        scene.overlay().showText(50)
+                .text("Kinetic motors are a compact and configurable source of Rotational Force")
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(motor));
+        scene.idle(70);
+
+        Vec3 blockSurface = util.vector().blockSurface(motor, Direction.NORTH)
+                .add(1 / 16f, 0, 3 / 16f);
+        scene.overlay().showFilterSlotInput(blockSurface, Direction.NORTH, 80);
+        scene.overlay().showControls(blockSurface, Pointing.DOWN, 60).rightClick();
+        scene.idle(20);
+
+        scene.overlay().showText(60)
+                .text("The generated speed can be configured on its input panels")
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(blockSurface);
+        scene.idle(10);
+        scene.idle(50);
+        scene.world().modifyKineticSpeed(util.select().fromTo(1, 1, 2, 3, 1, 2), f -> 4 * f);
+        scene.idle(10);
+
+        scene.effects().rotationSpeedIndicator(motor);
+    }
 }

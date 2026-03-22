@@ -18,6 +18,9 @@ public class HenryPonderScenes {
                 .addStoryBoard("multimeter", KineticsScenes::multimeter, HenryPonderTags.Henry);
 
         HELPER.forComponents(HenryBlocks.GOLDEN_MIXER)
-                .addStoryBoard("golden_mixing", ProcessingScenes::golden_mixing, HenryPonderTags.Henry);
+                .addStoryBoard("golden_mixing", ProcessingScenes::goldenMixing, HenryPonderTags.Henry);
+
+        HELPER.forComponents(HenryBlocks.KINETIC_MOTOR)
+                .addStoryBoard("kinetic_motor", ProcessingScenes::kineticMotor, HenryPonderTags.Henry);
     }
 }
