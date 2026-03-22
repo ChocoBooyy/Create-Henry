@@ -1,6 +1,7 @@
 package com.chocoboy.create_henry.infrastructure.ponder;
 
 import com.chocoboy.create_henry.infrastructure.ponder.scenes.KineticsScenes;
+import com.chocoboy.create_henry.infrastructure.ponder.scenes.ProcessingScenes;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -15,5 +16,8 @@ public class HenryPonderScenes {
 
         HELPER.forComponents(HenryBlocks.MULTIMETER)
                 .addStoryBoard("multimeter", KineticsScenes::multimeter, HenryPonderTags.Henry);
+
+        HELPER.forComponents(HenryBlocks.GOLDEN_MIXER)
+                .addStoryBoard("golden_mixing", ProcessingScenes::golden_mixing, HenryPonderTags.Henry);
     }
 }
