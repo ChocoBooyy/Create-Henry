@@ -1,6 +1,7 @@
 package com.chocoboy.create_henry.infrastructure.ponder.scenes;
 
 import com.chocoboy.create_henry.content.blocks.kinetics.golden_mixer.GoldenMixerBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
@@ -134,6 +135,9 @@ public class ProcessingScenes {
             scene.world().showSection(util.select().position(1 + i, 1, 2), Direction.DOWN);
         }
 
+        scene.world().setKineticSpeed(util.select().fromTo(1, 1, 2, 3, 1, 2), 32);
+        scene.world().modifyBlockEntityNBT(util.select().position(util.grid().at(1, 1, 2)), MultiMeterBlockEntity.class,
+                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(32)));
         scene.idle(10);
         scene.effects().rotationSpeedIndicator(motor);
         scene.overlay().showText(50)
@@ -156,6 +160,8 @@ public class ProcessingScenes {
         scene.idle(10);
         scene.idle(50);
         scene.world().modifyKineticSpeed(util.select().fromTo(1, 1, 2, 3, 1, 2), f -> 4 * f);
+        scene.world().modifyBlockEntityNBT(util.select().position(util.grid().at(1, 1, 2)), MultiMeterBlockEntity.class,
+                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(128)));
         scene.idle(10);
 
         scene.effects().rotationSpeedIndicator(motor);

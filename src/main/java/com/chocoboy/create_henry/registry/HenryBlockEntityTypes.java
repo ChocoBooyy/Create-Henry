@@ -19,6 +19,7 @@ import com.chocoboy.create_henry.content.blocks.kinetics.transmission.InverseBox
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.*;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterRenderer;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterVisual;
 import com.chocoboy.create_henry.content.blocks.kinetics.industrial_brake.IndustrialBrakeRenderer;
 import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableBlockEntity;
@@ -89,7 +90,7 @@ public class HenryBlockEntityTypes {
 			.blockEntity("multimeter", MultiMeterBlockEntity::new)
 			.visual(() -> MultiMeterVisual::new)
 			.validBlocks(HenryBlocks.MULTIMETER)
-			.renderer(() -> ShaftRenderer::new)
+			.renderer(() -> MultiMeterRenderer::new)
 			.register();
 
 	public static final BlockEntityEntry<RedstoneDividerBlockEntity> REDSTONE_DIVIDER = REGISTRATE

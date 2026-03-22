@@ -36,6 +36,8 @@ public class KineticsScenes {
         scene.world().setBlock(gaugePos, HenryBlocks.MULTIMETER.getDefaultState()
                 .setValue(GaugeBlock.FACING, Direction.UP), true);
         scene.world().setKineticSpeed(util.select().position(gaugePos), 32);
+        scene.world().modifyBlockEntityNBT(util.select().position(gaugePos), MultiMeterBlockEntity.class,
+                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(32)));
         scene.idle(10);
 
         scene.overlay().showText(80)
@@ -46,6 +48,8 @@ public class KineticsScenes {
         scene.idle(90);
 
         scene.world().multiplyKineticSpeed(util.select().everywhere(), 4);
+        scene.world().modifyBlockEntityNBT(util.select().position(gaugePos), MultiMeterBlockEntity.class,
+                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(128)));
         scene.effects().rotationSpeedIndicator(util.grid().at(6, 1, 3));
         scene.idle(5);
         scene.effects().indicateSuccess(gaugePos);
