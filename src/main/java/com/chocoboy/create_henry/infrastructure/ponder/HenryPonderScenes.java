@@ -31,5 +31,8 @@ public class HenryPonderScenes {
 
         HELPER.forComponents(HenryBlocks.POWERED_FLYWHEEL)
                 .addStoryBoard("furnace_engine", ProcessingScenes::flywheel, HenryPonderTags.Henry);
+
+        HELPER.forComponents(HenryBlocks.HYDRAULIC_PRESS)
+                .addStoryBoard("hydraulic_press", ProcessingScenes::bulk_pressing, HenryPonderTags.Henry);
     }
 }

@@ -1,18 +1,24 @@
 package com.chocoboy.create_henry.infrastructure.ponder.scenes;
 
 import com.chocoboy.create_henry.content.blocks.kinetics.golden_mixer.GoldenMixerBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.hydraulic_press.HydraulicPressBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
+import com.simibubi.create.content.kinetics.press.PressingBehaviour;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
+import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.ParticleEmitter;
 import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
@@ -239,6 +245,127 @@ public class ProcessingScenes {
                 .pointAt(util.vector().blockSurface(meterPos, Direction.WEST))
                 .text("It provides a moderate but reliable source of Rotational Force");
         scene.idle(60);
+
+        scene.markAsFinished();
+    }
+
+    public static void bulkPressing(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("hydraulic_press", "Bulk Processing Items with the Hydraulic Press");
+        scene.configureBasePlate(0, 0, 5);
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+        scene.idle(5);
+
+        ElementLink<WorldSectionElement> depot =
+                scene.world().showIndependentSection(util.select().position(2, 1, 1), Direction.DOWN);
+        scene.world().moveSection(depot, util.vector().of(0, 0, 1), 0);
+        scene.idle(10);
+
+        BlockPos pressPos = util.grid().at(2, 3, 2);
+        BlockPos depotPos = util.grid().at(2, 1, 1);
+
+        scene.world().setKineticSpeed(util.select().position(pressPos), 0);
+        scene.world().showSection(util.select().position(pressPos), Direction.DOWN);
+        scene.idle(10);
+
+        scene.world().showSection(util.select().fromTo(2, 1, 3, 2, 1, 5), Direction.NORTH);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(2, 2, 3), Direction.SOUTH);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(2, 3, 3), Direction.NORTH);
+        scene.world().setKineticSpeed(util.select().position(pressPos), -32);
+        scene.effects().indicateSuccess(pressPos);
+        scene.idle(10);
+
+        scene.world().showSection(util.select().fromTo(1, 1, 3, 1, 1, 5), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(1, 2, 3), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(1, 3, 2, 1, 3, 3), Direction.DOWN);
+        scene.world().setKineticSpeed(util.select().position(1, 1, 4), -32);
+        scene.idle(10);
+
+        Vec3 pressSide = util.vector().blockSurface(pressPos, Direction.WEST);
+        scene.overlay().showText(60)
+                .pointAt(pressSide)
+                .placeNearTarget()
+                .attachKeyFrame()
+                .text("The Hydraulic Press can process items provided beneath it");
+        scene.idle(70);
+        scene.overlay().showText(60)
+                .pointAt(pressSide.subtract(0, 2, 0))
+                .placeNearTarget()
+                .text("Items can be dropped or placed on a Depot under the Press");
+        scene.idle(50);
+
+        ItemStack copper = new ItemStack(Items.COPPER_INGOT, 64);
+        scene.world().createItemOnBeltLike(depotPos, Direction.NORTH, copper);
+        Vec3 depotCenter = util.vector().centerOf(depotPos.south());
+        scene.overlay().showControls(depotCenter, Pointing.UP, 30).withItem(copper);
+        scene.idle(10);
+
+        Class<HydraulicPressBlockEntity> type = HydraulicPressBlockEntity.class;
+        scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+                .start(PressingBehaviour.Mode.BELT));
+        scene.idle(30);
+        scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+                .makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+        scene.world().removeItemsFromBelt(depotPos);
+        ItemStack sheet = new ItemStack(AllItems.COPPER_SHEET.asStack().getItem(), 64);
+        scene.world().createItemOnBeltLike(depotPos, Direction.UP, sheet);
+        scene.idle(10);
+        scene.overlay().showControls(depotCenter, Pointing.UP, 50).withItem(sheet);
+        scene.idle(60);
+
+        scene.world().hideIndependentSection(depot, Direction.NORTH);
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(0, 1, 3, 0, 2, 3), Direction.DOWN);
+        scene.idle(10);
+        scene.world().showSection(util.select().fromTo(4, 1, 2, 0, 2, 2), Direction.SOUTH);
+        scene.idle(20);
+
+        BlockPos beltPos = util.grid().at(0, 1, 2);
+        scene.overlay().showText(40)
+                .pointAt(util.vector().blockSurface(beltPos, Direction.WEST))
+                .placeNearTarget()
+                .attachKeyFrame()
+                .text("When items are provided on a belt...");
+        scene.idle(30);
+
+        ElementLink<BeltItemElement> ingot = scene.world().createItemOnBelt(beltPos, Direction.SOUTH, copper);
+        scene.idle(15);
+        ElementLink<BeltItemElement> ingot2 = scene.world().createItemOnBelt(beltPos, Direction.SOUTH, copper);
+        scene.idle(15);
+        scene.world().stallBeltItem(ingot, true);
+        scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+                .start(PressingBehaviour.Mode.BELT));
+
+        scene.overlay().showText(50)
+                .pointAt(pressSide)
+                .placeNearTarget()
+                .attachKeyFrame()
+                .text("The Press will hold and process them automatically");
+
+        scene.idle(30);
+        scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+                .makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+        scene.world().removeItemsFromBelt(pressPos.below(2));
+        ingot = scene.world().createItemOnBelt(pressPos.below(2), Direction.UP, sheet);
+        scene.world().stallBeltItem(ingot, true);
+        scene.idle(15);
+        scene.world().stallBeltItem(ingot, false);
+        scene.idle(15);
+        scene.world().stallBeltItem(ingot2, true);
+        scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+                .start(PressingBehaviour.Mode.BELT));
+        scene.idle(30);
+        scene.world().modifyBlockEntity(pressPos, type, pte -> pte.getPressingBehaviour()
+                .makePressingParticleEffect(depotCenter.add(0, 8 / 16f, 0), copper));
+        scene.world().removeItemsFromBelt(pressPos.below(2));
+        ingot2 = scene.world().createItemOnBelt(pressPos.below(2), Direction.UP, sheet);
+        scene.world().stallBeltItem(ingot2, true);
+        scene.idle(15);
+        scene.world().stallBeltItem(ingot2, false);
 
         scene.markAsFinished();
     }
