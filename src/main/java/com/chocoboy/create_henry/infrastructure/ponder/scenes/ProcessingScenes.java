@@ -11,12 +11,16 @@ import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.Pointing;
+import net.createmod.ponder.api.ParticleEmitter;
+import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.FurnaceBlock;
 import net.minecraft.world.phys.Vec3;
 
 public class ProcessingScenes {
@@ -166,4 +170,77 @@ public class ProcessingScenes {
 
         scene.effects().rotationSpeedIndicator(motor);
     }
+
+    public static void furnaceEngine(SceneBuilder default_scene, SceneBuildingUtil util) {
+        furnaceEngine(new CreateSceneBuilder(default_scene), util, false);
+    }
+
+    public static void flywheel(SceneBuilder default_scene, SceneBuildingUtil util) {
+        furnaceEngine(new CreateSceneBuilder(default_scene), util, true);
+    }
+
+    private static void furnaceEngine(CreateSceneBuilder scene, SceneBuildingUtil util, boolean showFlywheel) {
+        scene.title(showFlywheel ? "flywheel" : "furnace_engine",
+                showFlywheel ? "The Powered Flywheel" : "Generating Rotational Force with the Flywheel Engine");
+        scene.configureBasePlate(0, 0, 5);
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+
+        BlockPos shaftPos = util.grid().at(1, 1, 0);
+        BlockPos meterPos = util.grid().at(1, 1, 1);
+        BlockPos cogPos = util.grid().at(1, 1, 2);
+        BlockPos flywheelPos = util.grid().at(1, 1, 3);
+        BlockPos enginePos = util.grid().at(3, 1, 3);
+        BlockPos furnacePos = util.grid().at(4, 1, 3);
+
+        scene.idle(5);
+        scene.world().showSection(util.select().position(furnacePos), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(enginePos), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(flywheelPos), Direction.EAST);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(cogPos), Direction.EAST);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(meterPos), Direction.EAST);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(shaftPos), Direction.EAST);
+        scene.idle(10);
+
+        String introText = showFlywheel
+                ? "The Powered Flywheel connects the Flywheel Engine to the kinetic network"
+                : "The Flywheel Engine generates Rotational Force while its Blast Furnace is running";
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(showFlywheel ? flywheelPos : enginePos))
+                .text(introText);
+        scene.idle(70);
+
+        scene.addKeyframe();
+        scene.overlay().showControls(util.vector().topOf(furnacePos), Pointing.DOWN, 30)
+                .withItem(new ItemStack(Items.OAK_LOG));
+        scene.idle(5);
+        scene.overlay().showControls(util.vector().blockSurface(furnacePos, Direction.NORTH), Pointing.RIGHT, 30)
+                .withItem(new ItemStack(Items.COAL));
+        scene.idle(7);
+        scene.world().cycleBlockProperty(furnacePos, FurnaceBlock.LIT);
+        ParticleEmitter lava = scene.effects().simpleParticleEmitter(ParticleTypes.LAVA, Vec3.ZERO);
+        scene.effects().emitParticles(util.vector().of(4.5f, 1.5f, 2.9f), lava, 4, 1);
+        scene.world().setKineticSpeed(util.select().fromTo(1, 1, 0, 1, 1, 3), 24);
+        scene.world().modifyBlockEntityNBT(util.select().position(meterPos), MultiMeterBlockEntity.class,
+                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(24)));
+        scene.idle(40);
+
+        scene.effects().rotationSpeedIndicator(shaftPos);
+        scene.overlay().showText(50)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .colored(PonderPalette.GREEN)
+                .pointAt(util.vector().blockSurface(meterPos, Direction.WEST))
+                .text("It provides a moderate but reliable source of Rotational Force");
+        scene.idle(60);
+
+        scene.markAsFinished();
+    }
+
 }
