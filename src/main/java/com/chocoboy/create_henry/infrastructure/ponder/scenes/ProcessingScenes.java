@@ -3,6 +3,7 @@ package com.chocoboy.create_henry.infrastructure.ponder.scenes;
 import com.chocoboy.create_henry.content.blocks.kinetics.golden_mixer.GoldenMixerBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.hydraulic_press.HydraulicPressBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
+import com.chocoboy.create_henry.registry.HenryBlocks;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -366,6 +367,78 @@ public class ProcessingScenes {
         scene.world().stallBeltItem(ingot2, true);
         scene.idle(15);
         scene.world().stallBeltItem(ingot2, false);
+
+        scene.markAsFinished();
+    }
+
+    public static void rollTable(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("roll_table", "Transporting Items with the Roll Table");
+        scene.configureBasePlate(3, 0, 4);
+
+        BlockPos soloPos = util.grid().at(5, 1, 1);
+        BlockPos centerPos = util.grid().at(3, 1, 3);
+
+        scene.world().showSection(util.select().fromTo(4, 0, 0, 6, 0, 2), Direction.UP);
+        scene.idle(5);
+        scene.world().showSection(util.select().position(soloPos), Direction.DOWN);
+        scene.idle(10);
+
+        scene.overlay().showText(60)
+                .pointAt(util.vector().topOf(soloPos))
+                .placeNearTarget()
+                .attachKeyFrame()
+                .text("The Roll Table accepts items and rolls them across its surface to the opposite side");
+        scene.idle(70);
+
+        ItemStack henry = new ItemStack(HenryBlocks.HENRY_BLOCK.get());
+        scene.overlay().showControls(util.vector().of(5.5, 2.5, 1.5), Pointing.DOWN, 40).withItem(henry);
+        scene.idle(5);
+        scene.world().createItemOnBeltLike(soloPos, Direction.SOUTH, henry);
+        scene.idle(60);
+
+        scene.overlay().showText(60)
+                .pointAt(util.vector().blockSurface(soloPos, Direction.NORTH))
+                .placeNearTarget()
+                .attachKeyFrame()
+                .text("Items exit on the opposite side and fall if nothing is there to receive them");
+        scene.idle(70);
+
+        scene.world().hideSection(util.select().position(soloPos), Direction.UP);
+        scene.idle(3);
+        scene.world().hideSection(util.select().fromTo(4, 0, 0, 6, 0, 2), Direction.DOWN);
+        scene.idle(15);
+
+        scene.configureBasePlate(0, 0, 7);
+
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+        scene.idle(3);
+        scene.world().showSection(util.select().position(centerPos), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(3, 1, 0, 3, 1, 2), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(3, 1, 4, 3, 1, 6), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(0, 1, 3, 2, 1, 3), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(4, 1, 3, 6, 1, 3), Direction.DOWN);
+        scene.idle(10);
+
+        scene.world().setKineticSpeed(util.select().fromTo(3, 1, 4, 3, 1, 6), -32);
+        scene.world().setKineticSpeed(util.select().fromTo(3, 1, 0, 3, 1, 2), -32);
+        scene.world().setKineticSpeed(util.select().fromTo(0, 1, 3, 2, 1, 3), -32);
+        scene.world().setKineticSpeed(util.select().fromTo(4, 1, 3, 6, 1, 3), -32);
+
+        scene.overlay().showText(60)
+                .pointAt(util.vector().topOf(centerPos))
+                .placeNearTarget()
+                .attachKeyFrame()
+                .text("Belts on any side can deliver items to the Roll Table and collect its output on the other side");
+        scene.idle(70);
+
+        scene.world().createItemOnBelt(util.grid().at(3, 1, 6), Direction.SOUTH, henry);
+        scene.world().createItemOnBelt(util.grid().at(0, 1, 3), Direction.WEST, henry);
+        scene.idle(80);
 
         scene.markAsFinished();
     }
