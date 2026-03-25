@@ -21,16 +21,16 @@ public class HenryPonderScenes {
                 .addStoryBoard("golden_mixing", ProcessingScenes::goldenMixing, HenryPonderTags.Henry);
 
         HELPER.forComponents(HenryBlocks.KINETIC_MOTOR)
-                .addStoryBoard("kinetic_motor", ProcessingScenes::kineticMotor, HenryPonderTags.Henry);
+                .addStoryBoard("kinetic_motor", KineticsScenes::kineticMotor, HenryPonderTags.Henry);
 
         HELPER.forComponents(HenryBlocks.INDUSTRIAL_BRAKE)
                 .addStoryBoard("industrial_brake", KineticsScenes::industrialBrake, HenryPonderTags.Henry);
 
         HELPER.forComponents(HenryBlocks.FURNACE_ENGINE)
-                .addStoryBoard("furnace_engine", ProcessingScenes::furnaceEngine, HenryPonderTags.Henry);
+                .addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine, HenryPonderTags.Henry);
 
         HELPER.forComponents(HenryBlocks.POWERED_FLYWHEEL)
-                .addStoryBoard("furnace_engine", ProcessingScenes::flywheel, HenryPonderTags.Henry);
+                .addStoryBoard("furnace_engine", KineticsScenes::flywheel, HenryPonderTags.Henry);
 
         HELPER.forComponents(HenryBlocks.HYDRAULIC_PRESS)
                 .addStoryBoard("hydraulic_press", ProcessingScenes::bulkPressing, HenryPonderTags.Henry);

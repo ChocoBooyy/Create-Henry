@@ -2,7 +2,6 @@ package com.chocoboy.create_henry.infrastructure.ponder.scenes;
 
 import com.chocoboy.create_henry.content.blocks.kinetics.golden_mixer.GoldenMixerBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.hydraulic_press.HydraulicPressBlockEntity;
-import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
@@ -16,18 +15,14 @@ import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.Pointing;
-import net.createmod.ponder.api.ParticleEmitter;
-import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.FurnaceBlock;
 import net.minecraft.world.phys.Vec3;
 
 public class ProcessingScenes {
@@ -131,123 +126,6 @@ public class ProcessingScenes {
                 .attachKeyFrame()
                 .text("The filter slot can be used to resolve conflicts when multiple recipes are compatible");
         scene.idle(80);
-    }
-
-    public static void kineticMotor(SceneBuilder builder, SceneBuildingUtil util) {
-        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        scene.title("kinetic_motor", "Generating Rotational Force using Kinetic Motors");
-        scene.configureBasePlate(0, 0, 5);
-        scene.world().showSection(util.select().layer(0), Direction.UP);
-
-        BlockPos motor = util.grid().at(3, 1, 2);
-
-        for (int i = 0; i < 3; i++) {
-            scene.idle(5);
-            scene.world().showSection(util.select().position(1 + i, 1, 2), Direction.DOWN);
-        }
-
-        scene.world().setKineticSpeed(util.select().fromTo(1, 1, 2, 3, 1, 2), 32);
-        scene.world().modifyBlockEntityNBT(util.select().position(util.grid().at(1, 1, 2)), MultiMeterBlockEntity.class,
-                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(32)));
-        scene.idle(10);
-        scene.effects().rotationSpeedIndicator(motor);
-        scene.overlay().showText(50)
-                .text("Kinetic motors are a compact and configurable source of Rotational Force")
-                .placeNearTarget()
-                .pointAt(util.vector().topOf(motor));
-        scene.idle(70);
-
-        Vec3 blockSurface = util.vector().blockSurface(motor, Direction.NORTH)
-                .add(1 / 16f, 0, 3 / 16f);
-        scene.overlay().showFilterSlotInput(blockSurface, Direction.NORTH, 80);
-        scene.overlay().showControls(blockSurface, Pointing.DOWN, 60).rightClick();
-        scene.idle(20);
-
-        scene.overlay().showText(60)
-                .text("The generated speed can be configured on its input panels")
-                .attachKeyFrame()
-                .placeNearTarget()
-                .pointAt(blockSurface);
-        scene.idle(10);
-        scene.idle(50);
-        scene.world().modifyKineticSpeed(util.select().fromTo(1, 1, 2, 3, 1, 2), f -> 4 * f);
-        scene.world().modifyBlockEntityNBT(util.select().position(util.grid().at(1, 1, 2)), MultiMeterBlockEntity.class,
-                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(128)));
-        scene.idle(10);
-
-        scene.effects().rotationSpeedIndicator(motor);
-    }
-
-    public static void furnaceEngine(SceneBuilder default_scene, SceneBuildingUtil util) {
-        furnaceEngine(new CreateSceneBuilder(default_scene), util, false);
-    }
-
-    public static void flywheel(SceneBuilder default_scene, SceneBuildingUtil util) {
-        furnaceEngine(new CreateSceneBuilder(default_scene), util, true);
-    }
-
-    private static void furnaceEngine(CreateSceneBuilder scene, SceneBuildingUtil util, boolean showFlywheel) {
-        scene.title(showFlywheel ? "flywheel" : "furnace_engine",
-                showFlywheel ? "The Powered Flywheel" : "Generating Rotational Force with the Flywheel Engine");
-        scene.configureBasePlate(0, 0, 5);
-        scene.world().showSection(util.select().layer(0), Direction.UP);
-
-        BlockPos shaftPos = util.grid().at(1, 1, 0);
-        BlockPos meterPos = util.grid().at(1, 1, 1);
-        BlockPos cogPos = util.grid().at(1, 1, 2);
-        BlockPos flywheelPos = util.grid().at(1, 1, 3);
-        BlockPos enginePos = util.grid().at(3, 1, 3);
-        BlockPos furnacePos = util.grid().at(4, 1, 3);
-
-        scene.idle(5);
-        scene.world().showSection(util.select().position(furnacePos), Direction.DOWN);
-        scene.idle(3);
-        scene.world().showSection(util.select().position(enginePos), Direction.DOWN);
-        scene.idle(3);
-        scene.world().showSection(util.select().position(flywheelPos), Direction.EAST);
-        scene.idle(3);
-        scene.world().showSection(util.select().position(cogPos), Direction.EAST);
-        scene.idle(3);
-        scene.world().showSection(util.select().position(meterPos), Direction.EAST);
-        scene.idle(3);
-        scene.world().showSection(util.select().position(shaftPos), Direction.EAST);
-        scene.idle(10);
-
-        String introText = showFlywheel
-                ? "The Powered Flywheel connects the Flywheel Engine to the kinetic network"
-                : "The Flywheel Engine generates Rotational Force while its Blast Furnace is running";
-        scene.overlay().showText(60)
-                .attachKeyFrame()
-                .placeNearTarget()
-                .pointAt(util.vector().topOf(showFlywheel ? flywheelPos : enginePos))
-                .text(introText);
-        scene.idle(70);
-
-        scene.addKeyframe();
-        scene.overlay().showControls(util.vector().topOf(furnacePos), Pointing.DOWN, 30)
-                .withItem(new ItemStack(Items.OAK_LOG));
-        scene.idle(5);
-        scene.overlay().showControls(util.vector().blockSurface(furnacePos, Direction.NORTH), Pointing.RIGHT, 30)
-                .withItem(new ItemStack(Items.COAL));
-        scene.idle(7);
-        scene.world().cycleBlockProperty(furnacePos, FurnaceBlock.LIT);
-        ParticleEmitter lava = scene.effects().simpleParticleEmitter(ParticleTypes.LAVA, Vec3.ZERO);
-        scene.effects().emitParticles(util.vector().of(4.5f, 1.5f, 2.9f), lava, 4, 1);
-        scene.world().setKineticSpeed(util.select().fromTo(1, 1, 0, 1, 1, 3), 24);
-        scene.world().modifyBlockEntityNBT(util.select().position(meterPos), MultiMeterBlockEntity.class,
-                nbt -> nbt.putFloat("SpeedValue", MultiMeterBlockEntity.getDialTarget(24)));
-        scene.idle(40);
-
-        scene.effects().rotationSpeedIndicator(shaftPos);
-        scene.overlay().showText(50)
-                .attachKeyFrame()
-                .placeNearTarget()
-                .colored(PonderPalette.GREEN)
-                .pointAt(util.vector().blockSurface(meterPos, Direction.WEST))
-                .text("It provides a moderate but reliable source of Rotational Force");
-        scene.idle(60);
-
-        scene.markAsFinished();
     }
 
     public static void bulkPressing(SceneBuilder builder, SceneBuildingUtil util) {
