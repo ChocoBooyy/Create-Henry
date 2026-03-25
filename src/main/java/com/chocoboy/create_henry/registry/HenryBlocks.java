@@ -143,7 +143,6 @@ public class HenryBlocks {
 			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(pickaxeOnly())
 			.transform(HenryStressConfig.setImpact(4.0))
-			.transform(HenryStressConfig.setCapacity(16))
 			.recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, c.get(), 4)
 					.pattern("CIP")
 					.define('P', AllItems.PROPELLER.get())
