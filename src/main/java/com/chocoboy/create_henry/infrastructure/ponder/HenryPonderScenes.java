@@ -1,8 +1,11 @@
 package com.chocoboy.create_henry.infrastructure.ponder;
 
+import com.chocoboy.create_henry.infrastructure.ponder.scenes.FanScenes;
 import com.chocoboy.create_henry.infrastructure.ponder.scenes.KineticsScenes;
 import com.chocoboy.create_henry.infrastructure.ponder.scenes.ProcessingScenes;
+
 import com.chocoboy.create_henry.registry.HenryBlocks;
+import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
@@ -37,5 +40,9 @@ public class HenryPonderScenes {
 
         HELPER.forComponents(HenryBlocks.ROLL_TABLE)
                 .addStoryBoard("roll_table", ProcessingScenes::rollTable, HenryPonderTags.Henry);
+
+        HELPER.forComponents(HenryBlocks.INDUSTRIAL_FAN)
+                .addStoryBoard("industrial_fan/direction", FanScenes::direction, AllCreatePonderTags.KINETIC_APPLIANCES)
+                .addStoryBoard("industrial_fan/processing", FanScenes::processing);
     }
 }
