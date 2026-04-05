@@ -2,6 +2,7 @@ package com.chocoboy.create_henry.infrastructure.ponder.scenes;
 
 import com.chocoboy.create_henry.content.blocks.kinetics.golden_mixer.GoldenMixerBlockEntity;
 import com.chocoboy.create_henry.content.blocks.kinetics.hydraulic_press.HydraulicPressBlockEntity;
+import com.chocoboy.create_henry.content.blocks.logistics.smart_hopper.SmartHopperBlockEntity;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
@@ -15,8 +16,11 @@ import com.simibubi.create.foundation.ponder.element.BeltItemElement;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.nbt.NBTHelper;
 import net.createmod.catnip.math.Pointing;
+import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
 import net.createmod.ponder.api.element.WorldSectionElement;
+import net.minecraft.world.entity.Entity;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
@@ -319,6 +323,146 @@ public class ProcessingScenes {
         scene.idle(80);
 
         scene.markAsFinished();
+    }
+
+    public static void smartHopper(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("smart_hopper", "Filtering Items with the Smart Hopper");
+        scene.configureBasePlate(0, 0, 5);
+
+        BlockPos hopperPos = util.grid().at(3, 1, 2);
+        BlockPos outputPos = util.grid().at(2, 1, 2);
+        BlockPos barrelPos = util.grid().at(3, 2, 2);
+        BlockPos leverPos  = util.grid().at(3, 1, 1);
+        Vec3 hopperWest  = util.vector().blockSurface(hopperPos, Direction.WEST);
+        Vec3 hopperNorth = util.vector().blockSurface(hopperPos, Direction.NORTH);
+        Vec3 aboveHopper = util.vector().topOf(hopperPos);
+        Vec3 barrelTop   = util.vector().topOf(barrelPos);
+
+        //region Setup
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world().showSection(util.select().position(outputPos), Direction.DOWN);
+        scene.idle(5);
+        scene.world().showSection(util.select().position(hopperPos), Direction.DOWN);
+        scene.idle(5);
+        scene.world().showSection(util.select().position(barrelPos), Direction.DOWN);
+        scene.idle(15);
+        //endregion
+
+        ItemStack iron = new ItemStack(Items.IRON_INGOT);
+        ItemStack dirt = new ItemStack(Items.DIRT);
+
+        // Barrel contents: iron disappears before rejection demo so it's clear only dirt remains unfiltered
+        scene.overlay().showControls(barrelTop.add(-0.4, 0.15, 0), Pointing.DOWN, 360).withItem(new ItemStack(Items.IRON_INGOT, 16));
+        scene.overlay().showControls(barrelTop.add( 0.4, 0.15, 0), Pointing.DOWN, 500).withItem(new ItemStack(Items.DIRT, 8));
+
+        //region Orientation
+        scene.overlay().showText(80)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(aboveHopper)
+                .text("The Smart Hopper pulls items from above");
+        for (int i = 0; i < 2; i++) {
+            var dropped = scene.world().createItemEntity(aboveHopper, Vec3.ZERO, iron);
+            scene.idle(35);
+            scene.world().modifyEntity(dropped, Entity::discard);
+            scene.idle(10);
+        }
+        scene.idle(15);
+
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(hopperWest)
+                .text("And pushes them in the direction its spout faces");
+        scene.overlay().showControls(util.vector().topOf(outputPos), Pointing.DOWN, 65).withItem(new ItemStack(Items.IRON_INGOT, 8));
+        for (int i = 0; i < 3; i++) {
+            scene.idle(15);
+            scene.world().createItemOnBeltLike(hopperPos, Direction.WEST, iron);
+        }
+        scene.idle(20);
+        //endregion
+
+        //region Filtering
+        Vec3 filter = hopperNorth.add(0, 3 / 16f, 0);
+
+        scene.overlay().showFilterSlotInput(filter, Direction.NORTH, 80);
+        scene.idle(10);
+        scene.rotateCameraY(20);
+        scene.overlay().showText(70)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(filter)
+                .text("Items in the filter slot specify what to extract and transfer");
+        scene.idle(10);
+        scene.world().setFilterData(util.select().position(hopperPos), SmartHopperBlockEntity.class, iron);
+        scene.idle(60);
+        scene.rotateCameraY(-20);
+
+        scene.overlay().showText(80)
+                .colored(PonderPalette.GREEN)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(aboveHopper)
+                .text("Matching items are transferred to the output");
+        for (int i = 0; i < 3; i++) {
+            var dropped = scene.world().createItemEntity(aboveHopper, Vec3.ZERO, iron);
+            scene.idle(30);
+            scene.world().modifyEntity(dropped, Entity::discard);
+            scene.idle(10);
+        }
+        scene.idle(10);
+        // Iron tooltip has now expired — only dirt remains visible on the barrel
+
+        scene.overlay().showText(70)
+                .colored(PonderPalette.RED)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(aboveHopper)
+                .text("Non-matching items are left on top");
+        var rejected = scene.world().createItemEntity(aboveHopper, Vec3.ZERO, dirt);
+        scene.idle(70);
+        scene.world().modifyEntity(rejected, Entity::discard);
+        scene.idle(15);
+
+        scene.overlay().showFilterSlotInput(filter, Direction.NORTH, 65);
+        scene.overlay().showControls(filter.add(0, 0.125, 0), Pointing.DOWN, 65).rightClick();
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(filter)
+                .text("Use the value panel to specify the transferred stack size");
+        scene.idle(65);
+        //endregion
+
+        //region Redstone
+        scene.world().showSection(util.select().position(leverPos), Direction.DOWN);
+        scene.idle(10);
+
+        scene.overlay().showText(70)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().centerOf(leverPos))
+                .text("A Redstone signal disables the Smart Hopper");
+        scene.idle(30);
+        scene.world().toggleRedstonePower(util.select().fromTo(leverPos, hopperPos));
+        scene.effects().indicateRedstone(leverPos);
+
+        var blocked = scene.world().createItemEntity(aboveHopper, Vec3.ZERO, iron);
+        scene.idle(60);
+        scene.world().modifyEntity(blocked, Entity::discard);
+        scene.idle(15);
+
+        scene.world().toggleRedstonePower(util.select().fromTo(leverPos, hopperPos));
+        scene.markAsFinished();
+        for (int i = 0; i < 2; i++) {
+            var dropped = scene.world().createItemEntity(aboveHopper, Vec3.ZERO, iron);
+            scene.idle(30);
+            scene.world().modifyEntity(dropped, Entity::discard);
+            scene.idle(10);
+        }
+        //endregion
     }
 
 }

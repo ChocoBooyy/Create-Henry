@@ -44,5 +44,8 @@ public class HenryPonderScenes {
         HELPER.forComponents(HenryBlocks.INDUSTRIAL_FAN)
                 .addStoryBoard("industrial_fan/direction", FanScenes::direction, AllCreatePonderTags.KINETIC_APPLIANCES)
                 .addStoryBoard("industrial_fan/processing", FanScenes::processing);
+
+        HELPER.forComponents(HenryBlocks.SMART_HOPPER)
+                .addStoryBoard("smart_hopper/smart_hopper", ProcessingScenes::smartHopper, HenryPonderTags.Henry);
     }
 }
