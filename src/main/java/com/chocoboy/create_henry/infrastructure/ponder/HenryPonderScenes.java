@@ -47,5 +47,8 @@ public class HenryPonderScenes {
 
         HELPER.forComponents(HenryBlocks.SMART_HOPPER)
                 .addStoryBoard("smart_hopper/smart_hopper", ProcessingScenes::smartHopper, HenryPonderTags.Henry);
+
+        HELPER.forComponents(HenryBlocks.INVERSE_BOX)
+                .addStoryBoard("inverse_box/inverse_box", KineticsScenes::inverseBox, HenryPonderTags.Henry);
     }
 }

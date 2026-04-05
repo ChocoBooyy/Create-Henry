@@ -260,4 +260,48 @@ public class KineticsScenes {
 
         scene.markAsFinished();
     }
+
+    public static void inverseBox(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("inverse_box", "Inverting rotation with the Inverse Box");
+        scene.configureBasePlate(0, 0, 5);
+
+        BlockPos inverseBoxPos = util.grid().at(3, 1, 2);
+
+        //region Setup
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(1, 1, 2, 5, 1, 2), Direction.DOWN);
+        scene.world().showSection(util.select().position(5, 0, 1), Direction.UP);
+        scene.idle(10);
+        //endregion
+
+        //region Relay
+        // Left (input) side: positive speed; right (output) side: inverted
+        scene.world().setKineticSpeed(util.select().fromTo(1, 1, 2, 3, 1, 2), 32);
+        scene.world().setKineticSpeed(util.select().fromTo(3, 1, 2, 5, 1, 2), -32);
+        scene.world().setKineticSpeed(util.select().position(5, 0, 1), 16);
+        scene.effects().rotationDirectionIndicator(util.grid().at(1, 1, 2));
+        scene.effects().rotationDirectionIndicator(util.grid().at(5, 1, 2));
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(inverseBoxPos))
+                .text("The Inverse Box relays rotation along a shaft");
+        scene.idle(70);
+        //endregion
+
+        //region Inversion
+        scene.effects().rotationDirectionIndicator(util.grid().at(1, 1, 2));
+        scene.effects().rotationDirectionIndicator(util.grid().at(5, 1, 2));
+        scene.overlay().showText(70)
+                .colored(PonderPalette.RED)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(inverseBoxPos))
+                .text("The rotation on the other side is always inverted");
+        scene.idle(80);
+        scene.markAsFinished();
+        //endregion
+    }
 }
