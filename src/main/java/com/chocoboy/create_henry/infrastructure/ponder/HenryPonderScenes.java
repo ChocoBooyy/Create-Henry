@@ -51,6 +51,9 @@ public class HenryPonderScenes {
         HELPER.forComponents(HenryBlocks.INVERSE_BOX)
                 .addStoryBoard("inverse_box/inverse_box", KineticsScenes::inverseBox, HenryPonderTags.Henry);
 
+        HELPER.forComponents(HenryBlocks.BORE_BLOCK)
+                .addStoryBoard("bore_block/bore_block", KineticsScenes::boreBlock, HenryPonderTags.Henry);
+
         HELPER.forComponents(HenryBlocks.REDSTONE_DIVIDER)
                 .addStoryBoard("redstone_divider/redstone_divider", KineticsScenes::redstoneDivider, HenryPonderTags.Henry);
     }

@@ -11,6 +11,8 @@ import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_d
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
@@ -19,6 +21,7 @@ import net.createmod.ponder.api.ParticleEmitter;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -415,6 +418,72 @@ public class KineticsScenes {
                 .pointAt(util.vector().topOf(dividerPos))
                 .text("At full signal strength, the output is brought to a complete stop");
         scene.idle(70);
+        scene.markAsFinished();
+        //endregion
+    }
+
+    public static void boreBlock(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("bore_block", "Mining through blocks with the Bore Block");
+        scene.configureBasePlate(0, 0, 5);
+
+        BlockPos borePos = util.grid().at(4, 1, 1);
+
+        //region Setup
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(0, 1, 3, 5, 1, 3), Direction.DOWN);
+        scene.world().showSection(util.select().position(5, 0, 2), Direction.UP);
+        scene.idle(10);
+        ElementLink<WorldSectionElement> bore = scene.world().showIndependentSection(
+                util.select().fromTo(4, 1, 1, 4, 1, 2), Direction.DOWN);
+        scene.idle(15);
+        //endregion
+
+        //region Intro
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(borePos))
+                .text("The Bore Block destroys any block in its path when moved by a contraption");
+        scene.idle(70);
+        //endregion
+
+        //region Forward
+        scene.world().showSection(util.select().position(1, 1, 1), Direction.EAST);
+        scene.overlay().showText(55)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(util.grid().at(1, 1, 1)))
+                .text("Blocks in its path are broken as the bore advances");
+        scene.idle(65);
+
+        scene.world().setKineticSpeed(util.select().fromTo(0, 1, 3, 5, 1, 3), 32);
+        scene.world().setKineticSpeed(util.select().position(5, 0, 2), 16);
+
+        scene.world().moveSection(bore, util.vector().of(-4, 0, 0), 80);
+        scene.idle(60);
+        scene.world().replaceBlocks(util.select().position(1, 1, 1), Blocks.AIR.defaultBlockState(), true);
+        scene.idle(20);
+        scene.idle(15);
+        //endregion
+
+        //region Reverse
+        scene.world().modifyKineticSpeed(util.select().fromTo(0, 1, 3, 5, 1, 3), f -> -f);
+        scene.world().modifyKineticSpeed(util.select().position(5, 0, 2), f -> -f);
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .colored(PonderPalette.GREEN)
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(borePos))
+                .text("Reversing the shaft lets the bore clear any blocks in its path on the return pass");
+        scene.world().moveSection(bore, util.vector().of(4, 0, 0), 80);
+        scene.idle(5);
+        scene.world().showSection(util.select().position(3, 1, 1), Direction.WEST);
+        scene.idle(40);
+        scene.world().replaceBlocks(util.select().position(3, 1, 1), Blocks.AIR.defaultBlockState(), true);
+        scene.idle(20);
+        scene.idle(15);
         scene.markAsFinished();
         //endregion
     }
