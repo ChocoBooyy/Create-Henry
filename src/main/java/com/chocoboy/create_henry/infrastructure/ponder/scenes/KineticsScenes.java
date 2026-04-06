@@ -6,6 +6,8 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.crusher.CrushingWheelBlock;
 import com.simibubi.create.content.kinetics.gauge.GaugeBlock;
 import com.chocoboy.create_henry.content.blocks.kinetics.multimeter.MultiMeterBlockEntity;
+import com.simibubi.create.content.redstone.analogLever.AnalogLeverBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.transmission.redstone_divider.RedstoneDividerBlock;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
@@ -301,6 +303,118 @@ public class KineticsScenes {
                 .pointAt(util.vector().topOf(inverseBoxPos))
                 .text("The rotation on the other side is always inverted");
         scene.idle(80);
+        scene.markAsFinished();
+        //endregion
+    }
+
+    public static void redstoneDivider(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("redstone_divider", "Dividing rotational speed with the Redstone Divider");
+        scene.configureBasePlate(0, 0, 5);
+
+        BlockPos dividerPos = util.grid().at(3, 1, 3);
+        BlockPos leverPos   = util.grid().at(1, 1, 2);
+
+        //region Setup
+        scene.world().showSection(util.select().layer(0), Direction.UP);
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(1, 1, 3, 5, 1, 3), Direction.DOWN);
+        scene.world().showSection(util.select().position(5, 0, 2), Direction.UP);
+        scene.idle(10);
+        //endregion
+
+        //region Relay
+        scene.world().setKineticSpeed(util.select().fromTo(1, 1, 3, 5, 1, 3), 32);
+        scene.world().setKineticSpeed(util.select().position(5, 0, 2), 16);
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(dividerPos))
+                .text("The Redstone Divider relays rotation like a normal shaft when unpowered");
+        scene.idle(70);
+        //endregion
+
+        //region Speed control
+        // Reveal lever, then trace the wire from lever toward the divider
+        scene.world().showSection(util.select().position(leverPos), Direction.DOWN);
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(1, 1, 1, 3, 1, 2), Direction.DOWN);
+        scene.idle(10);
+
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().centerOf(leverPos))
+                .text("The Analog Lever controls the signal strength sent to the divider");
+        scene.idle(70);
+
+        // Click 1: lever state 6 -> wire powers 6,5,4,3 -> divider power 3 (model power_1, x0.75)
+        scene.overlay().showControls(util.vector().centerOf(leverPos), Pointing.DOWN, 25).rightClick();
+        scene.idle(5);
+        scene.world().modifyBlockEntityNBT(util.select().position(leverPos), AnalogLeverBlockEntity.class, nbt -> nbt.putInt("State", 6));
+        scene.world().modifyBlock(util.grid().at(1, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 6), false);
+        scene.world().modifyBlock(util.grid().at(2, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 5), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 4), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 2), s -> s.setValue(RedstoneDividerBlock.POWER, 3), false);
+        scene.world().modifyBlock(dividerPos, s -> s.setValue(RedstoneDividerBlock.POWER, 3), false);
+        scene.effects().indicateRedstone(leverPos);
+        scene.world().modifyKineticSpeed(util.select().fromTo(1, 1, 3, 2, 1, 3), f -> 24f);
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(dividerPos))
+                .text("A Redstone signal reduces the output speed");
+        scene.idle(80);
+
+        // Click 2: lever state 9 -> wire powers 9,8,7,6 -> divider power 6 (model power_2, x0.50)
+        scene.overlay().showControls(util.vector().centerOf(leverPos), Pointing.DOWN, 25).rightClick();
+        scene.idle(5);
+        scene.world().modifyBlockEntityNBT(util.select().position(leverPos), AnalogLeverBlockEntity.class, nbt -> nbt.putInt("State", 9));
+        scene.world().modifyBlock(util.grid().at(1, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 9), false);
+        scene.world().modifyBlock(util.grid().at(2, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 8), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 7), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 2), s -> s.setValue(RedstoneDividerBlock.POWER, 6), false);
+        scene.world().modifyBlock(dividerPos, s -> s.setValue(RedstoneDividerBlock.POWER, 6), false);
+        scene.effects().indicateRedstone(leverPos);
+        scene.world().modifyKineticSpeed(util.select().fromTo(1, 1, 3, 2, 1, 3), f -> 16f);
+        scene.overlay().showText(60)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(dividerPos))
+                .text("Stronger signals divide the speed further");
+        scene.idle(80);
+
+        // Click 3: lever state 12 -> wire powers 12,11,10,9 -> divider power 9 (model power_3, x0.25)
+        scene.overlay().showControls(util.vector().centerOf(leverPos), Pointing.DOWN, 25).rightClick();
+        scene.idle(5);
+        scene.world().modifyBlockEntityNBT(util.select().position(leverPos), AnalogLeverBlockEntity.class, nbt -> nbt.putInt("State", 12));
+        scene.world().modifyBlock(util.grid().at(1, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 12), false);
+        scene.world().modifyBlock(util.grid().at(2, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 11), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 10), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 2), s -> s.setValue(RedstoneDividerBlock.POWER, 9), false);
+        scene.world().modifyBlock(dividerPos, s -> s.setValue(RedstoneDividerBlock.POWER, 9), false);
+        scene.effects().indicateRedstone(leverPos);
+        scene.world().modifyKineticSpeed(util.select().fromTo(1, 1, 3, 2, 1, 3), f -> 8f);
+        scene.idle(60);
+
+        // Click 4: lever state 15 -> wire powers 15,14,13,12 -> divider power 12 (model power_4, x0.00)
+        scene.overlay().showControls(util.vector().centerOf(leverPos), Pointing.DOWN, 25).rightClick();
+        scene.idle(5);
+        scene.world().modifyBlockEntityNBT(util.select().position(leverPos), AnalogLeverBlockEntity.class, nbt -> nbt.putInt("State", 15));
+        scene.world().modifyBlock(util.grid().at(1, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 15), false);
+        scene.world().modifyBlock(util.grid().at(2, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 14), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 1), s -> s.setValue(RedstoneDividerBlock.POWER, 13), false);
+        scene.world().modifyBlock(util.grid().at(3, 1, 2), s -> s.setValue(RedstoneDividerBlock.POWER, 12), false);
+        scene.world().modifyBlock(dividerPos, s -> s.setValue(RedstoneDividerBlock.POWER, 12), false);
+        scene.effects().indicateRedstone(leverPos);
+        scene.world().modifyKineticSpeed(util.select().fromTo(1, 1, 3, 2, 1, 3), f -> 0f);
+        scene.overlay().showText(60)
+                .colored(PonderPalette.RED)
+                .attachKeyFrame()
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(dividerPos))
+                .text("At full signal strength, the output is brought to a complete stop");
+        scene.idle(70);
         scene.markAsFinished();
         //endregion
     }
