@@ -5,6 +5,9 @@ import java.util.function.BiConsumer;
 @SuppressWarnings({"unused"})
 public class HenryLangPartial {
     public static void provideLang(BiConsumer<String, String> consumer) {
+        consume(consumer, "block.create_henry.fluid_hatch.tooltip.summary", "_Quickly empties_ your _fluid containers_ into nearby storage.");
+        consume(consumer, "block.create_henry.fluid_hatch.tooltip.condition1", "When R-Clicked");
+        consume(consumer, "block.create_henry.fluid_hatch.tooltip.behaviour1", "_Empties_ your _held fluid container_ into the _tank_ it faces. _Sneak-click_ to _empty_ _everything_ except Hotbar items.");
         consume(consumer, "create_henry.recipe.fan_sanding.fan", "Fan behind Sand");
         consume(consumer, "create_henry.recipe.fan_freezing.fan", "Fan behind Powdered Snow");
         consume(consumer, "create_henry.recipe.fan_seething.fan", "Fan behind Super Heated Blaze Burner");
