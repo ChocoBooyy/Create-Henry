@@ -7,7 +7,8 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.chocoboy.create_henry.HenryCreate;
+import net.minecraft.network.chat.Component;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
@@ -36,7 +37,8 @@ public abstract class HenryFanProcessingCategory<T extends Recipe<?>> extends Cr
 
     public static Supplier<ItemStack> getFan(String name) {
         return () -> HenryBlocks.INDUSTRIAL_FAN.asStack()
-                .setHoverName(CreateLang.translateDirect("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
+                .setHoverName(Component.translatable(HenryCreate.MOD_ID + ".recipe." + name + ".fan")
+                        .withStyle(style -> style.withItalic(false)));
     }
 
     @Override

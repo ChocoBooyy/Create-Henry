@@ -27,6 +27,7 @@ import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.FurnaceEngineBlock;
+import com.chocoboy.create_henry.content.fans.processing.SandingType;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
 import com.chocoboy.create_henry.infrastructure.datagen.HenryDatagen;
 
@@ -110,7 +111,7 @@ public class HenryCreate
             @Override
             protected void apply(Void v, net.minecraft.server.packs.resources.ResourceManager mgr,
                                  net.minecraft.util.profiling.ProfilerFiller p) {
-                HenryFanProcessingTypes.SandingType.buildPolishCache(recipeManager);
+                SandingType.buildPolishCache(recipeManager);
             }
         });
     }

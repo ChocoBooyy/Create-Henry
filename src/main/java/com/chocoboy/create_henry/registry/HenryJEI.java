@@ -1,13 +1,16 @@
 package com.chocoboy.create_henry.registry;
 
-import com.chocoboy.create_henry.content.recipes.*;
+import com.chocoboy.create_henry.content.fans.processing.SandingType;
 import com.chocoboy.create_henry.content.jei.*;
-import com.simibubi.create.content.processing.basin.BasinRecipe;
+import com.chocoboy.create_henry.content.recipes.*;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.*;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.content.processing.basin.BasinRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import com.simibubi.create.foundation.utility.CreateLang;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -17,7 +20,6 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
-import mezz.jei.api.runtime.IIngredientManager;
 import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
@@ -30,49 +32,43 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.content.jei.HenryFanProcessingCategory;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
-import com.chocoboy.create_henry.infrastructure.config.HenryRecipesConfig;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
-import com.simibubi.create.foundation.utility.CreateLang;
+import com.chocoboy.create_henry.infrastructure.config.HenryRecipesConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.simibubi.create.compat.jei.CreateJEI.consumeTypedRecipes;
 
 @JeiPlugin
-@SuppressWarnings({"unused", "inline", "unchecked", "all", "removal"})
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HenryJEI implements IModPlugin {
 
-    private static final ResourceLocation MOD_ID = new ResourceLocation(HenryCreate.MOD_ID, "jei_plugin");
+    private static final ResourceLocation PLUGIN_ID = new ResourceLocation(HenryCreate.MOD_ID, "jei_plugin");
 
     @Override
     @Nonnull
     public ResourceLocation getPluginUid() {
-        return MOD_ID;
+        return PLUGIN_ID;
     }
 
     private static final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
-    private IIngredientManager ingredientManager;
 
+    @SuppressWarnings("unchecked")
     private void loadCategories() {
         allCategories.clear();
 
         CreateRecipeCategory<?>
-
                 sanding = builder(SandingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.SANDING)
                         .addRecipeListConsumer(recipes -> consumeAllRecipes(recipe -> {
-                            if (HenryFanProcessingTypes.SandingType.isPolishProcessingRecipe(recipe)) {
-                                SandingRecipe r = HenryFanProcessingTypes.SandingType
-                                        .toSandingRecipe((ProcessingRecipe<?>) recipe);
+                            if (SandingType.isPolishProcessingRecipe(recipe)) {
+                                SandingRecipe r = SandingType.toSandingRecipe((ProcessingRecipe<?>) recipe);
                                 if (r != null) recipes.add(r);
                             }
                         }))
@@ -109,13 +105,12 @@ public class HenryJEI implements IModPlugin {
                         .catalyst(() -> HenryBlocks.HYDRAULIC_PRESS)
                         .itemIcon(HenryBlocks.HYDRAULIC_PRESS.get())
                         .emptyBackground(185, 100)
-                        .build("hydraulic_compacting", info -> (CreateRecipeCategory<HydraulicRecipe>)(Object) new HydraulicCategory((CreateRecipeCategory.Info<BasinRecipe>)(Object) info));
-
+                        .build("hydraulic_compacting", info -> (CreateRecipeCategory<HydraulicRecipe>) (Object)
+                                new HydraulicCategory((CreateRecipeCategory.Info<BasinRecipe>) (Object) info));
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        ingredientManager = registration.getIngredientManager();
         allCategories.forEach(c -> c.registerRecipes(registration));
     }
 
@@ -129,27 +124,26 @@ public class HenryJEI implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         allCategories.forEach(c -> c.registerCatalysts(registration));
 
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation("create", "fan_washing")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(HenryBlocks.INDUSTRIAL_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation("create", "fan_smoking")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(HenryBlocks.INDUSTRIAL_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation("create", "fan_blasting")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(HenryBlocks.INDUSTRIAL_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation("create", "fan_haunting")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(HenryBlocks.INDUSTRIAL_FAN.get()), type));
+        // Industrial fan also processes vanilla Create fan recipes
+        for (String vanillaType : List.of("fan_washing", "fan_smoking", "fan_blasting", "fan_haunting")) {
+            registration.getJeiHelpers()
+                    .getRecipeType(new ResourceLocation("create", vanillaType))
+                    .ifPresent(type -> registration.addRecipeCatalyst(
+                            new ItemStack(HenryBlocks.INDUSTRIAL_FAN.get()), type));
+        }
 
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_sanding")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_seething")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_freezing")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_withering")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "fan_dragon_breathing")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
-        registration.getJeiHelpers().getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "hydraulic_compacting")).ifPresent(type ->
-                registration.addRecipeCatalyst(new ItemStack(HenryBlocks.HYDRAULIC_PRESS.get()), type));
+        // Encased fan also processes Henry fan recipes
+        for (String henryType : List.of("fan_sanding", "fan_seething", "fan_freezing", "fan_withering", "fan_dragon_breathing")) {
+            registration.getJeiHelpers()
+                    .getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, henryType))
+                    .ifPresent(type -> registration.addRecipeCatalyst(
+                            new ItemStack(AllBlocks.ENCASED_FAN.get()), type));
+        }
+
+        registration.getJeiHelpers()
+                .getRecipeType(new ResourceLocation(HenryCreate.MOD_ID, "hydraulic_compacting"))
+                .ifPresent(type -> registration.addRecipeCatalyst(
+                        new ItemStack(HenryBlocks.HYDRAULIC_PRESS.get()), type));
     }
 
     @Override
@@ -157,13 +151,13 @@ public class HenryJEI implements IModPlugin {
         registration.addRecipeTransferHandler(new BlueprintTransferHandler(), RecipeTypes.CRAFTING);
     }
 
-    private <T extends Recipe<?>> HenryJEI.CategoryBuilder<T> builder(Class<? extends T> recipeClass) {
+    private <T extends Recipe<?>> CategoryBuilder<T> builder(Class<? extends T> recipeClass) {
         return new CategoryBuilder<>(recipeClass);
     }
 
     private static class CategoryBuilder<T extends Recipe<?>> {
         private final Class<? extends T> recipeClass;
-        private Predicate<HenryRecipesConfig> predicate = hRecipes -> true;
+        private Predicate<HenryRecipesConfig> predicate = c -> true;
 
         private IDrawable background;
         private IDrawable icon;
@@ -175,56 +169,9 @@ public class HenryJEI implements IModPlugin {
             this.recipeClass = recipeClass;
         }
 
-        private String formatNiceName(String raw) {
-            if (raw.startsWith("fan_"))
-                raw = raw.substring(4);
-
-            String[] parts = raw.split("_");
-            StringBuilder b = new StringBuilder();
-
-            for (String p : parts) {
-                if (p.isEmpty()) continue;
-                b.append(Character.toUpperCase(p.charAt(0)))
-                        .append(p.substring(1))
-                        .append(" ");
-            }
-
-            return "Bulk " + b.toString().trim();
-        }
-
-        public CategoryBuilder<T> enableIf(Predicate<HenryRecipesConfig> predicate) {
-            this.predicate = predicate;
-            return this;
-        }
-
-        public CategoryBuilder<T> enableWhen(Function<HenryRecipesConfig, ConfigBase.ConfigBool> configValue) {
-            predicate = c -> configValue.apply(c).get();
-            return this;
-        }
-
         public CategoryBuilder<T> addRecipeListConsumer(Consumer<List<T>> consumer) {
             recipeListConsumers.add(consumer);
             return this;
-        }
-
-        public CategoryBuilder<T> addRecipes(Supplier<Collection<? extends T>> collection) {
-            return addRecipeListConsumer(recipes -> recipes.addAll(collection.get()));
-        }
-
-        public CategoryBuilder<T> addAllRecipesIf(Predicate<Recipe<?>> pred) {
-            return addRecipeListConsumer(recipes -> consumeAllRecipes(recipe -> {
-                if (pred.test(recipe)) {
-                    recipes.add((T) recipe);
-                }
-            }));
-        }
-
-        public CategoryBuilder<T> addAllRecipesIf(Predicate<Recipe<?>> pred, Function<Recipe<?>, T> converter) {
-            return addRecipeListConsumer(recipes -> consumeAllRecipes(recipe -> {
-                if (pred.test(recipe)) {
-                    recipes.add(converter.apply(recipe));
-                }
-            }));
         }
 
         public CategoryBuilder<T> addTypedRecipes(IRecipeTypeInfo recipeTypeEntry) {
@@ -235,110 +182,27 @@ public class HenryJEI implements IModPlugin {
             return addRecipeListConsumer(recipes -> CreateJEI.<T>consumeTypedRecipes(recipes::add, recipeType.get()));
         }
 
-        public CategoryBuilder<T> addTypedRecipes(Supplier<RecipeType<? extends T>> recipeType, Function<Recipe<?>, T> converter) {
-            return addRecipeListConsumer(recipes -> CreateJEI.<T>consumeTypedRecipes(recipe -> recipes.add(converter.apply(recipe)), recipeType.get()));
-        }
-
-        public CategoryBuilder<T> addTypedRecipesIf(Supplier<RecipeType<? extends T>> recipeType, Predicate<Recipe<?>> pred) {
-            return addRecipeListConsumer(recipes -> CreateJEI.<T>consumeTypedRecipes(recipe -> {
-                if (pred.test(recipe)) {
-                    recipes.add(recipe);
-                }
-            }, recipeType.get()));
-        }
-
-        public CategoryBuilder<T> addTypedRecipesExcluding(Supplier<RecipeType<? extends T>> recipeType,
-                                                           Supplier<RecipeType<? extends T>> excluded) {
-            return addRecipeListConsumer(recipes -> {
-                List<Recipe<?>> excludedRecipes = DDgetTypedRecipes(excluded.get());
-                CreateJEI.<T>consumeTypedRecipes(recipe -> {
-                    for (Recipe<?> excludedRecipe : excludedRecipes) {
-                        if (DDdoInputsMatch(recipe, excludedRecipe)) {
-                            return;
-                        }
-                    }
-                    recipes.add(recipe);
-                }, recipeType.get());
-            });
-        }
-
-        public CategoryBuilder<T> removeRecipes(Supplier<RecipeType<? extends T>> recipeType) {
-            return addRecipeListConsumer(recipes -> {
-                List<Recipe<?>> excludedRecipes = DDgetTypedRecipes(recipeType.get());
-                recipes.removeIf(recipe -> {
-                    for (Recipe<?> excludedRecipe : excludedRecipes) {
-                        if (DDdoInputsMatch(recipe, excludedRecipe)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-            });
-        }
-
-
-        public static List<Recipe<?>> DDgetTypedRecipes(RecipeType<?> type) {
-            List<Recipe<?>> recipes = new ArrayList<>();
-            consumeTypedRecipes(recipes::add, type);
-            return recipes;
-        }
-
-        public static List<Recipe<?>> DDgetTypedRecipesExcluding(RecipeType<?> type, Predicate<Recipe<?>> exclusionPred) {
-            List<Recipe<?>> recipes = DDgetTypedRecipes(type);
-            recipes.removeIf(exclusionPred);
-            return recipes;
-        }
-
-        public static boolean DDdoInputsMatch(Recipe<?> recipe1, Recipe<?> recipe2) {
-            if (recipe1.getIngredients()
-                    .isEmpty()
-                    || recipe2.getIngredients()
-                    .isEmpty()) {
-                return false;
-            }
-            ItemStack[] matchingStacks = recipe1.getIngredients()
-                    .get(0)
-                    .getItems();
-            if (matchingStacks.length == 0) {
-                return false;
-            }
-            return recipe2.getIngredients()
-                    .get(0)
-                    .test(matchingStacks[0]);
-        }
-
         public CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {
             catalysts.add(supplier);
             return this;
         }
 
         public CategoryBuilder<T> catalyst(Supplier<ItemLike> supplier) {
-            return catalystStack(() -> new ItemStack(supplier.get()
-                    .asItem()));
-        }
-
-        public CategoryBuilder<T> icon(IDrawable icon) {
-            this.icon = icon;
-            return this;
+            return catalystStack(() -> new ItemStack(supplier.get().asItem()));
         }
 
         public CategoryBuilder<T> itemIcon(ItemLike item) {
-            icon(new ItemIcon(() -> new ItemStack(item)));
+            icon = new ItemIcon(() -> new ItemStack(item));
             return this;
         }
 
         public CategoryBuilder<T> doubleItemIcon(ItemLike item1, ItemLike item2) {
-            icon(new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2)));
-            return this;
-        }
-
-        public CategoryBuilder<T> background(IDrawable background) {
-            this.background = background;
+            icon = new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
             return this;
         }
 
         public CategoryBuilder<T> emptyBackground(int width, int height) {
-            background(new EmptyBackground(width, height));
+            background = new EmptyBackground(width, height);
             return this;
         }
 
@@ -357,7 +221,7 @@ public class HenryJEI implements IModPlugin {
 
             CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
                     new mezz.jei.api.recipe.RecipeType<>(HenryCreate.asResource(name), recipeClass),
-                    Component.literal(formatNiceName(name)),
+                    Component.translatable(HenryCreate.MOD_ID + ".recipe." + name),
                     background, icon, recipesSupplier, catalysts);
             CreateRecipeCategory<T> category = factory.create(info);
             allCategories.add(category);
@@ -366,11 +230,9 @@ public class HenryJEI implements IModPlugin {
     }
 
     public static void consumeAllRecipes(Consumer<Recipe<?>> consumer) {
-        Objects.requireNonNull(Minecraft.getInstance()
-                        .getConnection())
+        Objects.requireNonNull(Minecraft.getInstance().getConnection())
                 .getRecipeManager()
                 .getRecipes()
                 .forEach(consumer);
     }
-
 }

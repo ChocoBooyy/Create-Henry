@@ -135,6 +135,9 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:createaddition-439890:6084982")
 
+    // Dev-only: Create Garnished
+    // runtimeOnly fg.deobf("curse.maven:garnished-923277:7557977")
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
