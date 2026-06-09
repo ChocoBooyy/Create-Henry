@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "ic2:ingot/tin"
+      "item": "ic2:ingot_tin"
     },
     {
       "chance": 0.5,
-      "item": "ic2:ingot/tin"
+      "item": "ic2:ingot_tin"
     }
   ]
 }

@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "immersiveengineering:ingot/uranium"
+      "item": "immersiveengineering:ingot_uranium"
     },
     {
       "chance": 0.5,
-      "item": "immersiveengineering:ingot/uranium"
+      "item": "immersiveengineering:ingot_uranium"
     }
   ]
 }

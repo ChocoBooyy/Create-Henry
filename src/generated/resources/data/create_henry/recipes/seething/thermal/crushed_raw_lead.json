@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "thermal:ingot/lead"
+      "item": "thermal:lead_ingot"
     },
     {
       "chance": 0.5,
-      "item": "thermal:ingot/lead"
+      "item": "thermal:lead_ingot"
     }
   ]
 }

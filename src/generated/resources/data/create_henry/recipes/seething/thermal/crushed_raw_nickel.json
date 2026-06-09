@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "thermal:ingot/nickel"
+      "item": "thermal:nickel_ingot"
     },
     {
       "chance": 0.5,
-      "item": "thermal:ingot/nickel"
+      "item": "thermal:nickel_ingot"
     }
   ]
 }

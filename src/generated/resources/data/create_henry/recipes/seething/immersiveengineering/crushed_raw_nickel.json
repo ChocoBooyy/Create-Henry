@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "immersiveengineering:ingot/nickel"
+      "item": "immersiveengineering:ingot_nickel"
     },
     {
       "chance": 0.5,
-      "item": "immersiveengineering:ingot/nickel"
+      "item": "immersiveengineering:ingot_nickel"
     }
   ]
 }

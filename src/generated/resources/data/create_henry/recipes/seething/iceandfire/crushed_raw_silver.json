@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "iceandfire:ingot/silver"
+      "item": "iceandfire:silver_ingot"
     },
     {
       "chance": 0.5,
-      "item": "iceandfire:ingot/silver"
+      "item": "iceandfire:silver_ingot"
     }
   ]
 }

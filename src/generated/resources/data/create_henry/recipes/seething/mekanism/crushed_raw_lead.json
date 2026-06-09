@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "mekanism:ingot/lead"
+      "item": "mekanism:ingot_lead"
     },
     {
       "chance": 0.5,
-      "item": "mekanism:ingot/lead"
+      "item": "mekanism:ingot_lead"
     }
   ]
 }

@@ -123,7 +123,7 @@ public final class SeethingRecipeGen extends HenryProcessingRecipeGen {
 				continue;
 
 			String metalName = metal.getName(mod);
-			ResourceLocation ingotId = new ResourceLocation(mod.getId(), "ingot/" + metalName);
+			ResourceLocation ingotId = mod.ingotOf(metalName);
 
 			create(mod.getId() + "/" + crushed.getId().getPath(),
 					b -> b.withItemIngredients(Ingredient.of(crushed::get))

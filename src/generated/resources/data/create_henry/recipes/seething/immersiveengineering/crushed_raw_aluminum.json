@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "immersiveengineering:ingot/aluminum"
+      "item": "immersiveengineering:ingot_aluminum"
     },
     {
       "chance": 0.5,
-      "item": "immersiveengineering:ingot/aluminum"
+      "item": "immersiveengineering:ingot_aluminum"
     }
   ]
 }

@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "galosphere:ingot/silver"
+      "item": "galosphere:silver_ingot"
     },
     {
       "chance": 0.5,
-      "item": "galosphere:ingot/silver"
+      "item": "galosphere:silver_ingot"
     }
   ]
 }

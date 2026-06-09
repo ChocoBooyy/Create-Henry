@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "ic2:ingot/silver"
+      "item": "ic2:ingot_silver"
     },
     {
       "chance": 0.5,
-      "item": "ic2:ingot/silver"
+      "item": "ic2:ingot_silver"
     }
   ]
 }

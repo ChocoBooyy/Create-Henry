@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "item": "immersiveengineering:ingot/silver"
+      "item": "immersiveengineering:ingot_silver"
     },
     {
       "chance": 0.5,
-      "item": "immersiveengineering:ingot/silver"
+      "item": "immersiveengineering:ingot_silver"
     }
   ]
 }
