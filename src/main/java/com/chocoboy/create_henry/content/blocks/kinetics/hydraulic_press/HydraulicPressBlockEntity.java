@@ -39,6 +39,8 @@ import static net.minecraft.ChatFormatting.GRAY;
 @SuppressWarnings({"removal", "all"})
 public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
 
+    private static final Object hydraulicCompactingRecipesKey = new Object();
+
     SmartFluidTankBehaviour tank;
 
     public HydraulicPressBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -127,6 +129,11 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
     @Override
     public boolean canProcessInBulk() {
         return HenryConfigs.server().recipes.hydraulicBulkPressing.get();
+    }
+
+    @Override
+    protected Object getRecipeCacheKey() {
+        return hydraulicCompactingRecipesKey;
     }
 
     @Override
