@@ -1,221 +1,143 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
-        maven { url = 'https://maven.parchmentmc.org' }
-
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${forgegradle_version}", changing: false
-        classpath "org.parchmentmc:librarian:${librarian_version}"
-        classpath "org.spongepowered:mixingradle:0.7.+"
-    }
+plugins {
+    id "fabric-loom" version "1.8.+"
+    id "maven-publish"
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
+base.archivesName = archives_base_name
+group = project.maven_group
 
-jarJar.enable()
-
-// Remove the "-all" suffix from the fat-jar
-tasks.named('jarJar') {
-    // for Gradle 5+:
-    archiveClassifier.set("")
-}
-
-group = 'com.chocoboy.create_henry'
-archivesBaseName = "Create-Henry-${artifact_minecraft_version}"
-version = mod_version+"-"+create
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
+version = "$mod_version+$minecraft_version" + (buildNumber != null ? "-build.$buildNumber" : "")
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+repositories {
+    maven { url = "https://maven.parchmentmc.org" } // Parchment mappings
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    maven { url = "https://maven.createmod.net" } // Catnip, Ponder, Flywheel
+    maven { url = "https://maven.ithundxr.dev/mirror" } // Registrate mirror
+    maven { url = "https://mvn.devos.one/releases" } // Porting Lib releases
+    maven { url = "https://mvn.devos.one/snapshots" } // Registrate (Create fork) + Porting Lib snapshots
+    maven { url = "https://maven.jamieswhiteshirt.com/libs-release" } // Reach Entity Attributes (Porting Lib transitive)
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // Forge Config API Port
+    maven { url = "https://api.modrinth.com/maven" } // Create Fabric
 
-    runs {
-        configureEach {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'mixin.debug.countInjections', 'true'
-
-            mods {
-                create_henry {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        client {
-            property 'forge.enabledGameTestNamespaces', 'create_henry'
-        }
-
-        server {
-            workingDirectory project.file('run-server')
-            property 'forge.enabledGameTestNamespaces', 'create_henry'
-            args '--nogui'
-        }
-
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', 'create_henry'
-        }
-
-        data {
-            workingDirectory project.file('run-data')
-
-            args '--mod', "create_henry", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/'), '--existing-mod', 'create'
-        }
+    maven { // Fabric ASM for Porting Lib
+        url = "https://jitpack.io/"
+        content { includeGroupAndSubgroups("com.github") }
     }
+
+    maven { url = "https://maven.shedaniel.me" } // Cloth Config, REI
+    maven { url = "https://maven.blamejared.com" } // JEI
+    maven { url = "https://maven.terraformersmc.com/releases" } // Mod Menu, EMI
 }
 
-repositories {
-    maven {
-        // Create, Ponder, Flywheel
-        name = 'Create maven'
-        url = "https://maven.createmod.net"
-    }
-    maven {
-        // Registrate
-        name = 'tterrag maven'
-        url = 'https://maven.tterrag.com/'
-    }
-    maven {
-        // Registrate
-        name = 'ithundxr maven'
-        url = "https://maven.ithundxr.dev/mirror"
-    }
-    maven {
-        // ForgeConfigAPIPort
-        name = 'ForgeConfigAPIPort'
-        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
-    }
-    maven {
-        // location of the maven that hosts JEI files since January 2023
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.dev"
-    }
-    maven {
-        url "https://cursemaven.com"
-    }
+loom {
+    accessWidenerPath = file("src/main/resources/create_henry.accesswidener")
+}
 
-    flatDir {
-        dirs "libs"
+configurations.configureEach {
+    resolutionStrategy {
+        // Make sure the desired version of loader is used. Sometimes old versions are pulled in transitively.
+        force("net.fabricmc:fabric-loader:$fabric_loader_version")
     }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // Setup
+    minecraft("com.mojang:minecraft:$minecraft_version")
+    mappings(loom.layered {
+        it.officialMojangMappings { nameSyntheticMembers = false }
+        it.parchment("org.parchmentmc.data:parchment-$minecraft_version:$parchment_version@zip")
+    })
+    modImplementation("net.fabricmc:fabric-loader:$fabric_loader_version")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
-    implementation(fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false })
-    implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
-    compileOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-api-${minecraft_version}:${flywheel_version}"))
-    runtimeOnly(fg.deobf("dev.engine-room.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}"))
-    implementation(fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}"))
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation("io.github.llamalad7:mixinextras-forge:0.4.1")
+    // Create Fabric. Its only declared dependency is fabric-api; catnip/ponder/flywheel/registrate
+    // are jar-in-jar and not on the compile classpath, so they are declared explicitly below.
+    modImplementation("maven.modrinth:create-fabric:$create_version")
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}-forge-api:${jei_version}")
-    runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
-
-    compileOnly fg.deobf("curse.maven:createaddition-439890:6084982")
-
-    // Dev-only: Create Garnished
-    // runtimeOnly fg.deobf("curse.maven:garnished-923277:7557977")
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-}
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-    exclude '.cache/'
-}
-
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "create_henry",
-                "Specification-Vendor"    : "chocoboy",
-                "Specification-Version"   : "1",
-                'Implementation-Title'    : project.jar.archiveBaseName,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "chocoboy",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        ])
+    // Create platform libraries (compile-time copies of the bundled JIJ artifacts).
+    // Catnip/Ponder declare a flywheel under the (unpublished) dev.engine_room.flywheel group, so the
+    // transitive flywheel is excluded and the correct dev.engine-room.flywheel artifacts are pinned below.
+    modCompileOnly("net.createmod.catnip:Catnip-Fabric-1.20.1:$catnip_version") {
+        exclude group: "dev.engine_room.flywheel"
     }
-    finalizedBy 'reobfJar'
+    modCompileOnly("net.createmod.ponder:Ponder-Fabric-1.20.1:$ponder_version") {
+        exclude group: "dev.engine_room.flywheel"
+    }
+    modCompileOnly("dev.engine-room.flywheel:flywheel-fabric-api-1.20.1:$flywheel_version")
+    modRuntimeOnly("dev.engine-room.flywheel:flywheel-fabric-1.20.1:$flywheel_version")
+
+    // Registrate (the Create fork Create Fabric 6.0.8 ships, hosted on the devos snapshots maven).
+    modCompileOnly("com.tterrag.registrate_fabric:Registrate:$registrate_version")
+
+    // Forge Config API Port: provides net.minecraftforge.common.ForgeConfigSpec on Fabric so the
+    // existing config code compiles.
+    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:$forge_config_api_port_version")
+
+    // Porting Lib (fluids / transfer / base / accessors) for later capability + fluid porting.
+    modImplementation("io.github.fabricators_of_create.Porting-Lib:fluids:$porting_lib_version")
+    modImplementation("io.github.fabricators_of_create.Porting-Lib:transfer:$porting_lib_version")
+    modImplementation("io.github.fabricators_of_create.Porting-Lib:base:$porting_lib_version")
+    modImplementation("io.github.fabricators_of_create.Porting-Lib:accessors:$porting_lib_version")
+
+    // Development QOL
+    modLocalRuntime("com.terraformersmc:modmenu:$modmenu_version")
+
+    // Recipe Viewers - Create Fabric supports JEI, REI, and EMI.
+    // See gradle.properties (recipe_viewer) to choose which to use at runtime.
+    switch (recipe_viewer.toLowerCase(Locale.ROOT)) {
+        case "jei": modLocalRuntime("mezz.jei:jei-$minecraft_version-fabric:$jei_version"); break
+        case "rei": modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"); break
+        case "emi": modLocalRuntime("dev.emi:emi-fabric:$emi_version"); break
+        case "disabled": break
+        default: println("Unknown recipe viewer specified: $recipe_viewer. Must be JEI, REI, EMI, or disabled.")
+    }
 }
 
-//Copied from Creates Github
+processResources {
+    Map<String, Object> properties = [
+            "version"              : version,
+            "fabric_loader_version": fabric_loader_version,
+            "fabric_api_version"   : fabric_api_version,
+            "create_version"       : create_version,
+            "minecraft_version"    : minecraft_version
+    ]
 
-afterEvaluate {
-    tasks.configureReobfTaskForReobfJar.mustRunAfter(tasks.compileJava)
-    tasks.configureReobfTaskForReobfJarJar.mustRunAfter(tasks.compileJava)
+    inputs.properties(properties)
+
+    filesMatching("fabric.mod.json") {
+        expand properties
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
-
-compileJava {
-    options.compilerArgs = ['-Xdiags:verbose']
-}
-
-task jarJarRelease {
-    group = 'jarjar'
-    doLast {
-        tasks.jarJar {
-            classifier = ''
-        }
-    }
-    finalizedBy tasks.jarJar
+    options.encoding = "UTF-8"
+    options.release = 17
 }
 
 java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
     withSourcesJar()
-    withJavadocJar()
 }
 
-void addLicense(jarTask) {
-    jarTask.from('LICENSE') {
+jar {
+    from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
-jar.finalizedBy('reobfJar')
-tasks.jarJar.finalizedBy('reobfJarJar')
-
-addLicense(jar)
-addLicense(tasks.jarJar)
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = archivesBaseName
-
+            artifactId = project.archives_base_name
             from components.java
-            fg.component(it)
-            jarJar.component(it)
         }
     }
 
     repositories {
-        if (project.hasProperty('mavendir')) {
+        if (project.hasProperty("mavendir")) {
             maven { url mavendir }
         }
     }
