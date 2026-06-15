@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "create_henry",
+  "version": "${version}",
+  "name": "Create: Henry",
+  "description": "Create: Henry is an addon for the Create mod that add random QoL, items, & blocks features that relates to old Create & New Create versions! It is also a continued version of the addon \"Create: Dreams & Desires\" for 1.20.1.",
+  "authors": [
+    "ChocoBoy",
+    "TryMyWagon",
+    "LopyLuna"
+  ],
+  "contact": {
+    "issues": "https://github.com/ChocoBooyy/Create-Henry/issues"
+  },
+  "license": "MIT",
+  "icon": "pack.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.chocoboy.create_henry.HenryCreate"
+    ],
+    "client": [
+      "com.chocoboy.create_henry.HenryClient"
+    ],
+    "fabric-datagen": [
+      "com.chocoboy.create_henry.infrastructure.datagen.HenryDatagen"
+    ]
+  },
+  "accessWidener": "create_henry.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.16",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*",
+    "create": ">=6.0.8"
+  }
+}
