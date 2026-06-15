@@ -38,9 +38,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public class SmartHopperBlock extends Block implements IWrenchable, IBE<SmartHopperBlockEntity> {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;

@@ -7,9 +7,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public abstract class HenryFanProcessingRecipe extends ProcessingRecipe<HenryFanProcessingRecipe.Wrapper> {
 
     protected HenryFanProcessingRecipe(IRecipeTypeInfo recipeType, ProcessingRecipeParams params) {

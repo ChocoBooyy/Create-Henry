@@ -26,9 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 @SuppressWarnings({"deprecation", "all"})
 public class MultiMeterBlock extends DirectionalAxisKineticBlock implements IBE<MultiMeterBlockEntity> {
     public static final GaugeShaper GAUGE = GaugeShaper.make();

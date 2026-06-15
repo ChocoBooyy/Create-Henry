@@ -15,11 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-@ParametersAreNonnullByDefault
 @SuppressWarnings("unused")
 public final class AdvancedCraftingRecipeGen extends BaseRecipeProvider {
 

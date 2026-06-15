@@ -22,11 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 import com.chocoboy.create_henry.registry.HenryPartialModels;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.function.Supplier;
 
-@ParametersAreNonnullByDefault
 public abstract class HenryFanProcessingCategory<T extends Recipe<?>> extends CreateRecipeCategory<T> {
 
     protected static final int SCALE = 24;

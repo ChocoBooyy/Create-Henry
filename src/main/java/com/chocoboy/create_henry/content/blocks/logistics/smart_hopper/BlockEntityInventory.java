@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public abstract class BlockEntityInventory<BE extends SyncedBlockEntity> implements Container, IItemHandlerModifiable {
@@ -190,7 +189,7 @@ public abstract class BlockEntityInventory<BE extends SyncedBlockEntity> impleme
         return true;
     }
 
-    public int getStackLimit(int slot, @Nonnull ItemStack stack) {
+    public int getStackLimit(int slot, @NotNull ItemStack stack) {
         return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
     }
 

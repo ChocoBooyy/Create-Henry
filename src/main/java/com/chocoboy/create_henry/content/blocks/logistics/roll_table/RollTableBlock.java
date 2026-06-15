@@ -29,15 +29,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 public class RollTableBlock extends Block implements IWrenchable, IBE<RollTableBlockEntity> {
     public RollTableBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
         ItemStack stack = player.getItemInHand(hand);
         return onBlockEntityUse(level, pos, be -> {
@@ -60,7 +57,6 @@ public class RollTableBlock extends Block implements IWrenchable, IBE<RollTableB
 
 
     @Override
-    @ParametersAreNonnullByDefault
     public void updateEntityAfterFallOn(BlockGetter level, Entity entity) {
         super.updateEntityAfterFallOn(level, entity);
         if (!(entity instanceof ItemEntity itemEntity)) return;
@@ -77,7 +73,6 @@ public class RollTableBlock extends Block implements IWrenchable, IBE<RollTableB
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
             return;

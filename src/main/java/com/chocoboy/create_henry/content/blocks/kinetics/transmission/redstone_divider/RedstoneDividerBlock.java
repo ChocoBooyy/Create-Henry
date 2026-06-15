@@ -18,9 +18,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.ticks.TickPriority;
 import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 @SuppressWarnings({"deprecation", "all"})
 public class RedstoneDividerBlock extends AbstractEncasedShaftBlock implements IBE<RedstoneDividerBlockEntity> {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;

@@ -13,11 +13,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import com.chocoboy.create_henry.registry.HenryParticleTypes;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Locale;
 
 @SuppressWarnings({"deprecation", "all"})
-@ParametersAreNonnullByDefault
 public class SmokeJetParticleData implements ParticleOptions, ICustomParticleDataWithSprite<SmokeJetParticleData> {
 
     public static final Codec<SmokeJetParticleData> CODEC = RecordCodecBuilder.create(i -> i

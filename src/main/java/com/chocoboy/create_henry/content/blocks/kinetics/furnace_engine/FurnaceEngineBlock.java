@@ -48,12 +48,10 @@ import org.jetbrains.annotations.NotNull;
 import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @SuppressWarnings({"all"})
-@ParametersAreNonnullByDefault
 @Mod.EventBusSubscriber
 public class FurnaceEngineBlock extends FaceAttachedHorizontalDirectionalBlock implements SimpleWaterloggedBlock, IWrenchable, IBE<FurnaceEngineBlockEntity> {
 

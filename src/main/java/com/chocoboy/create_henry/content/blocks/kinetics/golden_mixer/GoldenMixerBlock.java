@@ -23,9 +23,6 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public class GoldenMixerBlock extends KineticBlock implements IBE<GoldenMixerBlockEntity>, ICogWheel {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 

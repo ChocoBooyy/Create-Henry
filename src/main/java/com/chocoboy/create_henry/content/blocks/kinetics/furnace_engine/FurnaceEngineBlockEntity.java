@@ -28,7 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.List;
 

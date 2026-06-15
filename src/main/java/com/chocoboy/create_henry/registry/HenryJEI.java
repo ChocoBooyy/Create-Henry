@@ -35,8 +35,7 @@ import com.chocoboy.create_henry.content.jei.HenryFanProcessingCategory;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
 import com.chocoboy.create_henry.infrastructure.config.HenryRecipesConfig;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -45,14 +44,13 @@ import java.util.function.Supplier;
 import static com.simibubi.create.compat.jei.CreateJEI.consumeTypedRecipes;
 
 @JeiPlugin
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HenryJEI implements IModPlugin {
 
     private static final ResourceLocation PLUGIN_ID = new ResourceLocation(HenryCreate.MOD_ID, "jei_plugin");
 
     @Override
-    @Nonnull
+    @NotNull
     public ResourceLocation getPluginUid() {
         return PLUGIN_ID;
     }

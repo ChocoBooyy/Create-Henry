@@ -21,7 +21,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidInteractionRegistry;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 

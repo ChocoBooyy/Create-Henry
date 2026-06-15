@@ -18,9 +18,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 @SuppressWarnings({"deprecation"})
 public class IndustrialFanBlock extends DirectionalKineticBlock implements IBE<IndustrialFanBlockEntity>, ICogWheel {

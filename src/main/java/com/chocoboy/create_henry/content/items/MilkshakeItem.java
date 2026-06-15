@@ -9,9 +9,6 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public class MilkshakeItem extends Item {
     public MilkshakeItem(Properties properties) {
         super(properties);
