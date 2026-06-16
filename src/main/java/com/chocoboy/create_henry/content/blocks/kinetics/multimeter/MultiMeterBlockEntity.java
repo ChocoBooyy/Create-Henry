@@ -190,7 +190,7 @@ public class MultiMeterBlockEntity extends KineticBlockEntity implements IHaveGo
         }
 
         if (!worldPosition.equals(lastSent))
-            HenryPackets.getChannel().sendToServer(new GaugeObservedPacket(lastSent = worldPosition));
+            HenryPackets.sendToServer(new GaugeObservedPacket(lastSent = worldPosition));
 
         return true;
     }
