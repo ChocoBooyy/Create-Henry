@@ -1,19 +1,17 @@
 package com.chocoboy.create_henry;
 
 import net.createmod.ponder.foundation.PonderIndex;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.fabricmc.api.ClientModInitializer;
 import com.chocoboy.create_henry.infrastructure.ponder.HenryPonderPlugin;
 import com.chocoboy.create_henry.registry.HenryParticleTypes;
+import com.chocoboy.create_henry.registry.HenryPartialModels;
 
-public class HenryClient {
+public class HenryClient implements ClientModInitializer {
 
-    public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
-        modEventBus.addListener(HenryClient::clientInit);;
-        modEventBus.addListener(HenryParticleTypes::registerFactories);
-    }
-
-    public static void clientInit(final FMLClientSetupEvent event) {
+    @Override
+    public void onInitializeClient() {
+        HenryPartialModels.init();
         PonderIndex.addPlugin(new HenryPonderPlugin());
+        HenryParticleTypes.registerFactories();
     }
 }

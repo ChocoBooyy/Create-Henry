@@ -9,40 +9,42 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.FurnaceEngineBlock;
 import com.chocoboy.create_henry.content.fans.processing.SandingType;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
-import com.chocoboy.create_henry.infrastructure.datagen.HenryDatagen;
 
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 
-@SuppressWarnings({"removal","all"})
-@Mod(HenryCreate.MOD_ID)
-public class HenryCreate
-{
+public class HenryCreate implements ModInitializer {
+
     public static final String NAME = "Create: Henry";
     public static final String MOD_ID = "create_henry";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final Random RANDOM = new Random();
+
+    @Nullable
+    private static MinecraftServer server;
 
     @Nullable
     public static KineticStats create(Item item) {
@@ -61,64 +63,31 @@ public class HenryCreate
                             .andThen(TooltipModifier.mapNull(HenryCreate.create(item)))
             );
 
-    public HenryCreate()
-    {
-        ModLoadingContext modLoadingContext = ModLoadingContext.get();
-
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
-
-        REGISTRATE.registerEventListeners(modEventBus);
-
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> HenryPartialModels::init);
-
+    @Override
+    public void onInitialize() {
         HenryTags.init();
-        HenryCreativeModeTabs.register(modEventBus);
+        HenryCreativeModeTabs.register();
         HenryDisplaySources.register();
         HenryBlocks.register();
         HenryItems.register();
         HenryFluids.register();
         HenryBlockEntityTypes.register();
-        HenryRecipeTypes.register(modEventBus);
-        HenryParticleTypes.register(modEventBus);
+        HenryRecipeTypes.register();
+        HenryParticleTypes.register();
+
+        REGISTRATE.register();
+
         HenryPackets.registerPackets();
+        HenryConfigs.register();
 
-        HenryConfigs.register(modLoadingContext);
-
-        modEventBus.addListener(HenryCreate::init);
-        modEventBus.addListener(HenryCreate::onRegister);
-        modEventBus.addListener(EventPriority.LOWEST, HenryDatagen::gatherData);
-
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> HenryClient.onCtorClient(modEventBus, forgeEventBus));
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-        forgeEventBus.addListener(HenryCreate::onAddReloadListeners);
-
-    }
-
-    public static void init(final FMLCommonSetupEvent event) {
-        event.enqueueWork(HenryFluids::registerFluidInteractions);
-    }
-
-    public static void onAddReloadListeners(final AddReloadListenerEvent event) {
-        net.minecraft.world.item.crafting.RecipeManager recipeManager =
-                event.getServerResources().getRecipeManager();
-        event.addListener(new net.minecraft.server.packs.resources.SimplePreparableReloadListener<Void>() {
-            @Override
-            protected Void prepare(net.minecraft.server.packs.resources.ResourceManager mgr,
-                                   net.minecraft.util.profiling.ProfilerFiller p) { return null; }
-            @Override
-            protected void apply(Void v, net.minecraft.server.packs.resources.ResourceManager mgr,
-                                 net.minecraft.util.profiling.ProfilerFiller p) {
-                SandingType.buildPolishCache(recipeManager);
-            }
-        });
-    }
-
-
-    public static void onRegister(final RegisterEvent event) {
         HenryFanProcessingTypes.init();
+        HenryFluids.registerFluidInteractions();
+
+        ServerLifecycleEvents.SERVER_STARTING.register(startingServer -> server = startingServer);
+        ServerLifecycleEvents.SERVER_STOPPED.register(stoppedServer -> server = null);
+
+        ResourceManagerHelper.get(PackType.SERVER_DATA)
+                .registerReloadListener(new SandingPolishCacheReloadListener());
     }
 
     public static ResourceLocation asResource(String path) {
@@ -127,5 +96,32 @@ public class HenryCreate
 
     public static CreateRegistrate registrate() {
         return REGISTRATE;
+    }
+
+    private static final class SandingPolishCacheReloadListener implements IdentifiableResourceReloadListener {
+
+        private static final ResourceLocation ID = HenryCreate.asResource("sanding_polish_cache");
+
+        @Override
+        public ResourceLocation getFabricId() {
+            return ID;
+        }
+
+        @Override
+        public List<ResourceLocation> getFabricDependencies() {
+            return List.of(ResourceReloadListenerKeys.RECIPES);
+        }
+
+        @Override
+        public CompletableFuture<Void> reload(PreparableReloadListener.PreparationBarrier barrier,
+                                              ResourceManager manager, ProfilerFiller prepareProfiler,
+                                              ProfilerFiller applyProfiler, Executor prepareExecutor,
+                                              Executor applyExecutor) {
+            return barrier.wait(null).thenRunAsync(() -> {
+                if (server != null) {
+                    SandingType.buildPolishCache(server.getRecipeManager());
+                }
+            }, applyExecutor);
+        }
     }
 }

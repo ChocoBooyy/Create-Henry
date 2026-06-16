@@ -1,22 +1,21 @@
 package com.chocoboy.create_henry.registry;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import it.unimi.dsi.fastutil.objects.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.mutable.MutableObject;
 import com.chocoboy.create_henry.HenryCreate;
 
@@ -28,19 +27,16 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class HenryCreativeModeTabs {
-	private static final DeferredRegister<CreativeModeTab> REGISTER =
-			DeferredRegister.create(Registries.CREATIVE_MODE_TAB, HenryCreate.MOD_ID);
+	public static final ResourceKey<CreativeModeTab> BASE_CREATIVE_TAB =
+			ResourceKey.create(Registries.CREATIVE_MODE_TAB, HenryCreate.asResource("base"));
 
-	public static final RegistryObject<CreativeModeTab> BASE_CREATIVE_TAB = REGISTER.register("base",
-			() -> CreativeModeTab.builder()
-					.title(Component.translatable("itemGroup.create_henry.base"))
-					.withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
-					.icon(HenryBlocks.INDUSTRIAL_FAN::asStack)
-					.displayItems(new RegistrateDisplayItemsGenerator(true, HenryCreativeModeTabs.BASE_CREATIVE_TAB))
-					.build());
-
-	public static void register(IEventBus modEventBus) {
-		REGISTER.register(modEventBus);
+	public static void register() {
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, BASE_CREATIVE_TAB,
+				FabricItemGroup.builder()
+						.title(Component.translatable("itemGroup.create_henry.base"))
+						.icon(HenryBlocks.INDUSTRIAL_FAN::asStack)
+						.displayItems(new RegistrateDisplayItemsGenerator(true, BASE_CREATIVE_TAB))
+						.build());
 	}
 
 	private static class RegistrateDisplayItemsGenerator implements CreativeModeTab.DisplayItemsGenerator {
@@ -48,7 +44,7 @@ public class HenryCreativeModeTabs {
 
 		static {
 			MutableObject<Predicate<Item>> isItem3d = new MutableObject<>(item -> false);
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> isItem3d.setValue(item -> {
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> isItem3d.setValue(item -> {
 				ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 				BakedModel model = renderer.getModel(new ItemStack(item), null, null, 0);
 				return model.isGui3d();
@@ -57,9 +53,9 @@ public class HenryCreativeModeTabs {
 		}
 
 		private final boolean addItems;
-		private final RegistryObject<CreativeModeTab> tabFilter;
+		private final ResourceKey<CreativeModeTab> tabFilter;
 
-		public RegistrateDisplayItemsGenerator(boolean addItems, RegistryObject<CreativeModeTab> tabFilter) {
+		public RegistrateDisplayItemsGenerator(boolean addItems, ResourceKey<CreativeModeTab> tabFilter) {
 			this.addItems = addItems;
 			this.tabFilter = tabFilter;
 		}
@@ -117,7 +113,7 @@ public class HenryCreativeModeTabs {
 
 		// Returns the registered bucket item for the given fluid id, or null if missing/AIR
 		private static Item bucket(String fluidId) {
-			Item item = ForgeRegistries.ITEMS.getValue(HenryCreate.asResource(fluidId + "_bucket"));
+			Item item = BuiltInRegistries.ITEM.get(HenryCreate.asResource(fluidId + "_bucket"));
 			return (item == null || item == Items.AIR) ? null : item;
 		}
 

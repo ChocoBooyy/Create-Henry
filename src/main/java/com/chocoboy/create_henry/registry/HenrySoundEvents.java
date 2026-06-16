@@ -4,7 +4,6 @@ import com.chocoboy.create_henry.HenryCreate;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllSoundEvents;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -13,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -46,8 +44,8 @@ public class HenrySoundEvents {
         for (var entry : ALL.values()) entry.prepare();
     }
 
-    public static void register(RegisterEvent event) {
-        event.register(Registries.SOUND_EVENT, helper -> ALL.values().forEach(entry -> entry.register(helper)));
+    public static void register() {
+        ALL.values().forEach(AllSoundEvents.SoundEntry::register);
     }
 
     public static void provideLang(BiConsumer<String, String> consumer) {

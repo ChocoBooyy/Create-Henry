@@ -5,19 +5,16 @@ import com.chocoboy.create_henry.content.recipes.*;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import net.minecraft.core.registries.Registries;
+import io.github.fabricators_of_create.porting_lib.util.ShapedRecipeUtil;
+import io.github.fabricators_of_create.porting_lib.util.SimpleRecipeType;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.Nullable;
 
 import net.createmod.catnip.lang.Lang;
 
@@ -34,25 +31,25 @@ public enum HenryRecipeTypes implements IRecipeTypeInfo {
 	HYDRAULIC_COMPACTING(HydraulicRecipe::new);
 
 	private final ResourceLocation id;
-	private final RegistryObject<RecipeSerializer<?>> serializerObject;
-	private final Supplier<RecipeType<?>> type;
+	private final RecipeSerializer<?> serializer;
+	private final RecipeType<?> type;
 
 	HenryRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
 		String name = Lang.asId(name());
 		id = HenryCreate.asResource(name);
-		serializerObject = Registers.SERIALIZER_REGISTER.register(name, serializerSupplier);
-		@Nullable RegistryObject<RecipeType<?>> typeObject = Registers.TYPE_REGISTER.register(name, () -> RecipeType.simple(id));
-		type = typeObject;
+		serializer = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, serializerSupplier.get());
+		type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, new SimpleRecipeType<>(id));
 	}
 
 	HenryRecipeTypes(ProcessingRecipeFactory<?> processingFactory) {
 		this(() -> new ProcessingRecipeSerializer<>(processingFactory));
 	}
 
-	public static void register(IEventBus modEventBus) {
-		ShapedRecipe.setCraftingSize(9, 9);
-		Registers.SERIALIZER_REGISTER.register(modEventBus);
-		Registers.TYPE_REGISTER.register(modEventBus);
+	public static void register() {
+		ShapedRecipeUtil.setCraftingSize(9, 9);
+		for (HenryRecipeTypes ignored : values()) {
+			// Touching the enum forces eager registration through the constructors.
+		}
 	}
 
 	@Override
@@ -63,23 +60,18 @@ public enum HenryRecipeTypes implements IRecipeTypeInfo {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends RecipeSerializer<?>> T getSerializer() {
-		return (T) serializerObject.get();
+		return (T) serializer;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends RecipeType<?>> T getType() {
-		return (T) type.get();
+		return (T) type;
 	}
 
 	public <C extends Container, T extends Recipe<C>> Optional<T> find(C inv, Level world) {
 		return world.getRecipeManager()
 				.getRecipeFor(getType(), inv, world);
-	}
-
-	private static class Registers {
-		private static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, HenryCreate.MOD_ID);
-		private static final DeferredRegister<RecipeType<?>> TYPE_REGISTER = DeferredRegister.create(Registries.RECIPE_TYPE, HenryCreate.MOD_ID);
 	}
 
 }
