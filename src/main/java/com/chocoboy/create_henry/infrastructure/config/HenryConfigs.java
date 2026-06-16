@@ -1,13 +1,12 @@
 package com.chocoboy.create_henry.infrastructure.config;
 
+import com.chocoboy.create_henry.HenryCreate;
 import com.simibubi.create.api.stress.BlockStressValues;
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
+import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents;
 import net.createmod.catnip.config.ConfigBase;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.EnumMap;
@@ -16,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class HenryConfigs {
 
 	private static final Map<ModConfig.Type, ConfigBase> CONFIGS = new EnumMap<>(ModConfig.Type.class);
@@ -49,31 +47,26 @@ public class HenryConfigs {
 		return config;
 	}
 
-	public static void register(ModLoadingContext context) {
+	public static void register() {
 		client = register(HenryClientConfig::new, ModConfig.Type.CLIENT);
 		server = register(HenryServerConfig::new, ModConfig.Type.SERVER);
 
 		for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
-			context.registerConfig(pair.getKey(), pair.getValue().specification);
+			ForgeConfigRegistry.INSTANCE.register(HenryCreate.MOD_ID, pair.getKey(), pair.getValue().specification);
+
+		ModConfigEvents.loading(HenryCreate.MOD_ID).register(
+				config -> handleConfigEvent(config, ConfigBase::onLoad));
+		ModConfigEvents.reloading(HenryCreate.MOD_ID).register(
+				config -> handleConfigEvent(config, ConfigBase::onReload));
 
 		HenryStressConfig stress = server().kinetics.stressValues;
 		BlockStressValues.IMPACTS.registerProvider(stress::getImpact);
 		BlockStressValues.CAPACITIES.registerProvider(stress::getCapacity);
 	}
 
-	@SubscribeEvent
-	public static void onLoad(ModConfigEvent.Loading event) {
-		handleConfigEvent(event, ConfigBase::onLoad);
-	}
-
-	@SubscribeEvent
-	public static void onReload(ModConfigEvent.Reloading event) {
-		handleConfigEvent(event, ConfigBase::onReload);
-	}
-
-	private static void handleConfigEvent(ModConfigEvent event, Consumer<ConfigBase> action) {
+	private static void handleConfigEvent(ModConfig config, Consumer<ConfigBase> action) {
 		CONFIGS.values().stream()
-				.filter(config -> config.specification == event.getConfig().getSpec())
+				.filter(c -> c.specification == config.getSpec())
 				.forEach(action);
 	}
 }
