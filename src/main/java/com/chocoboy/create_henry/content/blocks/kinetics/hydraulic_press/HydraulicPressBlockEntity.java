@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -99,7 +100,7 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
-        tank = SmartFluidTankBehaviour.single(this, 1000);
+        tank = SmartFluidTankBehaviour.single(this, FluidConstants.BUCKET);
         behaviours.add(tank);
     }
 
@@ -153,9 +154,10 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
     }
 
     protected void drainFluid() {
-        long amount = getProcessFluid(Fluids.LAVA)
+        int drainMillibuckets = getProcessFluid(Fluids.LAVA)
                 ? HenryConfigs.server().recipes.hydraulicLavaDrainPressing.get()
                 : HenryConfigs.server().recipes.hydraulicFluidDrainPressing.get();
+        long amount = drainMillibuckets * (FluidConstants.BUCKET / 1000);
         FluidVariant variant = tank.getPrimaryHandler().getFluid().getType();
         if (variant.isBlank()) return;
         try (Transaction transaction = Transaction.openOuter()) {
@@ -170,7 +172,7 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
 
     public boolean canProcessWithFluid() {
         return (!tank.isEmpty() && (getProcessFluid(Fluids.LAVA) || getProcessFluid(Fluids.WATER))
-                && (tank.getPrimaryHandler().getFluidAmount() >= 1000));
+                && (tank.getPrimaryHandler().getFluidAmount() >= FluidConstants.BUCKET));
     }
 
     @Override
