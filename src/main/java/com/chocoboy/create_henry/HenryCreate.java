@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import com.chocoboy.create_henry.content.blocks.kinetics.furnace_engine.FurnaceEngineBlock;
 import com.chocoboy.create_henry.content.blocks.logistics.smart_hopper.SmartHopperBlockEntity;
+import com.chocoboy.create_henry.content.blocks.kinetics.hydraulic_press.HydraulicPressBlockEntity;
 import com.chocoboy.create_henry.content.fans.processing.SandingType;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
 
@@ -85,6 +86,7 @@ public class HenryCreate implements ModInitializer {
         HenryFluids.registerFluidInteractions();
 
         SmartHopperBlockEntity.registerCapabilities();
+        HydraulicPressBlockEntity.registerCapabilities();
 
         ServerLifecycleEvents.SERVER_STARTING.register(startingServer -> server = startingServer);
         ServerLifecycleEvents.SERVER_STOPPED.register(stoppedServer -> server = null);

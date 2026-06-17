@@ -34,9 +34,11 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 
 public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<FluidHatchBlockEntity>, IWrenchable, ProperWaterloggedBlock {
@@ -83,7 +85,7 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
         var neighborBE = level.getBlockEntity(neighborPos);
         if (neighborBE == null) return InteractionResult.FAIL;
 
-        var targetInv = neighborBE.getCapability(ForgeCapabilities.FLUID_HANDLER, facing.getOpposite()).orElse(null);
+        var targetInv = FluidStorage.SIDED.find(level, neighborPos, facing.getOpposite());
         if (targetInv == null) return InteractionResult.FAIL;
 
         var filter = BlockEntityBehaviour.get(level, pos, FilteringBehaviour.TYPE);
@@ -105,11 +107,11 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
             var fluidStack = emptyingResult.getFirst();
 
             if (fluidStack.isEmpty() || !filter.test(fluidStack)) continue;
-            if (fluidStack.getAmount() != targetInv.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE)) continue;
+            if (fluidStack.getAmount() != simulateFill(targetInv, fluidStack)) continue;
 
             var copyOfItem = item.copy();
             emptyingResult = GenericItemEmptying.emptyItem(level, copyOfItem, false);
-            targetInv.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+            executeFill(targetInv, fluidStack);
 
             if (!player.isCreative() && !(neighborBE instanceof CreativeFluidTankBlockEntity)) {
                 if (copyOfItem.isEmpty()) inventory.setItem(i, emptyingResult.getSecond());
@@ -129,6 +131,19 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
         CreateLang.translate(depositItemInHand ? "item_hatch.deposit_item" : "item_hatch.deposit_inventory").sendStatus(player);
         return InteractionResult.SUCCESS;
+    }
+
+    private static long simulateFill(Storage<FluidVariant> target, io.github.fabricators_of_create.porting_lib.fluids.FluidStack fluidStack) {
+        try (Transaction transaction = Transaction.openOuter()) {
+            return target.insert(fluidStack.getType(), fluidStack.getAmount(), transaction);
+        }
+    }
+
+    private static void executeFill(Storage<FluidVariant> target, io.github.fabricators_of_create.porting_lib.fluids.FluidStack fluidStack) {
+        try (Transaction transaction = Transaction.openOuter()) {
+            target.insert(fluidStack.getType(), fluidStack.getAmount(), transaction);
+            transaction.commit();
+        }
     }
 
     @Override

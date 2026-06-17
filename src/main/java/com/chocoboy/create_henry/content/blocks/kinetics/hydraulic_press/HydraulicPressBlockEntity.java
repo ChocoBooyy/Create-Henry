@@ -25,12 +25,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
+import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
         CreateLang.translate("gui.goggles.fluid_container")
                 .forGoggles(tooltip);
 
-        FluidStack fluidStack = tank.getPrimaryHandler().getFluidInTank(0);
+        FluidStack fluidStack = tank.getPrimaryHandler().getFluid();
         if (!fluidStack.isEmpty()) {
             CreateLang.fluidName(fluidStack)
                     .style(ChatFormatting.GRAY)
@@ -64,14 +66,14 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
                             .add(mb)
                             .style(ChatFormatting.GOLD))
                     .text(ChatFormatting.GRAY, " / ")
-                    .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                    .add(CreateLang.number(tank.getPrimaryHandler().getCapacity())
                             .add(mb)
                             .style(ChatFormatting.DARK_GRAY))
                     .forGoggles(tooltip, 1);
 
         } else if (fluidStack.isEmpty()) {
             CreateLang.translate("gui.goggles.fluid_container.capacity")
-                    .add(CreateLang.number(tank.getPrimaryHandler().getTankCapacity(0))
+                    .add(CreateLang.number(tank.getPrimaryHandler().getCapacity())
                             .add(mb)
                             .style(ChatFormatting.GOLD))
                     .style(ChatFormatting.GRAY)
@@ -101,14 +103,20 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
         behaviours.add(tank);
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER &&
-                side.getAxis() == getBlockState().getValue(HydraulicPressBlock.HORIZONTAL_FACING).getClockWise().getAxis() &&
-                side.getAxis() != Direction.Axis.Y)
-            return tank.getCapability()
-                    .cast();
-        return super.getCapability(cap, side);
+    public static void registerCapabilities() {
+        FluidStorage.SIDED.registerForBlockEntity(
+                HydraulicPressBlockEntity::getFluidStorage,
+                HenryBlockEntityTypes.HYDRAULIC_PRESS.get());
+    }
+
+    @Nullable
+    private Storage<FluidVariant> getFluidStorage(Direction side) {
+        if (side != null
+                && side.getAxis() == getBlockState().getValue(HydraulicPressBlock.HORIZONTAL_FACING).getClockWise().getAxis()
+                && side.getAxis() != Direction.Axis.Y) {
+            return tank.getCapability();
+        }
+        return null;
     }
 
     public static <C extends Container> boolean canCompress(Recipe<C> recipe) {
@@ -145,10 +153,14 @@ public class HydraulicPressBlockEntity extends MechanicalPressBlockEntity {
     }
 
     protected void drainFluid() {
-        if (getProcessFluid(Fluids.LAVA)) {
-            tank.getPrimaryHandler().drain(HenryConfigs.server().recipes.hydraulicLavaDrainPressing.get(), IFluidHandler.FluidAction.EXECUTE);
-        } else {
-            tank.getPrimaryHandler().drain(HenryConfigs.server().recipes.hydraulicFluidDrainPressing.get(), IFluidHandler.FluidAction.EXECUTE);
+        long amount = getProcessFluid(Fluids.LAVA)
+                ? HenryConfigs.server().recipes.hydraulicLavaDrainPressing.get()
+                : HenryConfigs.server().recipes.hydraulicFluidDrainPressing.get();
+        FluidVariant variant = tank.getPrimaryHandler().getFluid().getType();
+        if (variant.isBlank()) return;
+        try (Transaction transaction = Transaction.openOuter()) {
+            tank.getPrimaryHandler().extract(variant, amount, transaction);
+            transaction.commit();
         }
     }
 
