@@ -3,6 +3,7 @@ package com.chocoboy.create_henry.content.blocks.logistics.smart_hopper;
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerContainer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -44,6 +45,15 @@ public abstract class BlockEntityInventory<BE extends SyncedBlockEntity> extends
     @Override
     public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
         if (!extractionAllowed) return 0;
+        if (stackNonStackables) {
+            try (Transaction nested = transaction.openNested()) {
+                long extracted = super.extract(resource, maxAmount, nested);
+                nested.abort();
+                if (extracted != 0 && resource.getItem().getMaxStackSize() < extracted) {
+                    maxAmount = resource.getItem().getMaxStackSize();
+                }
+            }
+        }
         return super.extract(resource, maxAmount, transaction);
     }
 
