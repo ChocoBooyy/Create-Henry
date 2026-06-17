@@ -1,13 +1,12 @@
 package com.chocoboy.create_henry.content.blocks.logistics.roll_table;
 
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
-import com.simibubi.create.foundation.item.ItemHelper;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
 
-public class RollTableItemHandler implements IItemHandler {
+public class RollTableItemHandler extends SingleStackStorage {
 
     private final RollTableBlockEntity be;
     private final Direction side;
@@ -18,52 +17,35 @@ public class RollTableItemHandler implements IItemHandler {
     }
 
     @Override
-    public int getSlots() {
-        return 1;
-    }
-
-    @Override
-    public @NotNull ItemStack getStackInSlot(int slot) {
+    protected ItemStack getStack() {
         return be.getHeldItemStack();
     }
 
     @Override
-    public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (!be.getHeldItemStack().isEmpty()) return stack;
-
-        ItemStack returned = ItemHelper.limitCountToMaxStackSize(stack, simulate);
-        if (!simulate) {
+    protected void setStack(ItemStack stack) {
+        if (stack.isEmpty()) {
+            be.heldItem = null;
+        } else if (be.heldItem == null) {
             TransportedItemStack heldItem = new TransportedItemStack(stack);
             heldItem.prevBeltPosition = 0;
             be.setHeldItem(heldItem, side.getOpposite());
-            be.notifyUpdate();
-        }
-        return returned;
-    }
-
-    @Override
-    public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-        TransportedItemStack held = be.heldItem;
-        if (held == null) return ItemStack.EMPTY;
-
-        ItemStack stack = held.stack.copy();
-        ItemStack extracted = stack.split(amount);
-        if (!simulate) {
+        } else {
             be.heldItem.stack = stack;
-            if (stack.isEmpty()) be.heldItem = null;
-            be.notifyUpdate();
         }
-        return extracted;
     }
 
     @Override
-    public int getSlotLimit(int slot) {
-        return 64;
+    protected boolean canInsert(ItemVariant resource) {
+        return be.getHeldItemStack().isEmpty();
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return true;
+    protected int getCapacity(ItemVariant variant) {
+        return Math.min(64, variant.getItem().getMaxStackSize());
     }
 
+    @Override
+    protected void onFinalCommit() {
+        be.notifyUpdate();
+    }
 }

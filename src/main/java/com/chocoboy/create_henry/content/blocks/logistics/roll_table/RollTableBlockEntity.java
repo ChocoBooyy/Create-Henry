@@ -17,10 +17,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import org.jetbrains.annotations.Nullable;
+import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -30,29 +31,23 @@ public class RollTableBlockEntity extends SmartBlockEntity {
 
     TransportedItemStack heldItem;
     Map<Direction, RollTableItemHandler> itemHandlers;
-    private final Map<Direction, LazyOptional<IItemHandler>> lazyHandlers = new IdentityHashMap<>();
 
     public RollTableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         itemHandlers = new IdentityHashMap<>();
         for (Direction d : Iterate.horizontalDirections) {
-            RollTableItemHandler handler = new RollTableItemHandler(this, d);
-            itemHandlers.put(d, handler);
-            lazyHandlers.put(d, LazyOptional.of(() -> handler));
+            itemHandlers.put(d, new RollTableItemHandler(this, d));
         }
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER && side != null && side.getAxis().isHorizontal())
-            return lazyHandlers.get(side).cast();
-        return super.getCapability(cap, side);
+    public static void registerCapabilities() {
+        ItemStorage.SIDED.registerForBlockEntity(
+                RollTableBlockEntity::getItemHandler, HenryBlockEntityTypes.ROLL_TABLE.get());
     }
 
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyHandlers.values().forEach(LazyOptional::invalidate);
+    private @Nullable Storage<ItemVariant> getItemHandler(@Nullable Direction side) {
+        if (side != null && side.getAxis().isHorizontal()) return itemHandlers.get(side);
+        return null;
     }
 
     @Override

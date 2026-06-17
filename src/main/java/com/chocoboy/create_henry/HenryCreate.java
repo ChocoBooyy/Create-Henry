@@ -83,6 +83,8 @@ public class HenryCreate implements ModInitializer {
         HenryFanProcessingTypes.init();
         HenryFluids.registerFluidInteractions();
 
+        com.chocoboy.create_henry.content.blocks.logistics.smart_hopper.SmartHopperBlockEntity.registerCapabilities();
+
         ServerLifecycleEvents.SERVER_STARTING.register(startingServer -> server = startingServer);
         ServerLifecycleEvents.SERVER_STOPPED.register(stoppedServer -> server = null);
 

@@ -21,11 +21,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
+import com.chocoboy.create_henry.content.blocks.logistics.roll_table.RollTableBlockEntity;
+import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,24 +40,16 @@ public class SmartHopperBlockEntity extends SmartBlockEntity implements MenuProv
     FilteringBehaviour filtering;
     VersionedInventoryTrackerBehaviour invVersionTracker;
 
-    private final LazyOptional<IItemHandler> invOptional = LazyOptional.of(() -> inv);
-
     public SmartHopperBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         inv = new HopperInventory(5, this);
         setLazyTickRate(8);
     }
 
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) return invOptional.cast();
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        invOptional.invalidate();
+    public static void registerCapabilities() {
+        ItemStorage.SIDED.registerForBlockEntity(
+                (be, side) -> be.inv, HenryBlockEntityTypes.SMART_HOPPER.get());
+        RollTableBlockEntity.registerCapabilities();
     }
 
     @Override
@@ -77,7 +71,7 @@ public class SmartHopperBlockEntity extends SmartBlockEntity implements MenuProv
         }
     }
 
-    private void handleInput(@Nullable IItemHandler source, BlockState state) {
+    private void handleInput(@Nullable Storage<ItemVariant> source, BlockState state) {
         if (source == null) return;
         if (cantActivate(state)) return;
         if (invVersionTracker.stillWaiting(source)) return;
@@ -96,7 +90,7 @@ public class SmartHopperBlockEntity extends SmartBlockEntity implements MenuProv
         invVersionTracker.awaitNewVersion(source);
     }
 
-    private boolean handleOutput(@Nullable IItemHandler target, BlockState state, boolean simulate) {
+    private boolean handleOutput(@Nullable Storage<ItemVariant> target, BlockState state, boolean simulate) {
         assert level != null;
         if (cantActivate(state)) return false;
         if (target == null) return true;
@@ -106,7 +100,7 @@ public class SmartHopperBlockEntity extends SmartBlockEntity implements MenuProv
         var extracted = ItemHelper.extract(inv, s -> filtering.test(s), simulate);
         if (extracted.isEmpty()) return false;
 
-        var remainder = ItemHandlerHelper.insertItemStacked(target, extracted, simulate);
+        var remainder = insertStacked(target, extracted, simulate);
         if (!simulate) insertItem(remainder, false);
         if (remainder.getCount() != extracted.getCount()) return true;
 
@@ -115,21 +109,28 @@ public class SmartHopperBlockEntity extends SmartBlockEntity implements MenuProv
     }
 
     public void insertItem(ItemStack stack, boolean simulate) {
-        ItemHandlerHelper.insertItemStacked(inv, stack, simulate);
+        insertStacked(inv, stack, simulate);
         invVersionTracker.reset();
         assert level != null;
         if (!level.isClientSide) notifyUpdate();
     }
 
-    private @Nullable IItemHandler grabCapability(Direction side) {
+    private static ItemStack insertStacked(Storage<ItemVariant> target, ItemStack stack, boolean simulate) {
+        if (stack.isEmpty()) return stack;
+        try (Transaction transaction = TransferUtil.getTransaction()) {
+            long inserted = target.insert(ItemVariant.of(stack), stack.getCount(), transaction);
+            if (!simulate) transaction.commit();
+            return stack.copyWithCount(stack.getCount() - (int) inserted);
+        }
+    }
+
+    private @Nullable Storage<ItemVariant> grabCapability(Direction side) {
         if (level == null) return null;
-        var neighborBE = level.getBlockEntity(worldPosition.relative(side));
-        if (neighborBE == null) return null;
-        return neighborBE.getCapability(ForgeCapabilities.ITEM_HANDLER, side.getOpposite()).orElse(null);
+        return ItemStorage.SIDED.find(level, worldPosition.relative(side), side.getOpposite());
     }
 
     protected boolean cantAcceptItem(ItemStack stack, BlockState state) {
-        return ItemStack.isSameItemSameTags(ItemHandlerHelper.insertItem(inv, stack.copy(), true), stack)
+        return insertStacked(inv, stack.copy(), true).getCount() == stack.getCount()
                 || cantActivate(state)
                 || !filtering.test(stack);
     }
@@ -218,7 +219,7 @@ public class SmartHopperBlockEntity extends SmartBlockEntity implements MenuProv
         var extracted = extractFromStack(stack, state, mode, count, amountExtract);
         if (extracted.isEmpty()) return stack;
         if (mode == ItemHelper.ExtractionCountMode.UPTO || !extracted.isEmpty()) {
-            var leftOver = ItemHandlerHelper.insertItemStacked(inv, extracted, false);
+            var leftOver = insertStacked(inv, extracted, false);
             return stack.copyWithCount(stack.getCount() - amountExtract + leftOver.getCount());
         }
         return stack;
