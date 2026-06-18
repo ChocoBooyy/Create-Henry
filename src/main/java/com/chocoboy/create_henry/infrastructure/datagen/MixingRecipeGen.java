@@ -2,6 +2,7 @@ package com.chocoboy.create_henry.infrastructure.datagen;
 
 import com.chocoboy.create_henry.registry.HenryFluids;
 import com.chocoboy.create_henry.registry.HenryItems;
+import com.chocoboy.create_henry.registry.HenryTags;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
@@ -11,7 +12,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.Tags;
 
 import static com.tterrag.registrate.util.DataIngredient.items;
 
@@ -77,7 +77,7 @@ public final class MixingRecipeGen extends HenryProcessingRecipeGen {
 
     private GeneratedRecipe milkshake(String name, Ingredient flavor, FluidEntry<?> output) {
         return create(name, b -> {
-            b.require(Tags.Fluids.MILK, 250);
+            b.require(HenryTags.forgeFluidTag("milk"), 250);
             require(b, Items.SUGAR, 2);
             require(b, Items.SNOWBALL, 4);
             require(b, flavor, 2);

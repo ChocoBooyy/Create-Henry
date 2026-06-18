@@ -4,36 +4,50 @@ import com.chocoboy.create_henry.HenryCreate;
 import com.chocoboy.create_henry.infrastructure.ponder.HenryPonderPlugin;
 import com.chocoboy.create_henry.registry.HenryLangPartial;
 import com.tterrag.registrate.providers.ProviderType;
+import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
 import net.createmod.ponder.foundation.PonderIndex;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.data.DataProvider;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-public class HenryDatagen {
+public class HenryDatagen implements DataGeneratorEntrypoint {
 
-	public static void gatherData(GatherDataEvent event) {
+	@Override
+	public void onInitializeDataGenerator(FabricDataGenerator generator) {
+		ExistingFileHelper helper = ExistingFileHelper.withResourcesFromArg();
+		FabricDataGenerator.Pack pack = generator.createPack();
+
 		addExtraRegistrateData();
+		HenryCreate.registrate().setupDatagen(pack, helper);
 
-		DataGenerator generator = event.getGenerator();
-		PackOutput output = generator.getPackOutput();
+		gatherData(pack);
+	}
 
-		if (event.includeServer()) {
-			generator.addProvider(true, new AdvancedCraftingRecipeGen(output));
+	private static void gatherData(FabricDataGenerator.Pack pack) {
+		add(pack, AdvancedCraftingRecipeGen::new);
+		add(pack, WashingRecipeGen::new);
+		add(pack, SandingRecipeGen::new);
+		add(pack, FreezingRecipeGen::new);
+		add(pack, SeethingRecipeGen::new);
+		add(pack, WitheringRecipeGen::new);
+		add(pack, DragonBreathingRecipeGen::new);
+		add(pack, ItemApplicationRecipeGen::new);
+		add(pack, MixingRecipeGen::new);
+		add(pack, EmptyingRecipeGen::new);
+		add(pack, FillingRecipeGen::new);
+		add(pack, com.chocoboy.create_henry.registry.HenrySoundEvents::provider);
+		add(pack, HydraulicRecipeGen::new);
+	}
 
-			generator.addProvider(true, new WashingRecipeGen(output));
-			generator.addProvider(true, new SandingRecipeGen(output));
-			generator.addProvider(true, new FreezingRecipeGen(output));
-			generator.addProvider(true, new SeethingRecipeGen(output));
-			generator.addProvider(true, new WitheringRecipeGen(output));
-			generator.addProvider(true, new DragonBreathingRecipeGen(output));
-			generator.addProvider(true, new ItemApplicationRecipeGen(output));
-			generator.addProvider(true, new MixingRecipeGen(output));
-			generator.addProvider(true, new EmptyingRecipeGen(output));
-			generator.addProvider(true, new FillingRecipeGen(output));
-			generator.addProvider(true, new HydraulicRecipeGen(output));
-		}
+	// Disambiguates Pack.addProvider's Factory / RegistryDependentFactory overloads: every Henry
+	// provider is constructed from a PackOutput alone, so it always maps to the simple Factory form.
+	private static <T extends DataProvider> void add(FabricDataGenerator.Pack pack,
+													 Function<FabricDataOutput, T> factory) {
+		pack.addProvider(factory::apply);
 	}
 
 	private static void addExtraRegistrateData() {

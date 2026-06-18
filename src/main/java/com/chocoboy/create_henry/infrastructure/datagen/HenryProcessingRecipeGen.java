@@ -48,7 +48,7 @@ public abstract class HenryProcessingRecipeGen extends ProcessingRecipeGen {
 
     // Utilities
 
-    protected static String getItemName(ItemLike itemLike) {
+    public static String getItemName(ItemLike itemLike) {
         return CatnipServices.REGISTRIES.getKeyOrThrow(itemLike.asItem()).getPath();
     }
 }
