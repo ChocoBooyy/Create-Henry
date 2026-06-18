@@ -17,14 +17,22 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 
 public abstract class AbstractFanProcessingType implements FanProcessingType {
+
+    // Fabric entities have no Forge-style persistent data, so the in-progress conversion counter
+    // is tracked in memory. Progress is kept for as long as the entity stays loaded, which covers
+    // the whole conversion; it is not persisted across a world save mid-conversion.
+    private static final Map<Entity, Integer> CONVERSION_PROGRESS = new WeakHashMap<>();
 
     private final Wrapper wrapper = new Wrapper();
     private final HenryRecipeTypes recipeType;
@@ -95,21 +103,22 @@ public abstract class AbstractFanProcessingType implements FanProcessingType {
             SoundEvent progressSound, SoundEvent finalSound,
             Level level) {
 
-        int progress = from.getPersistentData().getInt(nbtKey);
+        int progress = CONVERSION_PROGRESS.getOrDefault(from, 0);
         if (progress < 50) {
             if (progress % 10 == 0)
                 level.playSound(null, from.blockPosition(), progressSound,
                         SoundSource.NEUTRAL, 1f, 1.5f * progress / 50f);
-            from.getPersistentData().putInt(nbtKey, progress + 1);
+            CONVERSION_PROGRESS.put(from, progress + 1);
             return;
         }
 
+        CONVERSION_PROGRESS.remove(from);
         level.playSound(null, from.blockPosition(), finalSound, SoundSource.NEUTRAL, 1.25f, 0.65f);
         T to = toType.create(level);
         if (to == null) return;
         CompoundTag tag = from.saveWithoutId(new CompoundTag());
         tag.remove("UUID");
-        to.deserializeNBT(tag);
+        to.load(tag);
         to.setPos(from.getPosition(0));
         level.addFreshEntity(to);
         from.discard();

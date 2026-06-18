@@ -53,15 +53,15 @@ public class HenrySoundEvents {
             if (entry.hasSubtitle()) consumer.accept(entry.getSubtitleKey(), entry.getSubtitle());
     }
 
-    public static SoundEntryProvider provider(DataGenerator generator) {
-        return new SoundEntryProvider(generator);
+    public static SoundEntryProvider provider(PackOutput output) {
+        return new SoundEntryProvider(output);
     }
 
     public static class SoundEntryProvider implements DataProvider {
         private final PackOutput output;
 
-        public SoundEntryProvider(DataGenerator generator) {
-            output = generator.getPackOutput();
+        public SoundEntryProvider(PackOutput output) {
+            this.output = output;
         }
 
         @Override

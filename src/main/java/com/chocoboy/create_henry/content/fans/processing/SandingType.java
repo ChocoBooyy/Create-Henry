@@ -27,7 +27,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -64,7 +64,7 @@ public final class SandingType extends AbstractFanProcessingType {
 
     public static boolean isPolishProcessingRecipe(Recipe<?> recipe) {
         if (!(recipe instanceof ProcessingRecipe<?>)) return false;
-        ResourceLocation serializerId = ForgeRegistries.RECIPE_SERIALIZERS.getKey(recipe.getSerializer());
+        ResourceLocation serializerId = BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer());
         if (serializerId == null) return false;
         return serializerId.getPath().equals("sandpaper_polishing");
     }

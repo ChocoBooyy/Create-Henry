@@ -90,7 +90,7 @@ public class HenryItems {
                         .define('A', AllItems.ANDESITE_ALLOY.get())
                         .define('G', AllItems.GOLDEN_SHEET.get()), c, p))
             .lang("Golden Whisk")
-            .tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
+            .tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB)
             .register();
 
 	public static final ItemEntry<Item> RAW_RUBBER = REGISTRATE.item("raw_rubber", Item::new)
@@ -111,7 +111,7 @@ public class HenryItems {
 					p, "crafting/" + c.getName() + "_from_" + getItemName(output));
 			})
 			.lang("Raw Rubber")
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
+			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB)
 			.register();
 
 	public static final ItemEntry<Item> RUBBER = REGISTRATE.item("rubber", Item::new)
@@ -135,7 +135,7 @@ public class HenryItems {
 					p, "smoking/" + c.getId().getPath());
 			})
 			.lang("Rubber")
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
+			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB)
 			.register();
 
 	public static final ItemEntry<Item> LAPIS_LAZULI_SHARD = REGISTRATE.item("lapis_lazuli_shard", Item::new)
@@ -155,7 +155,7 @@ public class HenryItems {
 						.unlockedBy("has_" + c.getName(), has(c.get())),
 					p, "crafting/" + c.getName() + "_from_" + getItemName(output));
 			})
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
+			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB)
 			.register();
 
 	public static final ItemEntry<CombustibleItem> COAL_PIECE = REGISTRATE.item("coal_piece", CombustibleItem::new)
@@ -176,7 +176,7 @@ public class HenryItems {
 						.unlockedBy("has_" + c.getName(), has(c.get())),
 					p, "crafting/" + c.getName() + "_from_" + getItemName(output));
 			})
-			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
+			.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB)
 			.register();
 
 	// Saves with default unlock (has the item being registered) and default path (crafting/<name>)
@@ -194,16 +194,16 @@ public class HenryItems {
 		String id = name.toLowerCase().replace(" ", "_");
 		FoodProperties food = new FoodProperties.Builder()
 				.nutrition(4).saturationMod(0.3f).alwaysEat()
-				.effect(effect, 1.0f)
+				.effect(effect.get(), 1.0f)
 				.build();
 		return REGISTRATE.item(id, p -> new MilkshakeItem(p.food(food).stacksTo(16)))
 				.lang(name)
-				.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey())
+				.tab(HenryCreativeModeTabs.BASE_CREATIVE_TAB)
 				.register();
 	}
 
 	private static ItemEntry<Item> item(String name) {
-		ResourceKey<CreativeModeTab> tab = HenryCreativeModeTabs.BASE_CREATIVE_TAB.getKey();
+		ResourceKey<CreativeModeTab> tab = HenryCreativeModeTabs.BASE_CREATIVE_TAB;
 		assert tab != null;
 		return REGISTRATE.item(name, Item::new)
 				.tab(tab)

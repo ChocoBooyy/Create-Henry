@@ -3,6 +3,7 @@ package com.chocoboy.create_henry.registry;
 import com.chocoboy.create_henry.HenryCreate;
 import com.simibubi.create.Create;
 import net.createmod.catnip.lang.Lang;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -19,46 +20,37 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-
-import java.util.Collections;
 
 import static com.chocoboy.create_henry.registry.HenryTags.NameSpace.FORGE;
 
 @SuppressWarnings({"all"})
 public class HenryTags {
-	public static <T> TagKey<T> optionalTag(IForgeRegistry<T> registry,
-											ResourceLocation id) {
-		return registry.tags()
-				.createOptionalTagKey(id, Collections.emptySet());
-	}
 
-	public static <T> TagKey<T> forgeTag(IForgeRegistry<T> registry, String path) {
-		return optionalTag(registry, new ResourceLocation("forge", path));
-	}
+	// On Fabric, cross-mod conventional tags live in the "c" namespace. The legacy "forge"-prefixed
+	// helper names are retained so existing call sites stay untouched, but they resolve to "c".
+	public static final String CONVENTIONAL = "c";
 
 	public static TagKey<Block> forgeBlockTag(String path) {
-		return forgeTag(ForgeRegistries.BLOCKS, path);
+		return TagKey.create(Registries.BLOCK, new ResourceLocation(CONVENTIONAL, path));
 	}
 
 	public static TagKey<Item> forgeItemTag(String path) {
-		return forgeTag(ForgeRegistries.ITEMS, path);
+		return TagKey.create(Registries.ITEM, new ResourceLocation(CONVENTIONAL, path));
 	}
 
 	public static TagKey<Fluid> forgeFluidTag(String path) {
-		return forgeTag(ForgeRegistries.FLUIDS, path);
+		return TagKey.create(Registries.FLUID, new ResourceLocation(CONVENTIONAL, path));
 	}
 
 	public static TagKey<Item> minecraftItemTag(String path) {
-		return ItemTags.create(new ResourceLocation("minecraft", path));
+		return TagKey.create(Registries.ITEM, new ResourceLocation("minecraft", path));
 	}
 
 	public enum NameSpace {
 
 		MOD(HenryCreate.MOD_ID, false, true),
 		CREATE("create"),
-		FORGE("forge"),
+		FORGE(CONVENTIONAL),
 
 		;
 
@@ -111,11 +103,7 @@ public class HenryTags {
 
 		AllBlockTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.BLOCKS, id);
-			} else {
-				tag = BlockTags.create(id);
-			}
+			tag = TagKey.create(Registries.BLOCK, id);
 			this.alwaysDatagen = alwaysDatagen;
 		}
 
@@ -169,11 +157,7 @@ public class HenryTags {
 
 		AllItemTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.ITEMS, id);
-			} else {
-				tag = ItemTags.create(id);
-			}
+			tag = TagKey.create(Registries.ITEM, id);
 			this.alwaysDatagen = alwaysDatagen;
 		}
 
@@ -229,11 +213,7 @@ public class HenryTags {
 
 		AllFluidTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.FLUIDS, id);
-			} else {
-				tag = FluidTags.create(id);
-			}
+			tag = TagKey.create(Registries.FLUID, id);
 			this.alwaysDatagen = alwaysDatagen;
 		}
 
@@ -275,16 +255,12 @@ public class HenryTags {
 
 		HenryRecipeSerializerTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
 			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
-			if (optional) {
-				tag = optionalTag(ForgeRegistries.RECIPE_SERIALIZERS, id);
-			} else {
-				tag = TagKey.create(Registries.RECIPE_SERIALIZER, id);
-			}
+			tag = TagKey.create(Registries.RECIPE_SERIALIZER, id);
 			this.alwaysDatagen = alwaysDatagen;
 		}
 
 		public boolean matches(RecipeSerializer<?> recipeSerializer) {
-			return ForgeRegistries.RECIPE_SERIALIZERS.getHolder(recipeSerializer).orElseThrow().is(tag);
+			return BuiltInRegistries.RECIPE_SERIALIZER.wrapAsHolder(recipeSerializer).is(tag);
 		}
 
 		private static void init() {}

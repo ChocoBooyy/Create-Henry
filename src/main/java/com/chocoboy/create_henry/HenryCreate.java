@@ -76,6 +76,7 @@ public class HenryCreate implements ModInitializer {
         HenryBlockEntityTypes.register();
         HenryRecipeTypes.register();
         HenryParticleTypes.register();
+        HenrySoundEvents.register();
 
         REGISTRATE.register();
 
@@ -87,6 +88,8 @@ public class HenryCreate implements ModInitializer {
 
         SmartHopperBlockEntity.registerCapabilities();
         HydraulicPressBlockEntity.registerCapabilities();
+
+        FurnaceEngineBlock.registerInteractionHandler();
 
         ServerLifecycleEvents.SERVER_STARTING.register(startingServer -> server = startingServer);
         ServerLifecycleEvents.SERVER_STOPPED.register(stoppedServer -> server = null);

@@ -34,9 +34,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.util.List;
 import java.util.Optional;
@@ -160,7 +159,7 @@ public class GoldenMixerBlockEntity extends BasinOperatingBlockEntity {
         var basin = getBasin();
         if (basin.isEmpty() || level == null) return;
 
-        for (var inv : basin.get().getInvs()) for (int slot = 0; slot < inv.getSlots(); slot++) {
+        for (var inv : basin.get().getInvs()) for (int slot = 0; slot < inv.getSlotCount(); slot++) {
             var stackInSlot = inv.getItem(slot);
             if (stackInSlot.isEmpty()) continue;
             var data = new ItemParticleOption(ParticleTypes.ITEM, stackInSlot);
@@ -197,9 +196,9 @@ public class GoldenMixerBlockEntity extends BasinOperatingBlockEntity {
         var basinBlockEntity = basin.get();
         if (basin.isEmpty()) return matchingRecipes;
 
-        var availableItems = basinBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, null).resolve().orElse(null);
+        var availableItems = basinBlockEntity.getInputInventory();
         if (availableItems == null) return matchingRecipes;
-        for (int i = 0; i < availableItems.getSlots(); i++) {
+        for (int i = 0; i < availableItems.getSlotCount(); i++) {
             var stack = availableItems.getStackInSlot(i);
             if (stack.isEmpty()) continue;
             var list = PotionMixingRecipes.BY_ITEM.get(stack.getItem());
@@ -262,7 +261,7 @@ public class GoldenMixerBlockEntity extends BasinOperatingBlockEntity {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void tickAudio() {
         super.tickAudio();
         var slow = Math.abs(getSpeed() * speedMultiplier()) < 65;
