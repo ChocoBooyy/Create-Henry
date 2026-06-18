@@ -364,7 +364,7 @@ public class HenryBlocks {
             }))
             .recipe((c, p) -> save(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 1)
                     .pattern("A").pattern("B").pattern("C")
-                    .define('A', forgeItemTag("plates/brass"))
+                    .define('A', forgeItemTag("brass_plates"))
                     .define('B', Items.HOPPER)
                     .define('C', AllItems.ELECTRON_TUBE.get())
                     .unlockedBy("has_hopper", has(Items.HOPPER)),
