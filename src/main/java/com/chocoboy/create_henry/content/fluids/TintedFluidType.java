@@ -1,85 +1,42 @@
 package com.chocoboy.create_henry.content.fluids;
 
-import java.util.function.Consumer;
-
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import com.mojang.blaze3d.shaders.FogShape;
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.Camera;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer.FogMode;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 
-public abstract class TintedFluidType extends FluidType {
+/**
+ * Client-side render configuration for a Henry fluid.
+ *
+ * <p>On Forge this data lived on a {@code FluidType} client extension. Porting Lib's
+ * {@code FluidType} carries no client extensions, so the texture, tint and fog data is held
+ * here and consumed by the client entrypoint, which registers it with the Fabric fluid render
+ * handlers.
+ */
+public abstract class TintedFluidType {
 
 	protected static final int NO_TINT = 0xffffffff;
-	private ResourceLocation stillTexture;
-	private ResourceLocation flowingTexture;
 
-	public TintedFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
-		super(properties);
+	private final ResourceLocation stillTexture;
+	private final ResourceLocation flowingTexture;
+
+	protected TintedFluidType(ResourceLocation stillTexture, ResourceLocation flowingTexture) {
 		this.stillTexture = stillTexture;
 		this.flowingTexture = flowingTexture;
 	}
 
-	@Override
-	public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-		consumer.accept(new IClientFluidTypeExtensions() {
-
-			@Override
-			public ResourceLocation getStillTexture() {
-				return stillTexture;
-			}
-
-			@Override
-			public ResourceLocation getFlowingTexture() {
-				return flowingTexture;
-			}
-
-			@Override
-			public int getTintColor(FluidStack stack) {
-				return TintedFluidType.this.getTintColor(stack);
-			}
-
-			@Override
-			public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-				return TintedFluidType.this.getTintColor(state, getter, pos);
-			}
-
-			@Override
-			public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level,
-													int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-				Vector3f customFogColor = TintedFluidType.this.getCustomFogColor();
-				return customFogColor == null ? fluidFogColor : customFogColor;
-			}
-
-			@Override
-			public void modifyFogRender(Camera camera, FogMode mode, float renderDistance, float partialTick,
-										float nearDistance, float farDistance, FogShape shape) {
-				float modifier = TintedFluidType.this.getFogDistanceModifier();
-				float baseWaterFog = 96.0f;
-				if (modifier != 1f) {
-					RenderSystem.setShaderFogShape(FogShape.CYLINDER);
-					RenderSystem.setShaderFogStart(-8);
-					RenderSystem.setShaderFogEnd(baseWaterFog * modifier);
-				}
-			}
-
-		});
+	public ResourceLocation getStillTexture() {
+		return stillTexture;
 	}
 
-	protected abstract int getTintColor(FluidStack stack);
+	public ResourceLocation getFlowingTexture() {
+		return flowingTexture;
+	}
 
-	protected abstract int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos);
+	/**
+	 * Tint applied to the fluid block/sprite. Alpha is significant: an alpha of {@code 0}
+	 * stops Optifine from forcing biome colours onto the fluid.
+	 */
+	public abstract int getTintColor();
 
 	protected Vector3f getCustomFogColor() {
 		return null;
