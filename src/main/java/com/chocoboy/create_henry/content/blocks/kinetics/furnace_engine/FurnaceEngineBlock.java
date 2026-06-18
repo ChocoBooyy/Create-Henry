@@ -40,10 +40,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import org.jetbrains.annotations.NotNull;
 import com.chocoboy.create_henry.registry.HenryBlockEntityTypes;
 import com.chocoboy.create_henry.registry.HenryBlocks;
@@ -52,7 +49,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @SuppressWarnings({"all"})
-@Mod.EventBusSubscriber
 public class FurnaceEngineBlock extends FaceAttachedHorizontalDirectionalBlock implements SimpleWaterloggedBlock, IWrenchable, IBE<FurnaceEngineBlockEntity> {
 
     private static final int placementHelperId = PlacementHelpers.register(
@@ -122,21 +118,22 @@ public class FurnaceEngineBlock extends FaceAttachedHorizontalDirectionalBlock i
         return state == null ? null : state.setValue(BlockStateProperties.WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
     }
 
-    @SubscribeEvent
-    public static void usingFurnaceEngineOnFurnacePreventsGUI(PlayerInteractEvent.RightClickBlock event) {
-        BlockItem blockItem;
-        ItemStack stack = event.getItemStack();
-        Item item = stack.getItem();
-        if (item instanceof BlockItem) {
-            blockItem = (BlockItem) item;
-        } else {
-            return;
-        }
+    public static void registerInteractionHandler() {
+        UseBlockCallback.EVENT.register(FurnaceEngineBlock::usingFurnaceEngineOnFurnacePreventsGUI);
+    }
+
+    private static InteractionResult usingFurnaceEngineOnFurnacePreventsGUI(Player player, Level level,
+                                                                           InteractionHand hand, BlockHitResult ray) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!(stack.getItem() instanceof BlockItem blockItem))
+            return InteractionResult.PASS;
         if (blockItem.getBlock() != HenryBlocks.FURNACE_ENGINE.get())
-            return;
-        BlockState state = event.getLevel().getBlockState(event.getPos());
-        if (state.getBlock() instanceof AbstractFurnaceBlock)
-            event.setUseBlock(Event.Result.DENY);
+            return InteractionResult.PASS;
+        BlockState state = level.getBlockState(ray.getBlockPos());
+        if (!(state.getBlock() instanceof AbstractFurnaceBlock))
+            return InteractionResult.PASS;
+        // Deny the furnace GUI and place the engine instead, mirroring the Forge setUseBlock(DENY) behaviour.
+        return blockItem.place(new BlockPlaceContext(player, hand, stack, ray));
     }
 
     @Override

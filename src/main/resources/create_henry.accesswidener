@@ -2,3 +2,5 @@ accessWidener v1 named
 
 accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity cookingProgress I
 accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity cookingTotalTime I
+
+accessible class net/minecraft/client/particle/ParticleEngine$SpriteParticleRegistration

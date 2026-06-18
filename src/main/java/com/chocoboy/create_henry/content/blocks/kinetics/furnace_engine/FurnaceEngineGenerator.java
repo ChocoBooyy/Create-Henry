@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.ModelFile;
+import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
 import com.chocoboy.create_henry.HenryCreate;
 
 public class FurnaceEngineGenerator extends SpecialBlockStateGen {

@@ -18,7 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class PoweredFlywheelBlockEntity extends GeneratingKineticBlockEntity {
 
@@ -111,7 +111,7 @@ public class PoweredFlywheelBlockEntity extends GeneratingKineticBlockEntity {
 		if (compound.contains("EnginePos")) {
 			enginePos = NbtUtils.readBlockPos(compound.getCompound("EnginePos"));
 			engineEfficiency = compound.getFloat("EnginePower");
-			capacityKey = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("EngineType")));
+			capacityKey = BuiltInRegistries.BLOCK.get(new ResourceLocation(compound.getString("EngineType")));
 		}
 		if (clientPacket) {
 			this.visualSpeed.chase(this.getGeneratedSpeed(), 0.015625, LerpedFloat.Chaser.EXP);

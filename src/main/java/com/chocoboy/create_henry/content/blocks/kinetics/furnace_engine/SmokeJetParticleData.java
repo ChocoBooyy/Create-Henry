@@ -9,8 +9,6 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import com.chocoboy.create_henry.registry.HenryParticleTypes;
 
 import java.util.Locale;
@@ -72,7 +70,6 @@ public class SmokeJetParticleData implements ParticleOptions, ICustomParticleDat
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public ParticleEngine.SpriteParticleRegistration<SmokeJetParticleData> getMetaFactory() {
         return SmokeJetParticle.Factory::new;
     }

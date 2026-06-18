@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import com.chocoboy.create_henry.registry.HenryBlocks;
 
 import org.jetbrains.annotations.Nullable;
@@ -109,9 +109,7 @@ public class FurnaceEngineBlockEntity extends SmartBlockEntity {
 
                 flywheel.update(this.worldPosition, conveyedSpeedLevel, delayedEfficiency);
                 if (this.level.isClientSide) {
-                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> {
-                        return this::spawnParticles;
-                    });
+                    EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::spawnParticles);
                 }
             }
         } else if (!this.level.isClientSide()) {
@@ -130,7 +128,7 @@ public class FurnaceEngineBlockEntity extends SmartBlockEntity {
 
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     private void spawnParticles() {
         Float targetAngle = this.getTargetAngle();
         PoweredFlywheelBlockEntity ste = this.target.get();
@@ -212,7 +210,7 @@ public class FurnaceEngineBlockEntity extends SmartBlockEntity {
         return furnace;
     }
     @Nullable
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Float getTargetAngle() {
         float angle = 0.0F;
         BlockState blockState = this.getBlockState();
