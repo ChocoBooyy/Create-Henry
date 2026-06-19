@@ -21,7 +21,6 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.createmod.catnip.config.ConfigBase;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +43,6 @@ import java.util.function.Supplier;
 import static com.simibubi.create.compat.jei.CreateJEI.consumeTypedRecipes;
 
 @JeiPlugin
-@MethodsReturnNonnullByDefault
 public class HenryJEI implements IModPlugin {
 
     private static final ResourceLocation PLUGIN_ID = new ResourceLocation(HenryCreate.MOD_ID, "jei_plugin");
