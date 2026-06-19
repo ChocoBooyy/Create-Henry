@@ -87,6 +87,14 @@ dependencies {
     // Development QOL
     modLocalRuntime("com.terraformersmc:modmenu:$modmenu_version")
 
+    // JEI Fabric API on the compile classpath so the HenryJEI plugin + recipe categories always
+    // compile, independent of which recipe viewer is enabled at runtime below.
+    modCompileOnly("mezz.jei:jei-$minecraft_version-common:$jei_version")
+    modCompileOnly("mezz.jei:jei-$minecraft_version-fabric:$jei_version")
+    // JEI's API package-info files are annotated with jsr305 @ParametersAreNonnullByDefault; the
+    // annotations must be resolvable when javac reads those packages from the JEI plugin.
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+
     // Recipe Viewers - Create Fabric supports JEI, REI, and EMI.
     // See gradle.properties (recipe_viewer) to choose which to use at runtime.
     switch (recipe_viewer.toLowerCase(Locale.ROOT)) {
