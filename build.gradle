@@ -36,6 +36,25 @@ loom {
     accessWidenerPath = file("src/main/resources/create_henry.accesswidener")
 }
 
+fabricApi {
+    configureDataGeneration {
+        modId = "create_henry"
+        outputDirectory = file("src/generated/resources")
+    }
+}
+
+loom {
+    runs {
+        // Porting Lib's ExistingFileHelper needs a directory of existing resources to validate
+        // generated model parents against; point it at the main resources source set. The datagen
+        // run config itself is created by the fabricApi data generation setup above.
+        named("datagen") {
+            client()
+            property("porting_lib.datagen.existing_resources", file("src/main/resources").absolutePath)
+        }
+    }
+}
+
 configurations.configureEach {
     resolutionStrategy {
         // Make sure the desired version of loader is used. Sometimes old versions are pulled in transitively.
@@ -83,6 +102,19 @@ dependencies {
     modImplementation("io.github.fabricators_of_create.Porting-Lib:accessors:$porting_lib_version")
     // networking module re-exposes me.pepperbell.simplenetworking (Create's packet base) at compile time.
     modCompileOnly("io.github.fabricators_of_create.Porting-Lib:networking:$porting_lib_version")
+
+    // Create bundles ponder, registrate, the porting_lib runtime modules, and milk-lib via jar-in-jar.
+    // Production unpacks them, but dev runs (runClient/runServer/runDatagen) do not, so they are
+    // declared explicitly as runtime-only mods.
+    modRuntimeOnly("net.createmod.ponder:Ponder-Fabric-1.20.1:$ponder_version") {
+        exclude group: "dev.engine_room.flywheel"
+    }
+    modRuntimeOnly("com.tterrag.registrate_fabric:Registrate:$registrate_version")
+    modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:networking:$porting_lib_version")
+    modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:obj_loader:$porting_lib_version")
+    modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:models:$porting_lib_version")
+    modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:client_events:$porting_lib_version")
+    modRuntimeOnly("io.github.tropheusj:milk-lib:$milk_lib_version")
 
     // Development QOL
     modLocalRuntime("com.terraformersmc:modmenu:$modmenu_version")
