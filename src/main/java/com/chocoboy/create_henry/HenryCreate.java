@@ -84,14 +84,16 @@ public class HenryCreate implements ModInitializer {
         HenryConfigs.register();
 
         HenryFanProcessingTypes.init();
-        HenryFluids.registerFluidInteractions();
 
         SmartHopperBlockEntity.registerCapabilities();
         HydraulicPressBlockEntity.registerCapabilities();
 
         FurnaceEngineBlock.registerInteractionHandler();
 
-        ServerLifecycleEvents.SERVER_STARTING.register(startingServer -> server = startingServer);
+        ServerLifecycleEvents.SERVER_STARTING.register(startingServer -> {
+            server = startingServer;
+            HenryFluids.registerFluidInteractions();
+        });
         ServerLifecycleEvents.SERVER_STOPPED.register(stoppedServer -> server = null);
 
         ResourceManagerHelper.get(PackType.SERVER_DATA)

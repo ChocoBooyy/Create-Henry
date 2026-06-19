@@ -93,6 +93,11 @@ public class HenryFluids {
 
     private record LavaInteraction(Fluid fluid, Block oreStone, Block defaultStone) {}
 
+    private static boolean fluidInteractionsRegistered = false;
+
+    // The palette stone base blocks are registered by Create's own ModInitializer. Resolving them
+    // eagerly during Henry's onInitialize races with Create's registration, so the lookup is deferred
+    // until the interactions are actually registered (server start), by which point Create has run.
     private static List<LavaInteraction> lavaInteractions() {
         return List.of(
             new LavaInteraction(CHOCOLATE_MILKSHAKE.get(), AllPaletteStoneTypes.VERIDIUM.getBaseBlock().get(),  Blocks.GRANITE),
@@ -104,6 +109,9 @@ public class HenryFluids {
     }
 
     public static void registerFluidInteractions() {
+        if (fluidInteractionsRegistered)
+            return;
+        fluidInteractionsRegistered = true;
         for (LavaInteraction interaction : lavaInteractions())
             registerLavaInteraction(interaction.fluid(), interaction.oreStone(), interaction.defaultStone());
     }
