@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "minecraft:exposed_copper",
     "minecraft:weathered_copper",

@@ -1,4 +1,5 @@
 {
+  "replace": false,
   "values": [
     "#create_henry:fan_processing_catalysts/sanding",
     "#create_henry:fan_processing_catalysts/freezing",

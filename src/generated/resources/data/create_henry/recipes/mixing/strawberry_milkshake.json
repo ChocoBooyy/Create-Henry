@@ -27,7 +27,7 @@
     },
     {
       "amount": 250,
-      "fluidTag": "forge:milk"
+      "fluidTag": "c:milk"
     }
   ],
   "results": [

@@ -1,0 +1,19 @@
+{
+  "fluid_hatch": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.iron_door.open"
+      }
+    ],
+    "subtitle": "create_henry.subtitle.fluid_hatch"
+  },
+  "fluid_hatch_compounded_1": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.copper.place"
+      }
+    ]
+  }
+}

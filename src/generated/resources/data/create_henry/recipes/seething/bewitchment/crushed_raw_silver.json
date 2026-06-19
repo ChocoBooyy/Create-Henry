@@ -1,0 +1,25 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "bewitchment"
+      ]
+    }
+  ],
+  "type": "create_henry:seething",
+  "ingredients": [
+    {
+      "item": "create:crushed_raw_silver"
+    }
+  ],
+  "results": [
+    {
+      "item": "bewitchment:silver_ingot"
+    },
+    {
+      "chance": 0.5,
+      "item": "bewitchment:silver_ingot"
+    }
+  ]
+}
