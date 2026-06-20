@@ -133,6 +133,10 @@ public class FurnaceEngineBlock extends FaceAttachedHorizontalDirectionalBlock i
         if (!(state.getBlock() instanceof AbstractFurnaceBlock))
             return InteractionResult.PASS;
         // Deny the furnace GUI and place the engine instead, mirroring the Forge setUseBlock(DENY) behaviour.
+        // The callback fires on both sides, so the placement runs server-side only; the client just reports
+        // success to swing the arm and suppress the furnace screen.
+        if (level.isClientSide)
+            return InteractionResult.SUCCESS;
         return blockItem.place(new BlockPlaceContext(player, hand, stack, ray));
     }
 
