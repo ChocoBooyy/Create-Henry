@@ -114,6 +114,9 @@ dependencies {
     modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:obj_loader:$porting_lib_version")
     modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:models:$porting_lib_version")
     modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:client_events:$porting_lib_version")
+    // Create's PotionMixingRecipes needs the brewing module; nothing else pulls it transitively, so
+    // without this the create jei plugin crashes in dev with NoClassDefFoundError BrewingRecipeRegistry.
+    modRuntimeOnly("io.github.fabricators_of_create.Porting-Lib:brewing:$porting_lib_version")
     modRuntimeOnly("io.github.tropheusj:milk-lib:$milk_lib_version")
 
     // Development QOL
