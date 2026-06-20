@@ -24,6 +24,9 @@
     ],
     "fabric-datagen": [
       "com.chocoboy.create_henry.infrastructure.datagen.HenryDatagen"
+    ],
+    "jei_mod_plugin": [
+      "com.chocoboy.create_henry.registry.HenryJEI"
     ]
   },
   "accessWidener": "create_henry.accesswidener",
