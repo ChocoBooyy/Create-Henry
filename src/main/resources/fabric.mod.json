@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "create_henry",
-  "version": "${version}",
+  "version": "${mod_version}",
   "name": "Create: Henry",
   "description": "Create: Henry is an addon for the Create mod that add random QoL, items, & blocks features that relates to old Create & New Create versions! It is also a continued version of the addon \"Create: Dreams & Desires\" for 1.20.1.",
   "authors": [

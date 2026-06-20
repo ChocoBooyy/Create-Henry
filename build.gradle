@@ -3,11 +3,14 @@ plugins {
     id "maven-publish"
 }
 
-base.archivesName = archives_base_name
+base.archivesName = "$archives_base_name-fabric"
 group = project.maven_group
 
+// Jar file name mirrors the forge build (Create-Henry-<loader>-<mc>-<modver>-<create>), e.g.
+// Create-Henry-fabric-1.20.1-1.0.1-6.0.jar. The mod's own version stays a clean semver (see
+// fabric.mod.json / processResources), so this string only shapes the artifact name.
 String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
-version = "$mod_version+$minecraft_version" + (buildNumber != null ? "-build.$buildNumber" : "")
+version = "$minecraft_version-$mod_version-$create" + (buildNumber != null ? "-build.$buildNumber" : "")
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
@@ -144,6 +147,7 @@ dependencies {
 processResources {
     Map<String, Object> properties = [
             "version"              : version,
+            "mod_version"          : mod_version,
             "fabric_loader_version": fabric_loader_version,
             "fabric_api_version"   : fabric_api_version,
             "create_version"       : create_version,
@@ -176,7 +180,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = project.archives_base_name
+            artifactId = "$archives_base_name-fabric"
             from components.java
         }
     }
