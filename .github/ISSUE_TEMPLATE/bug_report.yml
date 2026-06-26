@@ -1,0 +1,44 @@
+name: Bug report
+description: "Something in Create: Henry is broken, crashing, or acting up"
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: What's the bug?
+      description: "What happened, and what did you expect instead? A screenshot or short clip helps if it's visual."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: How do you trigger it?
+      description: "The steps to make it happen again. If it's random or you're not sure, just say so."
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Mod loader
+      options:
+        - Fabric
+        - Forge
+      default: 1
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: "Create: Henry version"
+      description: "The mod version you're running, from the jar file name or the in-game mods list."
+      placeholder: "e.g. 1.0.1"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Game log
+      description: "Upload your latest.log (in the logs folder, plus the crash report if it crashed) to https://mclo.gs and paste the link. Please don't paste the whole log in here, it makes the issue unreadable."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Debug info
+      description: "Run /create debuginfo in-game and paste the result here. It copies your loader, versions, and full mod list to the clipboard. Skip this if you can't run the command."
+    validations:
+      required: false
