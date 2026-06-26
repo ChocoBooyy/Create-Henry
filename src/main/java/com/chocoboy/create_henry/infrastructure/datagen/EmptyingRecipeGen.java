@@ -14,13 +14,15 @@ public final class EmptyingRecipeGen extends com.simibubi.create.api.data.recipe
     GeneratedRecipe
 
             SAP_LOGS = create("sap_from_logs", b -> b
-                    .require(forgeItemTag("stripped_logs"))
                     .output(HenryFluids.SAP.get(), 100)
+                    .output(Items.STICK)
+                    .require(forgeItemTag("stripped_logs"))
             ),
 
             SAP_WOOD = create("sap_from_wood", b -> b
-                    .require(forgeItemTag("stripped_wood"))
                     .output(HenryFluids.SAP.get(), 100)
+                    .output(Items.STICK)
+                    .require(forgeItemTag("stripped_wood"))
             ),
 
             CHOCOLATE = create("chocolate", b -> b
