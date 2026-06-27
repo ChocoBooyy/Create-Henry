@@ -2,11 +2,11 @@
   "type": "create_henry:hydraulic_compacting",
   "ingredients": [
     {
-      "amount": 100,
+      "amount": 8100,
       "fluidTag": "minecraft:lava"
     },
     {
-      "amount": 500,
+      "amount": 40500,
       "fluidTag": "minecraft:water"
     }
   ],

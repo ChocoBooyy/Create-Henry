@@ -26,13 +26,13 @@
       "item": "minecraft:pumpkin"
     },
     {
-      "amount": 250,
+      "amount": 20250,
       "fluidTag": "c:milk"
     }
   ],
   "results": [
     {
-      "amount": 500,
+      "amount": 40500,
       "fluid": "create_henry:pumpkin_milkshake"
     }
   ]

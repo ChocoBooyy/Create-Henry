@@ -12,31 +12,31 @@ public final class FillingRecipeGen extends com.simibubi.create.api.data.recipe.
     GeneratedRecipe
 
             CHOCOLATE = create("chocolate", b -> b
-                    .require(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 250)
+                    .require(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 20250)
                     .require(Items.GLASS_BOTTLE)
                     .output(HenryItems.CHOCOLATE_MILKSHAKE)
             ),
 
             VANILLA = create("vanilla", b -> b
-                    .require(HenryFluids.VANILLA_MILKSHAKE.get(), 250)
+                    .require(HenryFluids.VANILLA_MILKSHAKE.get(), 20250)
                     .require(Items.GLASS_BOTTLE)
                     .output(HenryItems.VANILLA_MILKSHAKE)
             ),
 
             STRAWBERRY = create("strawberry", b -> b
-                    .require(HenryFluids.STRAWBERRY_MILKSHAKE.get(), 250)
+                    .require(HenryFluids.STRAWBERRY_MILKSHAKE.get(), 20250)
                     .require(Items.GLASS_BOTTLE)
                     .output(HenryItems.STRAWBERRY_MILKSHAKE)
             ),
 
             GLOWBERRY = create("glowberry", b -> b
-                    .require(HenryFluids.GLOWBERRY_MILKSHAKE.get(), 250)
+                    .require(HenryFluids.GLOWBERRY_MILKSHAKE.get(), 20250)
                     .require(Items.GLASS_BOTTLE)
                     .output(HenryItems.GLOWBERRY_MILKSHAKE)
             ),
 
             PUMPKIN = create("pumpkin", b -> b
-                    .require(HenryFluids.PUMPKIN_MILKSHAKE.get(), 250)
+                    .require(HenryFluids.PUMPKIN_MILKSHAKE.get(), 20250)
                     .require(Items.GLASS_BOTTLE)
                     .output(HenryItems.PUMPKIN_MILKSHAKE)
             );

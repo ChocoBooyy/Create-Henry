@@ -22,16 +22,16 @@ public final class MixingRecipeGen extends HenryProcessingRecipeGen {
 
     // Fluids
     RAW_RUBBER = create("raw_rubber", b -> b
-            .require(HenryFluids.SAP.get(), 500)
+            .require(HenryFluids.SAP.get(), 40500)
             .output(HenryItems.RAW_RUBBER.get(), 1)
     ),
 
     CHOCOLATE_MILKSHAKE = create("chocolate_milkshake", b -> {
-        b.require(AllFluids.CHOCOLATE.get(), 250);
+        b.require(AllFluids.CHOCOLATE.get(), 20250);
         require(b, Items.SUGAR, 2);
         require(b, Items.SNOWBALL, 4);
         require(b, AllItems.BAR_OF_CHOCOLATE, 2);
-        return b.output(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 500);
+        return b.output(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 40500);
     }),
 
     VANILLA_MILKSHAKE = milkshake(
@@ -77,11 +77,11 @@ public final class MixingRecipeGen extends HenryProcessingRecipeGen {
 
     private GeneratedRecipe milkshake(String name, Ingredient flavor, FluidEntry<?> output) {
         return create(name, b -> {
-            b.require(HenryTags.forgeFluidTag("milk"), 250);
+            b.require(HenryTags.forgeFluidTag("milk"), 20250);
             require(b, Items.SUGAR, 2);
             require(b, Items.SNOWBALL, 4);
             require(b, flavor, 2);
-            return b.output(output.get(), 500);
+            return b.output(output.get(), 40500);
         });
     }
 
