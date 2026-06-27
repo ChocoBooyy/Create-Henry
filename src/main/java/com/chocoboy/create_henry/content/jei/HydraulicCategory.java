@@ -1,8 +1,10 @@
 package com.chocoboy.create_henry.content.jei;
 
+import com.chocoboy.create_henry.content.recipeviewer.HenryRecipeRenders;
 import com.simibubi.create.compat.jei.category.BasinCategory;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
+import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,7 +12,6 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import org.jetbrains.annotations.NotNull;
 
 public class HydraulicCategory extends BasinCategory {
-    private final AnimatedHydraulic press = new AnimatedHydraulic(true);
     private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
 
     public HydraulicCategory(CreateRecipeCategory.Info<BasinRecipe> info) {
@@ -23,6 +24,6 @@ public class HydraulicCategory extends BasinCategory {
         var requiredHeat = recipe.getRequiredHeat();
         if (requiredHeat != HeatCondition.NONE)
             heater.withHeat(requiredHeat.visualizeAsBlazeBurner()).draw(graphics, getBackground().getWidth() / 2 + 3, 55);
-        press.draw(graphics, getBackground().getWidth() / 2 + 3, 34);
+        HenryRecipeRenders.drawHydraulicPress(graphics, AnimatedKinetics.DEFAULT_LIGHTING, true, getBackground().getWidth() / 2 + 3, 34);
     }
 }
