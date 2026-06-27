@@ -143,7 +143,7 @@ public abstract class HenryFanProcessingCategory<T extends Recipe<?>> extends Cr
 
     }
 
-    public static abstract class SimpleBlock<T extends ProcessingRecipe<?>> extends MultiOutput<T> {
+    public static class SimpleBlock<T extends ProcessingRecipe<?>> extends MultiOutput<T> {
 
         private final BlockState blockState;
 

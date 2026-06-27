@@ -1,8 +1,9 @@
-package com.chocoboy.create_henry.registry;
+package com.chocoboy.create_henry.content.jei;
 
 import com.chocoboy.create_henry.content.fans.processing.SandingType;
-import com.chocoboy.create_henry.content.jei.*;
 import com.chocoboy.create_henry.content.recipes.*;
+import com.chocoboy.create_henry.registry.HenryBlocks;
+import com.chocoboy.create_henry.registry.HenryRecipeTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.*;
@@ -30,8 +31,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import com.chocoboy.create_henry.HenryCreate;
-import com.chocoboy.create_henry.content.jei.HenryFanProcessingCategory;
 import com.chocoboy.create_henry.infrastructure.config.HenryConfigs;
 import com.chocoboy.create_henry.infrastructure.config.HenryRecipesConfig;
 
@@ -75,13 +76,13 @@ public class HenryJEI implements IModPlugin {
                         .catalystStack(HenryFanProcessingCategory.getFan("fan_sanding"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.SAND)
                         .emptyBackground(178, 72)
-                        .build("fan_sanding", FanSandingCategory::new),
+                        .build("fan_sanding", info -> new HenryFanProcessingCategory.SimpleBlock<>(info, Blocks.SAND)),
                 freezing = builder(FreezingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.FREEZING)
                         .catalystStack(HenryFanProcessingCategory.getFan("fan_freezing"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.POWDER_SNOW_BUCKET)
                         .emptyBackground(178, 72)
-                        .build("fan_freezing", FanFreezingCategory::new),
+                        .build("fan_freezing", info -> new HenryFanProcessingCategory.SimpleBlock<>(info, Blocks.POWDER_SNOW)),
                 seething = builder(SeethingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.SEETHING)
                         .catalystStack(HenryFanProcessingCategory.getFan("fan_seething"))
@@ -93,13 +94,13 @@ public class HenryJEI implements IModPlugin {
                         .catalystStack(HenryFanProcessingCategory.getFan("fan_withering"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.WITHER_ROSE)
                         .emptyBackground(178, 72)
-                        .build("fan_withering", FanWitheringCategory::new),
+                        .build("fan_withering", info -> new HenryFanProcessingCategory.SimpleBlock<>(info, Blocks.WITHER_ROSE)),
                 dragon_breathing = builder(DragonBreathingRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.DRAGON_BREATHING)
                         .catalystStack(HenryFanProcessingCategory.getFan("fan_dragon_breathing"))
                         .doubleItemIcon(AllItems.PROPELLER.get(), Items.DRAGON_HEAD)
                         .emptyBackground(178, 72)
-                        .build("fan_dragon_breathing", FanDragonBreathingCategory::new),
+                        .build("fan_dragon_breathing", info -> new HenryFanProcessingCategory.SimpleBlock<>(info, Blocks.DRAGON_HEAD)),
                 hydraulic = builder(HydraulicRecipe.class)
                         .addTypedRecipes(HenryRecipeTypes.HYDRAULIC_COMPACTING)
                         .catalyst(() -> HenryBlocks.HYDRAULIC_PRESS)
