@@ -18,7 +18,7 @@ public final class HydraulicRecipeGen extends HenryProcessingRecipeGen {
             TUFF = create("tuff", b -> b
                     .requiresHeat(HeatCondition.SUPERHEATED)
                     .require(Items.GRAVEL)
-                    .require(FluidTags.LAVA, 40500)
+                    .require(FluidTags.LAVA, 500)
                     .require(Items.DEEPSLATE)
                     .require(Items.ANDESITE)
                     .output(Items.TUFF, 4)
@@ -41,21 +41,21 @@ public final class HydraulicRecipeGen extends HenryProcessingRecipeGen {
             ),
 
             COBBLE_GEN = create("cobblestone_gen", b -> b
-                    .require(FluidTags.LAVA, 8100)
-                    .require(FluidTags.WATER, 40500)
+                    .require(FluidTags.LAVA, 100)
+                    .require(FluidTags.WATER, 500)
                     .output(Items.COBBLESTONE, 10)
             ),
 
             STONE_GEN = create("stone_gen", b -> b
                     .requiresHeat(HeatCondition.HEATED)
-                    .require(FluidTags.LAVA, 8100)
-                    .require(FluidTags.WATER, 40500)
+                    .require(FluidTags.LAVA, 100)
+                    .require(FluidTags.WATER, 500)
                     .output(Items.STONE, 10)
             ),
 
             BASALT_GEN = create("basalt_gen", b -> b
                     .requiresHeat(HeatCondition.HEATED)
-                    .require(FluidTags.LAVA, 8100)
+                    .require(FluidTags.LAVA, 100)
                     .require(Items.BLUE_ICE)
                     .require(Items.SOUL_SOIL)
                     .output(Items.BASALT, 10)
@@ -65,8 +65,8 @@ public final class HydraulicRecipeGen extends HenryProcessingRecipeGen {
 
             VERIDIUM_GEN = create("veridium_gen", b -> b
                     .requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(FluidTags.LAVA, 40500)
-                    .require(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 8100)
+                    .require(FluidTags.LAVA, 500)
+                    .require(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 100)
                     .require(Items.GRANITE)
                     .require(Items.GRANITE)
                     .output(AllPaletteStoneTypes.VERIDIUM.getBaseBlock().get(), 2)
@@ -74,8 +74,8 @@ public final class HydraulicRecipeGen extends HenryProcessingRecipeGen {
 
             ASURINE_GEN = create("asurine_gen", b -> b
                     .requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(FluidTags.LAVA, 40500)
-                    .require(HenryFluids.VANILLA_MILKSHAKE.get(), 8100)
+                    .require(FluidTags.LAVA, 500)
+                    .require(HenryFluids.VANILLA_MILKSHAKE.get(), 100)
                     .require(Items.SANDSTONE)
                     .require(Items.SANDSTONE)
                     .output(AllPaletteStoneTypes.ASURINE.getBaseBlock().get(), 2)
@@ -83,8 +83,8 @@ public final class HydraulicRecipeGen extends HenryProcessingRecipeGen {
 
             CRIMSITE_GEN = create("crimsite_gen", b -> b
                     .requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(FluidTags.LAVA, 40500)
-                    .require(HenryFluids.STRAWBERRY_MILKSHAKE.get(), 8100)
+                    .require(FluidTags.LAVA, 500)
+                    .require(HenryFluids.STRAWBERRY_MILKSHAKE.get(), 100)
                     .require(Items.COBBLED_DEEPSLATE)
                     .require(Items.COBBLED_DEEPSLATE)
                     .output(AllPaletteStoneTypes.CRIMSITE.getBaseBlock().get(), 2)
@@ -92,8 +92,8 @@ public final class HydraulicRecipeGen extends HenryProcessingRecipeGen {
 
             OCHRUM_GEN = create("ochrum_gen", b -> b
                     .requiresHeat(HeatCondition.SUPERHEATED)
-                    .require(FluidTags.LAVA, 40500)
-                    .require(HenryFluids.GLOWBERRY_MILKSHAKE.get(), 8100)
+                    .require(FluidTags.LAVA, 500)
+                    .require(HenryFluids.GLOWBERRY_MILKSHAKE.get(), 100)
                     .require(Items.TERRACOTTA)
                     .require(Items.TERRACOTTA)
                     .output(AllPaletteStoneTypes.OCHRUM.getBaseBlock().get(), 2)

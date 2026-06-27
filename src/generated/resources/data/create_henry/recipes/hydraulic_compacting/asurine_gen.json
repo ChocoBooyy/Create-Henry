@@ -9,11 +9,11 @@
       "item": "minecraft:sandstone"
     },
     {
-      "amount": 40500,
+      "amount": 500,
       "fluidTag": "minecraft:lava"
     },
     {
-      "amount": 8100,
+      "amount": 100,
       "fluid": "create_henry:vanilla_milkshake",
       "nbt": {}
     }

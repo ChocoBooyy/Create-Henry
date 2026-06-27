@@ -26,13 +26,13 @@
       "item": "minecraft:glow_berries"
     },
     {
-      "amount": 20250,
+      "amount": 250,
       "fluidTag": "forge:milk"
     }
   ],
   "results": [
     {
-      "amount": 40500,
+      "amount": 500,
       "fluid": "create_henry:glowberry_milkshake"
     }
   ]
