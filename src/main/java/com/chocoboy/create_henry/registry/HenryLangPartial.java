@@ -59,6 +59,14 @@ public class HenryLangPartial {
         consume(consumer, "tag.item.create_henry.sandable", "Sandable");
         consume(consumer, "tag.item.create_henry.seethable", "Seethable");
         consume(consumer, "tag.item.create_henry.witherable", "Witherable");
+
+        // EMI recipe-category display names (EMI key format: emi.category.<namespace>.<path>).
+        consume(consumer, "emi.category.create_henry.fan_sanding", "Bulk Sanding");
+        consume(consumer, "emi.category.create_henry.fan_freezing", "Bulk Freezing");
+        consume(consumer, "emi.category.create_henry.fan_seething", "Bulk Seething");
+        consume(consumer, "emi.category.create_henry.fan_withering", "Bulk Withering");
+        consume(consumer, "emi.category.create_henry.fan_dragon_breathing", "Bulk Dragon Breathing");
+        consume(consumer, "emi.category.create_henry.hydraulic_compacting", "Hydraulic Compacting");
     }
 
     private static void consume(BiConsumer<String, String> consumer, String key, String enUS) {

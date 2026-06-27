@@ -27,6 +27,9 @@
     ],
     "jei_mod_plugin": [
       "com.chocoboy.create_henry.registry.HenryJEI"
+    ],
+    "emi": [
+      "com.chocoboy.create_henry.content.emi.HenryEmiPlugin"
     ]
   },
   "accessWidener": "create_henry.accesswidener",
