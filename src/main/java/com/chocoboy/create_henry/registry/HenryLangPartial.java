@@ -31,6 +31,34 @@ public class HenryLangPartial {
         consume(consumer, "create_henry.display_source.multimeter_stress.current", "Current Stress (SU Used)");
         consume(consumer, "create_henry.display_source.multimeter_stress.remaining", "Remaining SU");
         consume(consumer, "create_henry.display_source.multimeter_stress.max", "Total SU Capacity");
+
+        // EMI/recipe-viewer display names for Henry's tags (EMI key format: tag.<registry>.<namespace>.<path>).
+        // Fluid tags (conventional namespace).
+        consume(consumer, "tag.fluid.forge.sap", "Sap");
+        consume(consumer, "tag.fluid.forge.vanilla", "Vanilla Milkshake");
+        consume(consumer, "tag.fluid.forge.strawberry", "Strawberry Milkshake");
+        consume(consumer, "tag.fluid.forge.glowberry", "Glowberry Milkshake");
+        consume(consumer, "tag.fluid.forge.pumpkin", "Pumpkin Milkshake");
+        // Bucket item tags (conventional namespace).
+        consume(consumer, "tag.item.forge.buckets.sap", "Sap Bucket");
+        consume(consumer, "tag.item.forge.buckets.chocolate_milkshake", "Chocolate Milkshake Bucket");
+        consume(consumer, "tag.item.forge.buckets.vanilla_milkshake", "Vanilla Milkshake Bucket");
+        consume(consumer, "tag.item.forge.buckets.strawberry_milkshake", "Strawberry Milkshake Bucket");
+        consume(consumer, "tag.item.forge.buckets.glowberry_milkshake", "Glowberry Milkshake Bucket");
+        consume(consumer, "tag.item.forge.buckets.pumpkin_milkshake", "Pumpkin Milkshake Bucket");
+        // Material item tags (conventional namespace).
+        consume(consumer, "tag.item.forge.crude_rubbers", "Crude Rubber");
+        consume(consumer, "tag.item.forge.raw_rubbers", "Raw Rubber");
+        consume(consumer, "tag.item.forge.rubbers", "Rubber");
+        consume(consumer, "tag.item.forge.nuggets.coal", "Coal Nuggets");
+        consume(consumer, "tag.item.forge.nuggets.lapis", "Lapis Nuggets");
+        consume(consumer, "tag.item.forge.dusts.obsidian", "Obsidian Dust");
+        // Fan-processing item tags (mod namespace).
+        consume(consumer, "tag.item.create_henry.freezable", "Freezable");
+        consume(consumer, "tag.item.create_henry.meat", "Meat");
+        consume(consumer, "tag.item.create_henry.sandable", "Sandable");
+        consume(consumer, "tag.item.create_henry.seethable", "Seethable");
+        consume(consumer, "tag.item.create_henry.witherable", "Witherable");
     }
 
     private static void consume(BiConsumer<String, String> consumer, String key, String enUS) {
