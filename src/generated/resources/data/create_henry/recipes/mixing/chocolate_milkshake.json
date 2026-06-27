@@ -26,14 +26,14 @@
       "item": "create:bar_of_chocolate"
     },
     {
-      "amount": 250,
+      "amount": 20250,
       "fluid": "create:chocolate",
       "nbt": {}
     }
   ],
   "results": [
     {
-      "amount": 500,
+      "amount": 40500,
       "fluid": "create_henry:chocolate_milkshake"
     }
   ]

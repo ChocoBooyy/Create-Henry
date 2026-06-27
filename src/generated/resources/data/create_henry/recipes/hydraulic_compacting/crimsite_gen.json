@@ -9,11 +9,11 @@
       "item": "minecraft:cobbled_deepslate"
     },
     {
-      "amount": 500,
+      "amount": 40500,
       "fluidTag": "minecraft:lava"
     },
     {
-      "amount": 100,
+      "amount": 8100,
       "fluid": "create_henry:strawberry_milkshake",
       "nbt": {}
     }

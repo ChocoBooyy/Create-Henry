@@ -14,43 +14,43 @@ public final class EmptyingRecipeGen extends com.simibubi.create.api.data.recipe
     GeneratedRecipe
 
             SAP_LOGS = create("sap_from_logs", b -> b
-                    .output(HenryFluids.SAP.get(), 100)
+                    .output(HenryFluids.SAP.get(), 8100)
                     .output(Items.STICK)
                     .require(forgeItemTag("stripped_logs"))
             ),
 
             SAP_WOOD = create("sap_from_wood", b -> b
-                    .output(HenryFluids.SAP.get(), 100)
+                    .output(HenryFluids.SAP.get(), 8100)
                     .output(Items.STICK)
                     .require(forgeItemTag("stripped_wood"))
             ),
 
             CHOCOLATE = create("chocolate", b -> b
-                    .output(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 250)
+                    .output(HenryFluids.CHOCOLATE_MILKSHAKE.get(), 20250)
                     .output(Items.GLASS_BOTTLE)
                     .require(HenryItems.CHOCOLATE_MILKSHAKE)
             ),
 
             VANILLA = create("vanilla", b -> b
-                    .output(HenryFluids.VANILLA_MILKSHAKE.get(), 250)
+                    .output(HenryFluids.VANILLA_MILKSHAKE.get(), 20250)
                     .output(Items.GLASS_BOTTLE)
                     .require(HenryItems.VANILLA_MILKSHAKE)
             ),
 
             STRAWBERRY = create("strawberry", b -> b
-                    .output(HenryFluids.STRAWBERRY_MILKSHAKE.get(), 250)
+                    .output(HenryFluids.STRAWBERRY_MILKSHAKE.get(), 20250)
                     .output(Items.GLASS_BOTTLE)
                     .require(HenryItems.STRAWBERRY_MILKSHAKE)
             ),
 
             GLOWBERRY = create("glowberry", b -> b
-                    .output(HenryFluids.GLOWBERRY_MILKSHAKE.get(), 250)
+                    .output(HenryFluids.GLOWBERRY_MILKSHAKE.get(), 20250)
                     .output(Items.GLASS_BOTTLE)
                     .require(HenryItems.GLOWBERRY_MILKSHAKE)
             ),
 
             PUMPKIN = create("pumpkin", b -> b
-                    .output(HenryFluids.PUMPKIN_MILKSHAKE.get(), 250)
+                    .output(HenryFluids.PUMPKIN_MILKSHAKE.get(), 20250)
                     .output(Items.GLASS_BOTTLE)
                     .require(HenryItems.PUMPKIN_MILKSHAKE)
             );

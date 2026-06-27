@@ -26,13 +26,13 @@
       "item": "minecraft:sweet_berries"
     },
     {
-      "amount": 250,
+      "amount": 20250,
       "fluidTag": "forge:milk"
     }
   ],
   "results": [
     {
-      "amount": 500,
+      "amount": 40500,
       "fluid": "create_henry:strawberry_milkshake"
     }
   ]
