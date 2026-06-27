@@ -137,6 +137,10 @@ dependencies {
     // independent of which recipe viewer is enabled at runtime below.
     modCompileOnly("dev.emi:emi-fabric:$emi_version")
 
+    // REI API on the compile classpath so the HenryREI plugin + REI categories always compile,
+    // independent of which recipe viewer is enabled at runtime below.
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version")
+
     // Recipe Viewers - Create Fabric supports JEI, REI, and EMI.
     // See gradle.properties (recipe_viewer) to choose which to use at runtime.
     switch (recipe_viewer.toLowerCase(Locale.ROOT)) {

@@ -30,6 +30,9 @@
     ],
     "emi": [
       "com.chocoboy.create_henry.content.emi.HenryEmiPlugin"
+    ],
+    "rei_client": [
+      "com.chocoboy.create_henry.content.rei.HenryREI"
     ]
   },
   "accessWidener": "create_henry.accesswidener",
