@@ -25,6 +25,11 @@ public final class ItemApplicationRecipeGen extends HenryProcessingRecipeGen {
             .require(AllItems.COPPER_SHEET.get())
             .output(HenryBlocks.HYDRAULIC_CASING.get())),
 
+    RUBBER_CASING = create("rubber_casing", b -> b
+            .require(forgeItemTag("stripped_logs"))
+            .require(HenryItems.RUBBER.get())
+            .output(HenryBlocks.RUBBER_CASING.get())),
+
     COGWHEEL = create("cogwheel", b -> b
             .require(AllBlocks.SHAFT.get())
             .require(ItemTags.PLANKS)
