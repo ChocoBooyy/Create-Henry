@@ -29,6 +29,7 @@ public class MultiMeterRenderer extends ShaftRenderer<MultiMeterBlockEntity> {
         BlockState state = be.getBlockState();
         MultiMeterBlock block = (MultiMeterBlock) state.getBlock();
 
+        SuperByteBuffer head = CachedBuffers.partial(HenryPartialModels.GAUGE_HEAD, state);
         SuperByteBuffer speedDial = CachedBuffers.partial(HenryPartialModels.GAUGE_SPEED_DIAL, state);
         SuperByteBuffer stressDial = CachedBuffers.partial(HenryPartialModels.GAUGE_STRESS_DIAL, state);
 
@@ -40,6 +41,9 @@ public class MultiMeterRenderer extends ShaftRenderer<MultiMeterBlockEntity> {
             if (!block.shouldRenderHeadOnFace(be.getLevel(), be.getBlockPos(), state, face)) continue;
 
             VertexConsumer vb = buffer.getBuffer(RenderType.solid());
+            head.rotateCentered((-face.toYRot() - 90) / 180f * (float) Math.PI, Direction.UP)
+                    .light(light)
+                    .renderInto(ms, vb);
             renderDial(speedDial, face, pivot, speedProgress, light, ms, vb);
             renderDial(stressDial, face, pivot, stressProgress, light, ms, vb);
         }
