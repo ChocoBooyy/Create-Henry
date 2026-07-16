@@ -1,0 +1,34 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "create_henry:block/indicator",
+		"2": "create_henry:block/multi_gauge"
+	},
+	"elements": [
+		{
+			"name": "GuageMetalBack",
+			"from": [14, 3, 3],
+			"to": [16, 13, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 8, 8]},
+			"faces": {
+				"north": {"uv": [14, 5, 13, 10], "texture": "#2"},
+				"east": {"uv": [9, 5, 14, 10], "texture": "#2"},
+				"south": {"uv": [10, 5, 9, 10], "texture": "#2"},
+				"west": {"uv": [9, 5, 14, 10], "texture": "#2"},
+				"up": {"uv": [14, 5, 9, 6], "rotation": 90, "texture": "#2"},
+				"down": {"uv": [9, 10, 14, 9], "rotation": 90, "texture": "#2"}
+			}
+		},
+		{
+			"name": "indicator",
+			"from": [16.075, 4, 4],
+			"to": [16.075, 12, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [12, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [9, 5, 14, 10], "texture": "#2"}
+			}
+		}
+	]
+}

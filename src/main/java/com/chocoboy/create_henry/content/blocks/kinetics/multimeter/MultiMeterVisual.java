@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 public class MultiMeterVisual extends ShaftVisual<MultiMeterBlockEntity> implements SimpleDynamicVisual {
 
-    // Two dials per exposed face: index 0/1 = face A speed/stress, index 2/3 = face B speed/stress
+    private final List<TransformedInstance> heads = new ArrayList<>();
     private final List<TransformedInstance> speedDials = new ArrayList<>();
     private final List<TransformedInstance> stressDials = new ArrayList<>();
     private final List<Direction> dialFacings = new ArrayList<>();
@@ -38,6 +38,9 @@ public class MultiMeterVisual extends ShaftVisual<MultiMeterBlockEntity> impleme
         for (Direction facing : Iterate.directions) {
             if (!block.shouldRenderHeadOnFace(realLevel, pos, blockState, facing)) continue;
 
+            TransformedInstance head = instancerProvider()
+                    .instancer(InstanceTypes.TRANSFORMED, Models.partial(HenryPartialModels.GAUGE_HEAD))
+                    .createInstance();
             TransformedInstance speed = instancerProvider()
                     .instancer(InstanceTypes.TRANSFORMED, Models.partial(HenryPartialModels.GAUGE_SPEED_DIAL))
                     .createInstance();
@@ -45,6 +48,14 @@ public class MultiMeterVisual extends ShaftVisual<MultiMeterBlockEntity> impleme
                     .instancer(InstanceTypes.TRANSFORMED, Models.partial(HenryPartialModels.GAUGE_STRESS_DIAL))
                     .createInstance();
 
+            head.setIdentityTransform()
+                    .translate(getVisualPosition())
+                    .center()
+                    .rotateYDegrees(-facing.toYRot() - 90)
+                    .uncenter()
+                    .setChanged();
+
+            heads.add(head);
             speedDials.add(speed);
             stressDials.add(stress);
             dialFacings.add(facing);
@@ -90,6 +101,7 @@ public class MultiMeterVisual extends ShaftVisual<MultiMeterBlockEntity> impleme
     @Override
     public void updateLight(float partialTick) {
         super.updateLight(partialTick);
+        for (TransformedInstance d : heads)       relight(d);
         for (TransformedInstance d : speedDials)  relight(d);
         for (TransformedInstance d : stressDials) relight(d);
     }
@@ -97,6 +109,7 @@ public class MultiMeterVisual extends ShaftVisual<MultiMeterBlockEntity> impleme
     @Override
     protected void _delete() {
         super._delete();
+        for (TransformedInstance d : heads)       d.delete();
         for (TransformedInstance d : speedDials)  d.delete();
         for (TransformedInstance d : stressDials) d.delete();
     }
@@ -104,6 +117,7 @@ public class MultiMeterVisual extends ShaftVisual<MultiMeterBlockEntity> impleme
     @Override
     public void collectCrumblingInstances(Consumer<Instance> consumer) {
         super.collectCrumblingInstances(consumer);
+        heads.forEach(consumer);
         speedDials.forEach(consumer);
         stressDials.forEach(consumer);
     }
