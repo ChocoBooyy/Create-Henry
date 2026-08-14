@@ -36,8 +36,7 @@ public class IndustrialBrakeBlockEntity extends GeneratingKineticBlockEntity {
         );
         impactValue.between(0, MAX_STRESS_PER_RPM);
         impactValue.value = 0;
-        // updateGeneratedRotation() already calls calculateStressApplied(), updateStressFor, updateStress, and sendData
-        impactValue.withCallback(v -> updateGeneratedRotation());
+        impactValue.withCallback(v -> updateDrawnStress());
         behaviours.add(impactValue);
     }
 
@@ -50,13 +49,20 @@ public class IndustrialBrakeBlockEntity extends GeneratingKineticBlockEntity {
         // calculateStressApplied() is speed-dependent (draw / speed), so the network's stored
         // SU/RPM value must be refreshed whenever shaft speed changes, otherwise the actual
         // SU drain diverges from the intended flat draw value.
-        if (hasNetwork()) {
-            KineticNetwork net = getOrCreateNetwork();
-            if (net != null) {
-                net.updateStressFor(this, calculateStressApplied());
-                net.updateStress();
-            }
-        }
+        updateDrawnStress();
+    }
+
+    // Pushes the current draw into the network. Required because updateGeneratedRotation()
+    // only refreshes stress when getGeneratedSpeed() != 0, and a brake never generates speed.
+    private void updateDrawnStress() {
+        if (level == null || level.isClientSide || !hasNetwork())
+            return;
+        KineticNetwork net = getOrCreateNetwork();
+        if (net == null)
+            return;
+        net.updateStressFor(this, calculateStressApplied());
+        net.updateStress();
+        sendData();
     }
 
     @Override
