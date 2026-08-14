@@ -103,6 +103,8 @@ dependencies {
     modImplementation("io.github.fabricators_of_create.Porting-Lib:transfer:$porting_lib_version")
     modImplementation("io.github.fabricators_of_create.Porting-Lib:base:$porting_lib_version")
     modImplementation("io.github.fabricators_of_create.Porting-Lib:accessors:$porting_lib_version")
+    // entity module injects Entity#getCustomData, used to store per-item fan processing timers.
+    modImplementation("io.github.fabricators_of_create.Porting-Lib:entity:$porting_lib_version")
     // networking module re-exposes me.pepperbell.simplenetworking (Create's packet base) at compile time.
     modCompileOnly("io.github.fabricators_of_create.Porting-Lib:networking:$porting_lib_version")
 

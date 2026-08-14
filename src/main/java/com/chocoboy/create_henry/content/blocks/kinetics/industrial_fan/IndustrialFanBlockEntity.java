@@ -38,7 +38,7 @@ public class IndustrialFanBlockEntity extends GeneratingKineticBlockEntity imple
         super(type, pos, state);
         isGenerator = false;
         updateGenerator = false;
-        airCurrent = new AirCurrent(this);
+        airCurrent = new IndustrialAirCurrent(this);
         updateAirFlow = true;
     }
 

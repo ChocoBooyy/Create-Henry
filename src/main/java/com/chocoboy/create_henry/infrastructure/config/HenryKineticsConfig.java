@@ -8,6 +8,7 @@ public class HenryKineticsConfig extends ConfigBase {
 	public final ConfigInt fanPushDistance = i(40, 5, "fanPushDistance", Comments.fanPushDistance);
 	public final ConfigInt fanPullDistance = i(40, 5, "fanPullDistance", Comments.fanPullDistance);
 	public final ConfigInt fanRotationArgmax = i(256, 64, "fanRotationArgmax", Comments.rpm, Comments.fanRotationArgmax);
+	public final ConfigInt fanProcessingTime = i(75, 0, "fanProcessingTime", Comments.fanProcessingTime);
 
 	public final ConfigGroup stats = group(1, "stats", Comments.stats);
 
